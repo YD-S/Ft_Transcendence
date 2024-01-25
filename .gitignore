@@ -1,0 +1,22 @@
+# Ignore environment variables
+/.env
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.idea/
+.vscode/
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore package-lock files
+package-lock.json
+yarn.lock
+
+# Ignore build artifacts
+*.build
+*.pid
