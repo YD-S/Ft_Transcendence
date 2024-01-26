@@ -20,3 +20,9 @@ yarn.lock
 # Ignore build artifacts
 *.build
 *.pid
+
+# Python files
+**/.venv
+**/venv
+**/__pycache__
+**/*.pyc
