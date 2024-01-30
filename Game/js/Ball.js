@@ -45,7 +45,7 @@ export default class Ball {
     update(delta) {
         this.x = this.x + this.direction.x * this.velocity * delta;
         this.y = this.y + this.direction.y * this.velocity * delta;
-        this.velocity *= Vel_multiplier * delta;
+        this.velocity += Vel_multiplier * delta;
         const rect = this.rect();
 
         if(rect.top <= 0 || rect.bottom >= window.innerHeight) {

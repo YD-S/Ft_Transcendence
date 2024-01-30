@@ -4,9 +4,10 @@
 
 :root{
     --hue: 250;
-    --sat: 40%;
-    --foreground: hsl(var(--hue), var(--sat), 75%);
+    --sat: 50%;
+    --foreground: hsl(var(--hue), var(--sat), 80%);
     --background: hsl(var(--hue), var(--sat), 25%);
+    --clr-one: rgb(255, 20, 147);
 }
 
 body {
@@ -20,6 +21,7 @@ body {
 
     position: absolute;
     background-color: var(--foreground);
+    box-shadow: inset 0 0 0.2em 0 var(--clr-one), 0 0 0.8em 0 var(--clr-one);
     width: 1vh;
     height: 10vh;
     top: calc(var(--pos) * 1vh);
@@ -40,6 +42,7 @@ body {
 
     position: absolute;
     background-color: var(--foreground);
+    box-shadow: inset 0 0 0.2em 0 var(--clr-one), 0 0 0.8em 0 var(--clr-one);
     width: 2.5vh;
     height: 2.5vh;
     border-radius: 50%;
@@ -54,6 +57,7 @@ body {
     font-weight: bold;
     font-size: 7vh;
     color: var(--foreground);
+    text-shadow: 0 0 0.2em hsl(0 0 100% / 0.3), 0 0 0.8em var(--clr-one);
 }
 
 .score > *{
