@@ -42,7 +42,7 @@ export default class Ball {
         return this.ballElem.getBoundingClientRect();
     }
 
-    update(delta) {
+    update(delta, paddleRect) {
         this.x = this.x + this.direction.x * this.velocity * delta;
         this.y = this.y + this.direction.y * this.velocity * delta;
         this.velocity += Vel_multiplier * delta;
@@ -51,9 +51,22 @@ export default class Ball {
         if(rect.top <= 0 || rect.bottom >= window.innerHeight) {
             this.direction.y = -this.direction.y;
         }
+
+        if(paddleRect.some(r => isColliding(r, rect))) {
+            this.direction.x = -this.direction.x;
+        }
     }
 }
 
 function CustomRandomNum(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+function isColliding(r1, r2) {
+    return (
+        r1.left <= r2.right &&
+        r1.right >= r2.left &&
+        r1.top <= r2.bottom &&
+        r1.bottom >= r2.top
+        );
 }
