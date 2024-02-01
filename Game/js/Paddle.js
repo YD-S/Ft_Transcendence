@@ -16,6 +16,11 @@ export default class Paddle {
         return this.PaddleElement.getBoundingClientRect();
     }
 
+    update() {
+        if(this.position < 0) this.position = 0;
+        if(this.position > 100) this.position = 100;
+    }
+
     reset() {
         this.position = 50;
     }

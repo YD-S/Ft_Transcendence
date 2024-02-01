@@ -32,7 +32,6 @@ export default class Ball {
             Math.abs(this.direction.x) >= 0.9
             ) {
             const angle = CustomRandomNum(0, 2 * Math.PI);
-            console.log(angle);
             this.direction = {x: Math.cos(angle), y: Math.sin(angle)};
         }
         this.velocity = vel_global;
