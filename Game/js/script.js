@@ -7,11 +7,11 @@ const keys = {};
 const ball = new Ball(document.getElementById('ball'));
 const paddle1 = new Paddle(document.getElementById('player1_paddle'));
 const paddle2 = new Paddle(document.getElementById('player2_paddle'));
-const player1_score = document.getElementById('score__p1');
-const player2_score = document.getElementById('score__p2');
+const Team1_score = document.getElementById('score__p1');
+const Team2_score = document.getElementById('score__p2');
 
-let lastTimestamp;
-function update(timestamp) {
+    let lastTimestamp;
+    function update(timestamp) {
     if (lastTimestamp != null) {
         const delta = (timestamp - lastTimestamp);
         movePaddles();
@@ -32,7 +32,7 @@ document.addEventListener('keyup', event => {
     keys[event.key] = false;
 });
 
-function movePaddles() {
+    function movePaddles() {
     if (keys['w'] || keys['W']) {
         paddle1.position -= paddleSpeed;
     }
@@ -53,10 +53,10 @@ window.requestAnimationFrame(update);
 function handleLost() {
     const rect = ball.rect();
     if(rect.right >= window.innerWidth) {
-        player1_score.textContent = parseInt(player1_score.textContent) + 1;
+        Team1_score.textContent = parseInt(Team1_score.textContent) + 1;
     }
     else
-        player2_score.textContent = parseInt(player2_score.textContent) + 1;
+        Team2_score.textContent = parseInt(Team2_score.textContent) + 1;
     ball.reset();
     paddle1.reset();
     paddle2.reset();
