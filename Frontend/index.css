@@ -1,3 +1,130 @@
+:root {
+    --primary-color: #c50000;
+    --primary-darker-color: #a70000;
+    --secondary-color: #00c5c5;
+    --secondary-darker-color: #00a7a7;
+    --tertiary-color: #c500c5;
+    --tertiary-darker-color: #a700a7;
+    --accent-color: #c5c500;
+    --accent-darker-color: #a7a700;
+    --background-color: #060504;
+    --background-secondary-color: #0D0C0B;
+    background-color: var(--background-color);
+}
+
+.svg{
+    width: 4.167vw;
+    height: 4.167vw;
+}
+
+.navbar-custom{
+    background-color: var(--background-color);
+}
+
+.button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    width: 100%;
+    background-color: var(--background-color);
+    gap: 2vh;
+}
+
+.primary-box{
+    width: 26.14vw;
+    height: 14.5vh;
+    background-color: var(--background-color);
+    border-radius: 15px;
+    border: 1px solid var(--primary-darker-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.35vw;
+    color: var(--primary-color);
+}
+
+.secondary-box{
+    width: 26.14vw;
+    height: 14.5vh;
+    background-color: var(--background-color);
+    border-radius: 15px;
+    border: 1px solid var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.35vw;
+    color: var(--secondary-color);
+}
+
+.tertiary-box{
+    width: 26.14vw;
+    height: 14.5vh;
+    background-color: var(--background-color);
+    border-radius: 15px;
+    border: 1px solid var(--tertiary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.35vw;
+    color: var(--tertiary-color);
+}
+
+.accent-box{
+    width: 26.14vw;
+    height: 14.5vh;
+    background-color: var(--background-color);
+    border-radius: 15px;
+    border: 1px solid var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.35vw;
+    color: var(--accent-color);
+}
+
+.settings-svg{
+    filter: invert(10%) sepia(98%) saturate(5731%) hue-rotate(3deg) brightness(73%) contrast(111%);
+}
+
+.profile-icon-svg{
+    filter: invert(10%) sepia(98%) saturate(5731%) hue-rotate(3deg) brightness(73%) contrast(111%);
+}
+
+.paint-pallete-svg{
+    filter: invert(66%) sepia(51%) saturate(2228%) hue-rotate(131deg) brightness(89%) contrast(102%);
+}
+
+.cup-pallete-svg{
+    filter: invert(72%) sepia(45%) saturate(1318%) hue-rotate(15deg) brightness(97%) contrast(101%);
+}
+
+.neon-pong{
+    text-align: center;
+    vertical-align: middle;
+    font-size:  3.333vw;
+    color: var(--primary-darker-color);
+}
+
+.footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 8.2vh;
+    width: 100%;
+    background-color: var(--background-secondary-color);
+}
 
 .animated-box{
     position: relative;
