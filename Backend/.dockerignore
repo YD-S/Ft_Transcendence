@@ -23,6 +23,3 @@ venv/
 # Ignore media and static files (served by a web server in production)
 media/
 static/
-
-# Ignore database migrations (they should be run on build)
-**/migrations/
