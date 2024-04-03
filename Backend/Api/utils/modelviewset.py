@@ -62,9 +62,9 @@ class ModelViewSet:
 
     def as_urls(self):
         return [
-            path('', require_http_methods(["GET"])(lambda req: self._endpoint(self.list, req))),
-            path('<int:pk>', require_http_methods(["GET"])(lambda req, pk: self._endpoint(self.get, req, pk))),
-            path('create/', require_http_methods(["POST"])(lambda req: self._endpoint(self.post, req))),
-            path('update/<int:pk>/', require_http_methods(["PUT"])(lambda req, pk: self._endpoint(self.put, req, pk))),
-            path('delete/<int:pk>/', require_http_methods(["DELETE"])(lambda req, pk: self._endpoint(self.delete, req, pk))),
+            path('', require_http_methods(["GET"])(lambda req: self._endpoint(self.list, req)), name='list'),
+            path('<int:pk>', require_http_methods(["GET"])(lambda req, pk: self._endpoint(self.get, req, pk)), name='retrieve'),
+            path('create/', require_http_methods(["POST"])(lambda req: self._endpoint(self.post, req)), name='create'),
+            path('update/<int:pk>/', require_http_methods(["PUT"])(lambda req, pk: self._endpoint(self.put, req, pk)), name='update'),
+            path('delete/<int:pk>/', require_http_methods(["DELETE"])(lambda req, pk: self._endpoint(self.delete, req, pk)), name='delete'),
         ]
