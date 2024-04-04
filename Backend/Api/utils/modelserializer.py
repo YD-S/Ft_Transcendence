@@ -30,7 +30,7 @@ class ModelSerializer:
             self._create_instance(data)
 
     def _update_instance(self, instance, data):
-        fields = self._get_fields(exclude=False)
+        fields = self._get_fields()
         auto_fields = map(lambda x: x.name, filter(lambda x: x.auto_created, self.Meta.model._meta.fields))
         for field in data:
             if field not in fields:

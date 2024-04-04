@@ -137,3 +137,49 @@ def register(request):
         content_type='application/json',
         status=200
     )
+
+
+@require_http_methods(["POST"])
+def change_password(request):
+    # Read the passwords from the request
+    data = json.loads(request.body.decode())
+    if not data.get('user_id'):
+        return HttpResponse(
+            json.dumps({"message": "User ID is required", "type": "change_password_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    if not data.get('current_password'):
+        return HttpResponse(
+            json.dumps({"message": "Current password is required", "type": "change_password_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    if not data.get('new_password'):
+        return HttpResponse(
+            json.dumps({"message": "New password is required", "type": "change_password_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    user = User.objects.get(pk=data.get('user_id'))
+    current_password = hash_password(data.get('current_password'))
+    if user.password != current_password:
+        return HttpResponse(
+            json.dumps({"message": "Current password is incorrect", "type": "change_password_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    new_password = hash_password(data.get('new_password'))
+    if new_password == current_password:
+        return HttpResponse(
+            json.dumps({"message": "New password must be different from current password", "type": "change_password_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    user.password = new_password
+    user.save()
+    return HttpResponse(
+        json.dumps({"message": "Password changed successfully"}),
+        content_type='application/json',
+        status=200
+    )

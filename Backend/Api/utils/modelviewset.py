@@ -65,9 +65,34 @@ class ModelViewSet:
 
     def as_urls(self):
         return [
-            path('', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["GET"])(lambda req: self._endpoint(self.list, req))), name='list'),
-            path('<int:pk>', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["GET"])(lambda req, pk: self._endpoint(self.get, req, pk))), name='retrieve'),
-            path('create/', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["POST"])(lambda req: self._endpoint(self.post, req))), name='create'),
-            path('update/<int:pk>/', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["PUT"])(lambda req, pk: self._endpoint(self.put, req, pk))), name='update'),
-            path('delete/<int:pk>/', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["DELETE"])(lambda req, pk: self._endpoint(self.delete, req, pk))), name='delete'),
+            path('',
+                 reduce(
+                     lambda x, y: y(x),
+                     self.decorators,
+                     require_http_methods(["GET", "POST"])(lambda req: self.__root_path(req)))
+                 ,
+                 name='list_create'),
+            path('<int:pk>/',
+                 reduce(
+                     lambda x, y: y(x),
+                     self.decorators,
+                     require_http_methods(["GET", "PUT", "DELETE"])(lambda req, pk: self.__pk_path(req, pk))
+                 ),
+                 name='retrieve_update_delete')
         ]
+
+    def __root_path(self, request):
+        if request.method == 'GET':
+            return self._endpoint(self.list, request)
+        elif request.method == 'POST':
+            return self._endpoint(self.list, request)
+        raise HttpError(405, 'Method not allowed')
+
+    def __pk_path(self, request, pk):
+        if request.method == 'GET':
+            return self._endpoint(self.get, request, pk)
+        elif request.method == 'PUT':
+            return self._endpoint(self.put, request, pk)
+        elif request.method == 'DELETE':
+            return self._endpoint(self.delete, request, pk)
+        raise HttpError(405, 'Method not allowed')
