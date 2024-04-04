@@ -161,7 +161,14 @@ def change_password(request):
             content_type='application/json',
             status=400
         )
-    user = User.objects.get(pk=data.get('user_id'))
+    try:
+        user = User.objects.get(pk=data.get('user_id'))
+    except User.DoesNotExist:
+        return HttpResponse(
+            json.dumps({"message": "User does found", "type": "change_password_fail"}),
+            content_type='application/json',
+            status=400
+        )
     current_password = hash_password(data.get('current_password'))
     if user.password != current_password:
         return HttpResponse(
