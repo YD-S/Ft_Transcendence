@@ -115,7 +115,6 @@ def register(request):
         )
     username = data.get('username')
     email = data.get('email')
-    password_hash = hash_password(data.get('password'))
     # Check if the username already exists
     if User.objects.filter(username=username).exists():
         return HttpResponse(
@@ -127,7 +126,7 @@ def register(request):
     user = UserSerializer(data={
         "username": username,
         "email": email,
-        "password": password_hash
+        "password": data.get('password')
     })
     try:
         user.save()

@@ -13,7 +13,6 @@ class User(BaseModel):
         return self.username
 
     def save(self, *args, **kwargs):
-        print(self.password)
-        self.password = hash_password(self.password)
-        print(self.password)
-        super().save(*args, **kwargs)
+        if not self.pk:
+            self.password = hash_password(self.password)
+        return super().save(*args, **kwargs)

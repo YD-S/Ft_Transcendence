@@ -41,25 +41,25 @@ class TokenManager:
 
     def refresh_token(self, refresh_token):
         payload = self._test_token(refresh_token)
-        if payload.get('username') not in self.tokens:
+        if payload.get('user_id') not in self.tokens:
             raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
                                   content_type='application/json')
         return self.create_token_pair(payload.get('user_id'))
 
     def validate_token(self, token):
         payload = self._test_token(token)
-        if payload.get('username') not in self.tokens:
-            raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
+        if payload.get('user_id') not in self.tokens:
+            raise ValidationError(json.dumps({"message": "Invalid token1", "type": "invalid_token"}),
                                   content_type='application/json')
-        if self.tokens.get(payload.get('username')).get('access_token') != token:
-            raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
+        if self.tokens.get(payload.get('user_id')).get('access_token') != token:
+            raise ValidationError(json.dumps({"message": "Invalid token2", "type": "invalid_token"}),
                                   content_type='application/json')
         return True
 
     def revoke_token(self, token):
         payload = self._test_token(token)
-        if payload.get('username') in self.tokens:
-            del self.tokens[payload.get('username')]
+        if payload.get('user_id') in self.tokens:
+            del self.tokens[payload.get('user_id')]
         else:
             raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
                                   content_type='application/json')
@@ -72,7 +72,7 @@ class TokenManager:
             raise ValidationError(json.dumps({"message": "Token expired", "type": "token_expired"}),
                                   content_type='application/json')
         except jwt.InvalidTokenError:
-            raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
+            raise ValidationError(json.dumps({"message": "Invalid token3", "type": "invalid_token"}),
                                   content_type='application/json')
         return payload
 

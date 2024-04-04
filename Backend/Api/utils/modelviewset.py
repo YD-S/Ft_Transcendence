@@ -47,6 +47,7 @@ class ModelViewSet:
     def delete(self, request, pk):
         instance = self.get_instance(pk)
         serializer = self.serializer(instance=instance)
+        instance.delete()
         return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(serializer.data))
 
     def get_instance(self, pk):
