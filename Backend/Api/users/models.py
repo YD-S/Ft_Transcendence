@@ -9,10 +9,15 @@ class User(BaseModel):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
 
+    last_login = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
-        return self.username
+        return f"{self.username}({self.id}) - {self.email}"
 
     def save(self, *args, **kwargs):
         if not self.pk:
             self.password = hash_password(self.password)
         return super().save(*args, **kwargs)
+
+
+

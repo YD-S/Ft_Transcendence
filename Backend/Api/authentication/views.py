@@ -4,16 +4,19 @@ from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 
-from authentication.utils import hash_password, TokenManager, require_token
+from authentication.token import TokenManager, require_token, get_token
+from authentication.utils import hash_password
+from common.request import HttpRequest, wrap_funcview
 from users.models import User
 from users.serializers import UserSerializer
 from utils.exception import ValidationError
 
 
 @require_http_methods(["POST"])
+@wrap_funcview
 def login(request):
     # Read the username and password from the request
-    data = json.loads(request.body.decode())
+    data = request.json()
     if not data.get('username') or not data.get('password'):
         return HttpResponse(
             json.dumps({"message": "Username and password are required", "type": "login_fail"}),
@@ -58,13 +61,10 @@ def login(request):
 
 @require_http_methods(["POST"])
 @require_token
-def logout(request):
-    # Read the token from the header
-    bearer_token = request.headers.get('Authorization')
-    token = bearer_token.split(" ")[1]
-    # Revoke the token
+@wrap_funcview
+def logout(request: HttpRequest):
     try:
-        TokenManager().revoke_token(token)
+        TokenManager().revoke_token(get_token(request))
     except ValidationError as e:
         return e.as_http_response()
     return HttpResponse(
@@ -75,9 +75,10 @@ def logout(request):
 
 
 @require_http_methods(["POST"])
-def refresh(request):
+@wrap_funcview
+def refresh(request: HttpRequest):
     # Read the token from the header
-    data = json.loads(request.body.decode())
+    data = request.json()
     if not data.get('refresh_token'):
         return HttpResponse(
             json.dumps({"message": "Refresh token is required", "type": "refresh_fail"}),
@@ -85,7 +86,6 @@ def refresh(request):
             status=400
         )
     refresh_token = data.get('refresh_token')
-    print(refresh_token)
     # Refresh the token
     try:
         access_token, refresh_token, access_expiration, refresh_expiration = TokenManager().refresh_token(refresh_token)
@@ -104,9 +104,10 @@ def refresh(request):
 
 
 @require_http_methods(["POST"])
-def register(request):
+@wrap_funcview
+def register(request: HttpRequest):
     # Read the username and password from the request
-    data = json.loads(request.body.decode())
+    data = request.json()
     if not data.get('username') or not data.get('password') or not data.get('email'):
         return HttpResponse(
             json.dumps({"message": "Username and password and email are required", "type": "register_fail"}),
@@ -140,9 +141,10 @@ def register(request):
 
 
 @require_http_methods(["POST"])
+@wrap_funcview
 def change_password(request):
     # Read the passwords from the request
-    data = json.loads(request.body.decode())
+    data = request.json()
     if not data.get('user_id'):
         return HttpResponse(
             json.dumps({"message": "User ID is required", "type": "change_password_fail"}),
