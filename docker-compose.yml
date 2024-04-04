@@ -39,6 +39,8 @@ services:
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - internal
     env_file:
@@ -48,3 +50,10 @@ services:
 networks:
   internal:
     driver: bridge
+
+volumes:
+    postgres_data:
+      driver_opts:
+        type: none
+        device: ./data/database
+        o: bind
