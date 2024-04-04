@@ -25,8 +25,8 @@ class TokenManager:
         self.tokens = {}
 
     def create_token_pair(self, user_id):
-        access_expiration = datetime.datetime.now() + datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION_MINUTES)
-        refresh_expiration = datetime.datetime.now() + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRATION_DAYS)
+        access_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION_MINUTES)
+        refresh_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRATION_DAYS)
         access_token = jwt.encode({'user_id': user_id, "exp": access_expiration}, settings.SECRET_KEY,
                                   algorithm='HS256')
         refresh_token = jwt.encode({'user_id': user_id, "exp": refresh_expiration}, settings.SECRET_KEY,
