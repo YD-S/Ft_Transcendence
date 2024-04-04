@@ -45,5 +45,5 @@ cp env.example .env
 
 # Edit .env file before continuing
 docker build . -t backend:latest
-docker run backend:latest
+docker run --name backend_container --env-file Api/.env backend:latest
 ```

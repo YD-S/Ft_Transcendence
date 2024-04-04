@@ -7,19 +7,15 @@ RUN apt-get update && apt-get install -y \
     python3-venv \
     netcat-traditional
 
-# Create a directory for the app \
-COPY Api /app
-COPY tools /tools
-
 # Set the working directory
 WORKDIR /app
 
+COPY tools /tools
+COPY Api/requirements.txt /app/requirements.txt
+
+
 # Install dependencies
-## Create a virtual environment
-RUN python3 -m venv /app/venv
-ENV PATH="/app/venv/bin:$PATH"
-## Install the dependencies
-RUN pip install -r requirements.txt
+RUN pip install --break-system-packages -r /app/requirements.txt
 
 
 # Expose the port

@@ -14,7 +14,13 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+IGNORE_DOTENV = os.getenv("IGNORE_DOTENV", "False").lower() == "true"
+
+if not IGNORE_DOTENV:
+    load_dotenv()
+    print("Loaded .env file.")
+else:
+    print("Ignoring .env file.")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +35,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = [x.strip() for x in os.getenv("ALLOWED_HOSTS").split(',')]
+ALLOWED_HOSTS = [x.strip() for x in os.getenv("ALLOWED_HOSTS", "").split(',')]
 CSRF_TRUSTED_ORIGINS = [f"https://{x}" for x in ALLOWED_HOSTS]
 
 # Application definition
@@ -91,7 +97,6 @@ DATABASES = {
         "PORT": 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

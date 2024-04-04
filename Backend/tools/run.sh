@@ -1,7 +1,12 @@
 
+# Ensure $POSTGRES_HOST is set
+if [ -z "$POSTGRES_HOST" ]; then
+  POSTGRES_HOST="postgres"
+fi
+
 # Wait for the database to be ready
-while ! nc -z postgres 5432; do
-  echo "Waiting for the database at postgres:5432..."
+while ! nc -z $POSTGRES_HOST 5432; do
+  echo "Waiting for the database at $POSTGRES_HOST:5432..."
   sleep 1
 done
 
