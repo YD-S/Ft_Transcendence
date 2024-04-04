@@ -1,4 +1,5 @@
 import json
+from functools import reduce
 from typing import Type, Callable
 
 from django.db import models
@@ -12,6 +13,7 @@ from utils.modelserializer import ModelSerializer
 
 class ModelViewSet:
     def __init__(self, m: Type[models.Model], s: Type[ModelSerializer]):
+        self.decorators: list[Callable] = []
         self.model: Type[models.Model] = m
         self.serializer: Type[ModelSerializer] = s
 
@@ -58,13 +60,13 @@ class ModelViewSet:
         try:
             return method(request, *args, **kwargs)
         except HttpError as e:
-            return HttpResponse(status=e.status, content=e.message)
+            return HttpResponse(status=e.status, content=e.content, headers={'Content-Type': e.content_type or 'text/plain'})
 
     def as_urls(self):
         return [
-            path('', require_http_methods(["GET"])(lambda req: self._endpoint(self.list, req)), name='list'),
-            path('<int:pk>', require_http_methods(["GET"])(lambda req, pk: self._endpoint(self.get, req, pk)), name='retrieve'),
-            path('create/', require_http_methods(["POST"])(lambda req: self._endpoint(self.post, req)), name='create'),
-            path('update/<int:pk>/', require_http_methods(["PUT"])(lambda req, pk: self._endpoint(self.put, req, pk)), name='update'),
-            path('delete/<int:pk>/', require_http_methods(["DELETE"])(lambda req, pk: self._endpoint(self.delete, req, pk)), name='delete'),
+            path('', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["GET"])(lambda req: self._endpoint(self.list, req))), name='list'),
+            path('<int:pk>', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["GET"])(lambda req, pk: self._endpoint(self.get, req, pk))), name='retrieve'),
+            path('create/', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["POST"])(lambda req: self._endpoint(self.post, req))), name='create'),
+            path('update/<int:pk>/', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["PUT"])(lambda req, pk: self._endpoint(self.put, req, pk))), name='update'),
+            path('delete/<int:pk>/', reduce(lambda x, y: y(x), self.decorators, require_http_methods(["DELETE"])(lambda req, pk: self._endpoint(self.delete, req, pk))), name='delete'),
         ]

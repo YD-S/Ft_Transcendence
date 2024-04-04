@@ -1,7 +1,14 @@
+from django.http import HttpResponse
+
+
 class HttpError(Exception):
-    def __init__(self, status: int, message: str):
+    def __init__(self, status: int, content: str):
         self.status = status
-        self.message = message
+        self.content = content
+        self.content_type = 'text/plain'
+
+    def as_http_response(self):
+        return HttpResponse(content=self.content, content_type=self.content_type, status=self.status)
 
 
 class NotFoundError(HttpError):
@@ -10,10 +17,11 @@ class NotFoundError(HttpError):
 
 
 class ValidationError(HttpError):
-    def __init__(self, message: str):
-        super().__init__(400, message)
+    def __init__(self, content: str, content_type: str = 'text/plain'):
+        super().__init__(400, content)
+        self.content_type = content_type
 
 
 class InternalServerError(HttpError):
-    def __init__(self, message: str):
-        super().__init__(500, message)
+    def __init__(self, content: str):
+        super().__init__(500, content)
