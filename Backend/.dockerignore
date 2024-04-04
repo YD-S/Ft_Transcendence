@@ -2,13 +2,13 @@
 __pycache__
 
 # Ignore local development settings
-*.sqlite3
+**/*.sqlite3
 *.pyc
 *.pyo
 *.pyd
 
 # Ignore the virtual environment
-venv/
+**/venv/
 
 # Ignore logs and other temporary files
 *.log

@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: Backend
+    networks:
+      - internal
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+
+  frontend:
+    container_name: frontend
+    build:
+      context: Frontend
+    ports:
+      - "443:443"
+    networks:
+      - internal
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: backend_user
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: transcendence
+    networks:
+      - internal
+
+
+networks:
+  internal:
+    driver: bridge
