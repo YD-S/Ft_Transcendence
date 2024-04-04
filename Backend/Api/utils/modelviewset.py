@@ -1,6 +1,6 @@
 import json
 from functools import reduce
-from typing import Type, Callable
+from typing import Type, Callable, List
 
 from django.db import models
 from django.http import HttpResponse
@@ -13,6 +13,8 @@ from utils.modelserializer import ModelSerializer
 
 
 class ModelViewSet:
+    __methods = []
+
     def __init__(self, m: Type[models.Model], s: Type[ModelSerializer]):
         self.decorators: list[Callable] = [
             wrap_funcview
@@ -20,12 +22,25 @@ class ModelViewSet:
         self.model: Type[models.Model] = m
         self.serializer: Type[ModelSerializer] = s
 
+    @classmethod
+    def view(cls, url: str, methods: List[str]):
+        def decorator(func: Callable):
+            cls.__methods.append({
+                'url': url,
+                'methods': methods,
+                'func': func
+            })
+
+            return func
+
+        return decorator
+
     def get(self, request: HttpRequest, pk):
         instance = self.get_instance(pk)
         serializer = self.serializer(instance=instance)
         return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(serializer.data))
 
-    def list(self, request):
+    def list(self, request: HttpRequest):
         qs = self.model.objects.all()
         data = []
         for instance in qs:
@@ -80,7 +95,16 @@ class ModelViewSet:
                      self.decorators,
                      require_http_methods(["GET", "PUT", "DELETE"])(lambda req, pk: self.__pk_path(req, pk))
                  ),
-                 name='retrieve_update_delete')
+                 name='retrieve_update_delete'),
+        ] + [
+            path(method['url'],
+                 reduce(
+                     lambda x, y: y(x),
+                     self.decorators,
+                     require_http_methods(method['methods'])(method['func'])
+                 ),
+                 name=f'{method["func"].__name__}')
+            for method in self.__methods
         ]
 
     def __root_path(self, request: HttpRequest):
