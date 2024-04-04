@@ -1,29 +1,49 @@
 # Backend
 
-Antes de trabajar con el proyecto del backend hay que tener un entorno virtual
+Pasos a seguir para configurar el backend del proyecto:
+- Configurar variables de entorno
+- Crear un entorno virtual
+- Instalar las dependencias
+- Crear y aplicar migraciones
+- Crear un superusuario
+- Ejecutar el proyecto
+
 
 ```bash
-# pwd: Ft_Transcendence/Backend/Api
-python3 -m venv venv #
-```
+cd Ft_Transcendence/Backend/Api
 
-Para usarlo solo hay que ejecutar lo siguiente
-
-```bash
-# pwd: Ft_Transcendence/Backend/Api
-source venv/bin/activate
-```
-
-También es necesario configurar una BBDD de PostgreSQL, y configurar las variables de entorno en un archivo `.env`.
-
-```bash
-# pwd: Ft_Transcendence/Backend/Api
+# Copy and configure the `.env` file
 cp env.example .env
+
+# Edit .env file before continuing
+
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run migrations
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# Create a superuser
+python3 manage.py createsuperuser
+
+# Run the project
+python3 manage.py runserver
 ```
 
-A partir de ahí podemos utilizar el script `manage.py` de Django para administrar el proyecto y ejecutarlo
+Alternativamente, se puede utilizar Docker para ejecutar el proyecto:
 
 ```bash
-# pwd: Ft_Transcendence/Backend/Api
-python3 manage.py <command>
+cd Ft_Transcendence/Backend
+
+# Copy and configure the `.env` file
+cp env.example .env
+
+# Edit .env file before continuing
+docker build . -t backend:latest
+docker run backend:latest
 ```
