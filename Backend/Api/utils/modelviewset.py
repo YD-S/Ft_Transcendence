@@ -3,69 +3,55 @@ from functools import reduce
 from typing import Type, Callable, List
 
 from django.db import models
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import path
 from django.views.decorators.http import require_http_methods
 
-from common.request import HttpRequest, wrap_funcview
+from common.request import HttpRequest, wrap_funcview, WrappedRequestMixin
 from utils.exception import HttpError, NotFoundError
 from utils.modelserializer import ModelSerializer
 
 
-class ModelViewSet:
-    __methods = []
+class ModelViewSet(WrappedRequestMixin):
+    model: Type[models.Model]
+    serializer: Type[ModelSerializer]
 
-    def __init__(self, m: Type[models.Model], s: Type[ModelSerializer]):
-        self.decorators: list[Callable] = [
-            wrap_funcview
-        ]
-        self.model: Type[models.Model] = m
-        self.serializer: Type[ModelSerializer] = s
+    def __init__(self, request: HttpRequest, *args, **kwargs):
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
 
-    @classmethod
-    def view(cls, url: str, methods: List[str]):
-        def decorator(func: Callable):
-            cls.__methods.append({
-                'url': url,
-                'methods': methods,
-                'func': func
-            })
-
-            return func
-
-        return decorator
-
-    def get(self, request: HttpRequest, pk):
+    def get(self, request: HttpRequest, pk, *args, **kwargs):
         instance = self.get_instance(pk)
         serializer = self.serializer(instance=instance)
-        return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(serializer.data))
+        return JsonResponse(serializer.data)
 
-    def list(self, request: HttpRequest):
+    def list(self, request: HttpRequest, *args, **kwargs):
         qs = self.model.objects.all()
         data = []
         for instance in qs:
             serializer = self.serializer(instance=instance)
             data.append(serializer.data)
-        return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(data))
+        return JsonResponse(data, safe=False)
 
-    def post(self, request: HttpRequest):
+    def post(self, request: HttpRequest, *args, **kwargs):
         serializer = self.serializer(data=request.json())
         instance = serializer.save()
         serializer = self.serializer(instance=instance)
-        return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(serializer.data))
+        return JsonResponse(serializer.data)
 
-    def put(self, request: HttpRequest, pk: int):
+    def put(self, request: HttpRequest, pk: int, *args, **kwargs):
         instance = self.get_instance(pk)
         data = request.json()
         serializer = self.serializer(instance=instance, data=data)
         serializer.save()
-        return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(serializer.data))
+        return JsonResponse(serializer.data)
 
-    def delete(self, request: HttpRequest, pk: int):
+    def delete(self, request: HttpRequest, pk: int, *args, **kwargs):
         instance = self.get_instance(pk)
         serializer = self.serializer(instance=instance)
         instance.delete()
-        return HttpResponse(headers={'Content-Type': 'application/json'}, content=json.dumps(serializer.data))
+        return JsonResponse(serializer.data)
 
     def get_instance(self, pk: int):
         qs = self.model.objects.filter(pk=pk)
@@ -73,52 +59,10 @@ class ModelViewSet:
             raise NotFoundError()
         return qs.first()
 
-    @staticmethod
-    def _endpoint(method: Callable, request: HttpRequest, *args, **kwargs):
-        try:
-            return method(request, *args, **kwargs)
-        except HttpError as e:
-            return e.as_http_response()
+    @classmethod
+    def as_view(cls, detail=False):
+        def view(request: HttpRequest, *args, **kwargs):
+            self = cls(request, *args, **kwargs)
+            return self.dispatch(request, *args, **{**kwargs, '__detail': detail})
 
-    def as_urls(self):
-        return [
-            path('',
-                 reduce(
-                     lambda x, y: y(x),
-                     self.decorators,
-                     require_http_methods(["GET", "POST"])(lambda req: self.__root_path(req)))
-                 ,
-                 name='list_create'),
-            path('<int:pk>/',
-                 reduce(
-                     lambda x, y: y(x),
-                     self.decorators,
-                     require_http_methods(["GET", "PUT", "DELETE"])(lambda req, pk: self.__pk_path(req, pk))
-                 ),
-                 name='retrieve_update_delete'),
-        ] + [
-            path(method['url'],
-                 reduce(
-                     lambda x, y: y(x),
-                     self.decorators,
-                     require_http_methods(method['methods'])(method['func'])
-                 ),
-                 name=f'{method["func"].__name__}')
-            for method in self.__methods
-        ]
-
-    def __root_path(self, request: HttpRequest):
-        if request.method == 'GET':
-            return self._endpoint(self.list, request)
-        elif request.method == 'POST':
-            return self._endpoint(self.list, request)
-        raise HttpError(405, 'Method not allowed')
-
-    def __pk_path(self, request: HttpRequest, pk: int):
-        if request.method == 'GET':
-            return self._endpoint(self.get, request, pk)
-        elif request.method == 'PUT':
-            return self._endpoint(self.put, request, pk)
-        elif request.method == 'DELETE':
-            return self._endpoint(self.delete, request, pk)
-        raise HttpError(405, 'Method not allowed')
+        return view
