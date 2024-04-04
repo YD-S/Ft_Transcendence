@@ -26,6 +26,12 @@ def login_view(request):
         )
     # Check if the username and password are correct
     user: User = authenticate(request, username=data.get('username'), password=data.get('password'))
+    if user is None:
+        return HttpResponse(
+            json.dumps({"message": "Invalid username or password", "type": "login_fail"}),
+            content_type='application/json',
+            status=400
+        )
 
     # Create JWT token
     try:
@@ -104,9 +110,9 @@ def register(request: HttpRequest):
             content_type='application/json',
             status=400
         )
-    # Create the user
-    user = UserSerializer(data=data)
     try:
+        # Create the user
+        user = UserSerializer(data=data)
         user.save()
     except ValidationError as e:
         return e.as_http_response()

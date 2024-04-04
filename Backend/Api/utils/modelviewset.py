@@ -1,14 +1,10 @@
-import json
-from functools import reduce
-from typing import Type, Callable, List
+from typing import Type
 
 from django.db import models
-from django.http import HttpResponse, JsonResponse
-from django.urls import path
-from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
 
-from common.request import HttpRequest, wrap_funcview, WrappedRequestMixin
-from utils.exception import HttpError, NotFoundError
+from common.request import HttpRequest, WrappedRequestMixin
+from utils.exception import NotFoundError
 from utils.modelserializer import ModelSerializer
 
 

@@ -63,5 +63,5 @@ volumes:
     postgres_data:
       driver_opts:
         type: none
-        device: ./data/database
+        device: ~/data/database
         o: bind

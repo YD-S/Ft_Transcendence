@@ -36,7 +36,6 @@ class ChatRoomConsumer(WebsocketConsumer):
     def receive(self, text_data: str):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        print(self.scope['user'])
         # Message.objects.create(content=message, sender=self.scope['user'], room=self.room).save()
         self.send(text_data=json.dumps({
             'message': message + " from server"
