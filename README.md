@@ -12,6 +12,11 @@ Copy and configure the `.env` file
 cp env.example .env
 ```
 
+Create database directory
+```bash
+mkdir -p ~/data/database
+```
+
 Run the project
 
 ```bash
