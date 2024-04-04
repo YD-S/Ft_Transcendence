@@ -3,6 +3,7 @@ version: '3.3'
 services:
   backend:
     container_name: backend
+    restart: unless-stopped
     build:
       context: Backend
     networks:
@@ -15,24 +16,33 @@ services:
 
   frontend:
     container_name: frontend
+    restart: unless-stopped
     build:
       context: Frontend
+      args:
+        - DOMAIN=${DOMAIN}
+        - DJANGO_ADMIN_DOMAIN=${DJANGO_ADMIN_DOMAIN}
     ports:
       - "443:443"
     networks:
       - internal
     depends_on:
       - backend
+    env_file:
+      - .env
 
   postgres:
     image: postgres:alpine
     container_name: postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: backend_user
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: transcendence
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
       - internal
+    env_file:
+      - .env
 
 
 networks:
