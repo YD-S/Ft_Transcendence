@@ -15,4 +15,5 @@ class UserViewSet(ModelViewSet):
         ]
 
     def list(self, request: HttpRequest):
+        print(request.user)
         return super().list(request)

@@ -44,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = [f"https://{x}" for x in ALLOWED_HOSTS]
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     "django.contrib.admin",
     "django.contrib.admindocs",
     "django.contrib.auth",
@@ -54,8 +55,15 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "common.apps.CommonConfig",
     "authentication.apps.AuthenticationConfig",
-    "chat.apps.ChatConfig"
+    "chat.apps.ChatConfig",
+    "channels",
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -76,7 +84,9 @@ ROOT_URLCONF = "Api.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -89,8 +99,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "Api.wsgi.application"
-
+# WSGI_APPLICATION = "Api.wsgi.application"
+ASGI_APPLICATION = "Api.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -124,6 +134,12 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    "authentication.backends.TokenBackend",
+]
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Internationalization

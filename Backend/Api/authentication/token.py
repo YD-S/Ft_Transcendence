@@ -82,10 +82,6 @@ class TokenManager:
 def require_token(func):
     def wrapper(request: HttpRequest, *args, **kwargs):
         if settings.BYPASS_TOKEN:
-            try:
-                request.user = get_user(get_token(request))
-            except ValidationError:
-                request.user = None
             return func(request, *args, **kwargs)
         try:
             token = get_token(request)
@@ -94,7 +90,6 @@ def require_token(func):
             resp = e.as_http_response()
             resp.status_code = 401
             return resp
-        request.user = get_user(token)
         return func(request, *args, **kwargs)
 
     return wrapper

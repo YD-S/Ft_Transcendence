@@ -1,3 +1,5 @@
+import datetime
+
 from users.models import User
 from utils.modelserializer import ModelSerializer
 
@@ -7,3 +9,9 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = '__all__'
         excluded_fields = ['password']
+        default_fields = {
+            "is_superuser": False,
+            "is_staff": False,
+            "is_active": True,
+            "date_joined": datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S'),
+        }

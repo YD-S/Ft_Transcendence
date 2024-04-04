@@ -1,7 +1,8 @@
 import json
 
+from django.contrib.auth import authenticate, login
 from django.db.models import QuerySet
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 
 from authentication.token import TokenManager, require_token, get_token
@@ -14,7 +15,7 @@ from utils.exception import ValidationError
 
 @require_http_methods(["POST"])
 @wrap_funcview
-def login(request):
+def login_view(request):
     # Read the username and password from the request
     data = request.json()
     if not data.get('username') or not data.get('password'):
@@ -23,38 +24,19 @@ def login(request):
             content_type='application/json',
             status=400
         )
-    username = data.get('username')
-    password_hash = hash_password(data.get('password'))
     # Check if the username and password are correct
-    user: QuerySet[User] = User.objects.filter(username=username)
-    if not user.exists():
-        return HttpResponse(
-            json.dumps({"message": f"User or password incorrect", "type": "login_fail"}),
-            content_type='application/json',
-            status=400
-        )
-    user: User = user.first()
-    # Check the hash
-    if user.password != password_hash:
-        return HttpResponse(
-            json.dumps({"message": f"User or password incorrect", "type": "login_fail"}),
-            content_type='application/json',
-            status=400
-        )
+    user: User = authenticate(request, username=data.get('username'), password=data.get('password'))
 
     # Create JWT token
     try:
         access_token, refresh_token, access_expiration, refresh_expiration = TokenManager().create_token_pair(user.id)
-        return HttpResponse(
-            json.dumps({
-                "access_token": access_token,
-                "refresh_token": refresh_token,
-                "access_expiration": f"{access_expiration:%Y-%m-%d %H:%M:%S}",
-                "refresh_expiration": f"{refresh_expiration:%Y-%m-%d %H:%M:%S}"
-            }),
-            content_type='application/json',
-            status=200
-        )
+        login(request, user, backend='authentication.backends.TokenBackend')
+        return JsonResponse({
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "access_expiration": f"{access_expiration:%Y-%m-%d %H:%M:%S}",
+            "refresh_expiration": f"{refresh_expiration:%Y-%m-%d %H:%M:%S}",
+        })
     except ValidationError as e:
         return e.as_http_response()
 
@@ -75,7 +57,6 @@ def logout(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
 def refresh(request: HttpRequest):
     # Read the token from the header
     data = request.json()
@@ -124,11 +105,7 @@ def register(request: HttpRequest):
             status=400
         )
     # Create the user
-    user = UserSerializer(data={
-        "username": username,
-        "email": email,
-        "password": data.get('password')
-    })
+    user = UserSerializer(data=data)
     try:
         user.save()
     except ValidationError as e:

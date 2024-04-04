@@ -12,6 +12,7 @@ class ModelSerializer:
         model: models.Model = None
         fields: list | str = '__all__'
         excluded_fields: list = []
+        default_fields: dict = {}
 
     def __init__(self, *, instance: models.Model = None, data: dict = None):
         self.none = object()
@@ -22,12 +23,12 @@ class ModelSerializer:
             raise ValidationError(json.dumps({"message": "Either instance or data must be provided", "type": "data"}), content_type='application/json')
 
         if instance is not None and data is not None:
-            self._update_instance(instance, data)
+            self._update_instance(instance, {**self.Meta.default_fields, **data})
         elif instance is not None:
             self.instance = instance
             self._serialize_instance()
         else:
-            self._create_instance(data)
+            self._create_instance({**self.Meta.default_fields, **data})
 
     def _update_instance(self, instance, data):
         fields = self._get_fields()

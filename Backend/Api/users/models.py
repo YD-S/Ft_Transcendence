@@ -1,10 +1,11 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from authentication.utils import hash_password
 from common.models import BaseModel
 
 
-class User(BaseModel):
+class User(BaseModel, AbstractUser):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
