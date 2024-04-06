@@ -5,13 +5,9 @@ services:
     container_name: backend
     restart: unless-stopped
     build:
-      context: Backend
-    environment:
-      # This is to ignore the local .env file in the backend,
-      # so that the environment variables are read from the .env file in the root directory
-      IGNORE_DOTENV: 'true'
+      context: .
     volumes:
-      - ./Backend/Api:/app
+      - .:/app
     networks:
       - internal
     depends_on:
@@ -19,25 +15,20 @@ services:
     env_file:
       - .env
 
-
-  frontend:
-    container_name: frontend
+  nginx:
+    container_name: nginx
     restart: unless-stopped
-    build:
-      context: Frontend
-      args:
-        - DOMAIN=${DOMAIN}
-        - DJANGO_ADMIN_DOMAIN=${DJANGO_ADMIN_DOMAIN}
-    volumes:
-      - ./Frontend:/var/www/frontend
+    image: nginx:bullseye
     ports:
       - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/ssl
+      - ./static:/var/www/static
     networks:
       - internal
     depends_on:
       - backend
-    env_file:
-      - .env
 
   postgres:
     image: postgres:alpine

@@ -1,0 +1,76 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/tournament.css' %}">
+<div id="tournament">
+
+  {# Generate tree like the previous one using django templates #}
+  {# Uses an object Tournament to populate the fields, which is a tree-like object from the finals to the first round #}
+  {# Would look like two trees growing from each side of the screen, touching at the tips #}
+  {# Uses classes instead of inline css #}
+
+  {% for round in tournament.rounds_left %}
+    <div class="round">
+      {% for match in round.matches %}
+        <div class="match" style="gap:{{ round.round }}vh">
+          <div class="player">
+            <button class="player-button primary-box" onclick="loadPage('1v1')">
+              {{ match.player1 }}
+            </button>
+          </div>
+          <div class="vs">
+            vs
+          </div>
+          <div class="player">
+            <button class="player-button secondary-box" onclick="loadPage('1v1')">
+              {{ match.player2 }}
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  {# Final match #}
+  <div class="final">
+    <div class="final-match">
+      <div class="player">
+        <button class="player-button primary-box" onclick="loadPage('1v1')">
+          {{ tournament.final.player1 }}
+        </button>
+      </div>
+      <div class="vs">
+        vs
+      </div>
+      <div class="player">
+        <button class="player-button secondary-box" onclick="loadPage('1v1')">
+          {{ tournament.final.player2 }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {# Reversed tree for the right side #}
+  {% for round in tournament.rounds_right reversed %}
+    <div class="round">
+      {% for match in round.matches %}
+        <div class="match" style="gap:{{ round.round }}vh">
+          <div class="player">
+            <button class="player-button primary-box" onclick="loadPage('1v1')">
+              {{ match.player1 }}
+            </button>
+          </div>
+          <div class="vs">
+            vs
+          </div>
+          <div class="player">
+            <button class="player-button secondary-box" onclick="loadPage('1v1')">
+              {{ match.player2 }}
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+
+</div>
