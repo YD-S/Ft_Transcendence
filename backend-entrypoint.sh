@@ -17,7 +17,7 @@ done
 python3 manage.py makemigrations
 python3 manage.py migrate
 
-python3 manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL || echo "Superuser already exists."
+python3 manage.py createsuperuser --noinput --username "$DJANGO_SUPERUSER_USERNAME" --email "$DJANGO_SUPERUSER_EMAIL" || echo "Superuser already exists."
 
 # Start the server
-python3 manage.py runserver 0.0.0.0:8000
+DJANGO_SETTINGS_MODULE=NeonPong.settings daphne -b 0.0.0.0 -p 8000 NeonPong.asgi:application

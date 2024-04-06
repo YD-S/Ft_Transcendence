@@ -1,0 +1,58 @@
+version: '3.3'
+
+services:
+  backend:
+    container_name: backend
+    restart: unless-stopped
+    build:
+      context: .
+    volumes:
+      - .:/app
+    networks:
+      - internal
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    image: nginx:bullseye
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/ssl
+      - ./static:/var/www/static
+    networks:
+      - internal
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    env_file:
+      - .env
+
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+    postgres_data:
+      driver_opts:
+        type: none
+        device: ~/data/database
+        o: bind

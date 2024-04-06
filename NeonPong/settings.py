@@ -14,13 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-IGNORE_DOTENV = os.getenv("IGNORE_DOTENV", "False").lower() == "true"
-
-if not IGNORE_DOTENV:
-    load_dotenv()
-    print("Loaded .env file.")
-else:
-    print("Ignoring .env file.")
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -56,8 +50,8 @@ INSTALLED_APPS = [
     "common.apps.CommonConfig",
     "authentication.apps.AuthenticationConfig",
     "chat.apps.ChatConfig",
+    "website.apps.WebsiteConfig",
     "channels",
-    "website.apps.WebsiteConfig"
 ]
 
 CHANNEL_LAYERS = {

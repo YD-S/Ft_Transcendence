@@ -1,7 +1,10 @@
+import django
+django.setup()
+
 import json
 from channels.generic.websocket import WebsocketConsumer
 
-from chat.models import Room, Message
+from chat.models import Room
 
 
 class ChatRoomConsumer(WebsocketConsumer):
