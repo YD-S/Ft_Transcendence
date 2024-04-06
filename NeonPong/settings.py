@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "authentication.apps.AuthenticationConfig",
     "chat.apps.ChatConfig",
     "channels",
+    "website.apps.WebsiteConfig"
 ]
 
 CHANNEL_LAYERS = {
@@ -79,7 +80,7 @@ if not DEBUG:
         "django.middleware.csrf.CsrfViewMiddleware",
     )
 
-ROOT_URLCONF = "Api.urls"
+ROOT_URLCONF = "NeonPong.urls"
 
 TEMPLATES = [
     {
@@ -99,8 +100,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = "Api.wsgi.application"
-ASGI_APPLICATION = "Api.asgi.application"
+ASGI_APPLICATION = "NeonPong.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -158,6 +158,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

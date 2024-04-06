@@ -16,7 +16,7 @@ from django.core.wsgi import get_wsgi_application
 
 import routing.routing
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Api.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "NeonPong.settings")
 
 application = ProtocolTypeRouter({
     "http": get_wsgi_application(),

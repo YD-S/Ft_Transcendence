@@ -3,7 +3,7 @@ import json
 
 import jwt
 
-from Api import settings
+from NeonPong import settings
 from common.request import HttpRequest
 
 from users.models import User

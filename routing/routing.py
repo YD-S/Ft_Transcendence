@@ -10,4 +10,5 @@ urlpatterns = [
     path('user/', include(("users.urls", "users"), namespace="users")),
     path('auth/', include(("authentication.urls", "authentication"), namespace="authentication")),
     path("chat/", include("chat.urls")),
+    path("", include("website.urls")),
 ]
