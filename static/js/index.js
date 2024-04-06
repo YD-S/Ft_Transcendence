@@ -147,5 +147,5 @@ function saveToken(data) {
     sessionStorage.setItem('refresh_token', data.refresh_token);
     sessionStorage.setItem('access_expiration', data.access_expiration * 1000);
     sessionStorage.setItem('refresh_expiration', data.refresh_expiration * 1000);
-    setTimeout(() => refreshToken(), data.access_expiration * 1000 - Date.now());
+    setTimeout(() => refreshToken(), (data.access_expiration * 1000 - Date.now()) - 1000); // Refresh token 1 second before expiration
 }
