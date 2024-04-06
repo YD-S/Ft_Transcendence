@@ -8,12 +8,12 @@
     gap: 1vh;
 }
 
-#multiplayer .vertical {
+#multiplayer > .vertical {
     flex-direction: column;
     height: 42.18vh;
 }
 
-#multiplayer .horizontal {
+#multiplayer > .horizontal {
     flex-direction: row;
     height: 20.5vh;
 }

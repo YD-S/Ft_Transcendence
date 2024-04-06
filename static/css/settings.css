@@ -1,14 +1,14 @@
 
-#main {
+#settings {
   flex-direction: row;
 }
 
-.settings-button {
+#settings .button {
   height: 42.18vh;
   flex-direction: column;
 }
 
-.settings-img {
+#settings .img {
   width: 10.41vw;
   height: 19.53vh;
 }

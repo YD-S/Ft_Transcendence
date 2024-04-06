@@ -10,55 +10,6 @@ function loadPage(page) {
 
 window.onload = () => loadPage('home');
 
-function oneVSone() {
-    const contentMain = document.getElementById('main');
-
-    contentMain.innerHTML = `
-    <div style="display: flex; width: 26.14vw; height: 19.43vh; flex-direction: column; gap: 6vh; align-items: center; justify-content: center;">
-         <div style="display: flex; width: 26.14vw; height: 19.43vh; flex-direction: column; gap: 1vh;">
-            <button style="height: 9.66vh" class="primary-box">
-                Panesico
-            </button>
-        </div>
-        <div style="color: var(--accent-color); font-size: 5vw; display: flex; align-items: center; justify-content: center;">
-            vs
-        </div>   
-        <div style="display: flex; width: 26.14vw; height: 19.43vh; flex-direction: column; gap: 1vh;">
-            <button style="height: 9.66vh" class="secondary-box">
-                Panesico
-            </button>
-        </div>
-    </div>
-    `;
-}
-
-function twoVStwo() {
-    const contentMain = document.getElementById('main');
-
-    contentMain.innerHTML = `
-    <div style="display: flex; width: 52.28vw; height: 42.18vh; flex-direction: row; gap: 6vh; align-items: center; justify-content: center;">
-         <div style="display: flex; width: 26.14vw; height: 19.43vh; flex-direction: column; gap: 1vh;">
-            <button style="height: 9.66vh" class="primary-box">
-                Panesico
-            </button>
-            <button style="height: 9.66vh" class="primary-box">
-                ...
-            </button>
-        </div>
-        <div style="color: var(--accent-color); font-size: 5vw;">
-            vs
-        </div>   
-        <div style="display: flex; width: 26.14vw; height: 19.43vh; flex-direction: column; gap: 1vh;">
-            <button style="height: 9.66vh" class="secondary-box">
-                Panesico
-            </button>
-            <button style="height: 9.66vh" class="secondary-box">
-                ...
-            </button>
-        </div>
-    </div>
-    `;
-}
 
 function tournament() {
 
