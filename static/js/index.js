@@ -4,11 +4,17 @@ function loadPage(page) {
     fetch(`/${page}`)
     .then(response => response.text())
     .then(data => {
+        history.pushState({data: data}, "", page === 'home' ? '/' : page);
         contentMain.innerHTML = data;
     });
 }
 
 window.onload = () => loadPage('home');
+
+window.onpopstate = (event) => {
+    const contentMain = document.getElementById('main');
+    contentMain.innerHTML = event.state.data;
+}
 
 function invertColors() {
     const rootStyles = getComputedStyle(document.documentElement);
