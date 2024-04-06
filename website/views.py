@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 
+from authentication.token import require_token
+
 
 def fetch_redirect(file):
     def decorator(func):
@@ -13,12 +15,12 @@ def fetch_redirect(file):
     return decorator
 
 
-# Index redirects to home
 def index(request):
     return redirect("home")
 
 
 def generic(file: str):
+    @require_token
     @fetch_redirect(file)
     def view(request):
         return render(request, file)
@@ -26,6 +28,7 @@ def generic(file: str):
     return view
 
 
+@require_token
 @fetch_redirect("tournament.html")
 def tournament(request):
     spacing = 4.7
@@ -162,3 +165,8 @@ def tournament(request):
             ],
         },
     })
+
+
+@fetch_redirect("login.html")
+def login(request):
+    return render(request, "login.html")

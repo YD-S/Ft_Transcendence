@@ -2,6 +2,7 @@ import datetime
 import json
 
 import jwt
+from django.shortcuts import redirect
 
 from NeonPong import settings
 from common.request import HttpRequest
@@ -87,9 +88,7 @@ def require_token(func):
             token = get_token(request)
             TokenManager().validate_token(token)
         except ValidationError as e:
-            resp = e.as_http_response()
-            resp.status_code = 401
-            return resp
+            return redirect("/login")
         return func(request, *args, **kwargs)
 
     return wrapper
@@ -105,11 +104,17 @@ def get_user(token: str):
 
 
 def get_token(request: HttpRequest):
-    bearer_token = request.headers.get('Authorization')
-    if not bearer_token:
+    # Get token from Authorization cookie
+    cookie = request.headers.get("Cookie")
+    if not cookie:
         raise ValidationError(json.dumps({"message": "Token is required", "type": "token_required"}),
                               content_type='application/json')
-    if not bearer_token.startswith("Bearer "):
-        raise ValidationError(json.dumps({"message": "Expected Bearer token", "type": "invalid_token"}),
+    token = None
+    for c in cookie.split(";"):
+        if c.strip().startswith("Authorization="):
+            token = c.split("=")[1]
+            break
+    if not token:
+        raise ValidationError(json.dumps({"message": "Token is required", "type": "token_required"}),
                               content_type='application/json')
-    return bearer_token.split(" ")[1]
+    return token

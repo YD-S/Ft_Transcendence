@@ -59,7 +59,7 @@ function padZero(str, len) {
     return (zeros + str).slice(-len);
 }
 
-function submit() {
+function login() {
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
     let data = {
@@ -73,14 +73,21 @@ function submit() {
         },
         body: JSON.stringify(data),
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status !== 200) {
+                throw new Error("Invalid username or password");
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log('Success:', data);
-            sessionStorage.setItem('access_token', data.access_token);
+            // store access token in cookie for all paths
+            document.cookie = `Authorization=${data.access_token}; path=/`;
             sessionStorage.setItem('refresh_token', data.refresh_token);
+            // redirect to home page
+            window.location.href = '/home';
 
         })
         .catch((error) => {
-            console.error('Error:', error);
+            alert(error);
         });
 }
