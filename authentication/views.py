@@ -1,15 +1,13 @@
 import json
 
 from django.contrib.auth import authenticate, login
-from django.db.models import QuerySet
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 
 from authentication.token import TokenManager, require_token, get_token
 from authentication.utils import hash_password
 from common.request import HttpRequest, wrap_funcview
-from users.models import User
-from users.serializers import UserSerializer
+from users.models import User, UserManager
 from utils.exception import ValidationError
 
 
@@ -112,8 +110,11 @@ def register(request: HttpRequest):
         )
     try:
         # Create the user
-        user = UserSerializer(data=data)
-        user.save()
+        UserManager().create_user(
+            email=email,
+            password=data.get('password'),
+            username=username
+        )
     except ValidationError as e:
         return e.as_http_response()
     return HttpResponse(
@@ -150,7 +151,7 @@ def change_password(request):
         user = User.objects.get(pk=data.get('user_id'))
     except User.DoesNotExist:
         return HttpResponse(
-            json.dumps({"message": "User does found", "type": "change_password_fail"}),
+            json.dumps({"message": "User not found", "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
