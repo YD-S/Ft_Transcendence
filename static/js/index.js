@@ -1,4 +1,6 @@
-function loadPage(page) {
+import {Game} from './game.js';
+
+export function loadPage(page) {
     const contentMain = document.getElementById('main');
 
     fetch(`/${page}`)
@@ -6,6 +8,9 @@ function loadPage(page) {
         .then(data => {
             history.pushState({data: data}, "", page);
             contentMain.innerHTML = data;
+            if (page === 'game') {
+                new Game();
+            }
         });
 }
 

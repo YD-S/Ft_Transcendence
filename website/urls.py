@@ -10,6 +10,7 @@ urlpatterns = [
     path("multiplayer", views.generic("multiplayer.html"), name="multiplayer"),
     path("1v1", views.generic("1v1.html"), name="1v1"),
     path("2v2", views.generic("2v2.html"), name="2v2"),
+    path("game", views.generic("game.html"), name="game"),
     path("login", views.login, name="tournament"),
 
     path("tournament", views.tournament, name="tournament"),
