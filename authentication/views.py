@@ -38,8 +38,8 @@ def login_view(request):
         return JsonResponse({
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "access_expiration": f"{access_expiration:%Y-%m-%d %H:%M:%S}",
-            "refresh_expiration": f"{refresh_expiration:%Y-%m-%d %H:%M:%S}",
+            "access_expiration": f"{int(access_expiration.timestamp())}",
+            "refresh_expiration": f"{int(refresh_expiration.timestamp())}",
         })
     except ValidationError as e:
         return e.as_http_response()
@@ -61,6 +61,7 @@ def logout(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
+@wrap_funcview
 def refresh(request: HttpRequest):
     # Read the token from the header
     data = request.json()
@@ -78,8 +79,8 @@ def refresh(request: HttpRequest):
             json.dumps({
                 "access_token": access_token,
                 "refresh_token": refresh_token,
-                "access_expiration": f"{access_expiration:%Y-%m-%d %H:%M:%S}",
-                "refresh_expiration": f"{refresh_expiration:%Y-%m-%d %H:%M:%S}"
+                "access_expiration": f"{int(access_expiration.timestamp())}",
+                "refresh_expiration": f"{int(refresh_expiration.timestamp())}"
             }),
             content_type='application/json',
             status=200

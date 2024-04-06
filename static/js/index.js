@@ -80,14 +80,72 @@ function login() {
             return response.json();
         })
         .then(data => {
-            // store access token in cookie for all paths
-            document.cookie = `Authorization=${data.access_token}; path=/`;
-            sessionStorage.setItem('refresh_token', data.refresh_token);
-            // redirect to home page
-            window.location.href = '/home';
-
+            saveToken(data);
+            loadPage('home');
         })
         .catch((error) => {
             alert(error);
         });
+}
+
+function logout() {
+    fetch('/api/auth/logout/', {method: 'POST'})
+        .then(response => {
+            if (response.status !== 200) {
+                throw new Error("Logout failed");
+            }
+        })
+        .catch((error) => {
+            alert(error);
+        });
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('access_token');
+    loadPage('login')
+    deleteCookie('Authorization');
+}
+
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = `; expires=${date.toUTCString()}`;
+    }
+    document.cookie = `${name}=${value || ""}${expires}; path=/`;
+}
+
+function deleteCookie(name) {
+    document.cookie = `${name}=; Max-Age=-99999999;`;
+}
+
+function refreshToken() {
+    let refresh_token = sessionStorage.getItem('refresh_token');
+    fetch('/api/auth/refresh/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({refresh_token: refresh_token}),
+    })
+        .then(response => {
+            if (response.status !== 200) {
+                throw new Error("Refresh failed");
+            }
+            return response.json();
+        })
+        .then(data => {
+            saveToken(data);
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
+
+function saveToken(data) {
+    setCookie('Authorization', `${data.access_token}`, 1);
+    sessionStorage.setItem('access_token', data.access_token);
+    sessionStorage.setItem('refresh_token', data.refresh_token);
+    sessionStorage.setItem('access_expiration', data.access_expiration * 1000);
+    sessionStorage.setItem('refresh_expiration', data.refresh_expiration * 1000);
+    setTimeout(() => refreshToken(), data.access_expiration * 1000 - Date.now());
 }
