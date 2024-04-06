@@ -15,11 +15,11 @@
 <nav class="navbar d-flex justify-content-between navbar-custom">
         <!-- Left-aligned item -->
         <button class="px-2 mr-auto button">
-            <img class="settings-svg svg" src={% static "svg/settings.svg" %} alt="settings" width="80" height="80" onclick="settings()">
+            <img class="settings-svg svg" src={% static "svg/settings.svg" %} alt="settings" width="80" height="80" onclick="loadPage('settings')">
         </button>
 
         <!-- Center-aligned item -->
-        <button class="neon-pong button" onclick="neonPong()">
+        <button class="neon-pong button" onclick="loadPage('home')">
             NEON PONG
         </button>
 
@@ -29,19 +29,9 @@
         </button>
 </nav>
 
-<main class="main" id="main">
-    <button class="secondary-box" onclick="multiplayer()">
-        MULTIPLAYER
-    </button>
-    <button class="primary-box">
-        SINGLEPLAYER
-    </button>
-</main>
+<main class="main" id="main"></main>
 
 <footer class="footer">
-    <div>
-
-    </div>
 </footer>
 
 

@@ -8,43 +8,7 @@ function loadPage(page) {
     });
 }
 
-function settings(){
-    loadPage('settings');
-}
-
-function neonPong() {
-    const contentMain = document.getElementById('main');
-
-    contentMain.style.setProperty('flex-direction', 'column');
-    contentMain.innerHTML = `
-    <button class="secondary-box" onclick="multiplayer()">
-        MULTIPLAYER
-    </button>
-    <button class="primary-box">
-        SINGLEPLAYER
-    </button>
-    `;
-}
-
-function multiplayer() {
-    const contentMain = document.getElementById('main');
-
-    contentMain.innerHTML = `
-    <div style="display: flex; flex-wrap: wrap; width: 52.28vw; height: 42.18vh; flex-direction: column; gap: 1vh;">
-        <button style="height: 20.5vh" class="primary-box" onclick="oneVSone()">
-            1 vs 1
-        </button>
-        <button style="height: 20.5vh" class="secondary-box" onclick="twoVStwo()">
-            2 vs 2
-        </button>
-        <button style="flex-direction: column; height: 42.18vh" class="accent-box">
-            <img style="width: 10.41vw; height: 19.53vh" class="cup-pallete-svg" src="svg/cup.svg" alt="profile" onclick="tournament()">
-            TOURNAMENT
-        </button>
-    </div>
-
-    `;
-}
+window.onload = () => loadPage('home');
 
 function oneVSone() {
     const contentMain = document.getElementById('main');

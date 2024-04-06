@@ -1,0 +1,24 @@
+
+#multiplayer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 52.28vw;
+    height: 42.18vh;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+#multiplayer .vertical {
+    flex-direction: column;
+    height: 42.18vh;
+}
+
+#multiplayer .horizontal {
+    flex-direction: row;
+    height: 20.5vh;
+}
+
+#multiplayer .img {
+    width: 10.41vw;
+    height: 19.53vh;
+}
