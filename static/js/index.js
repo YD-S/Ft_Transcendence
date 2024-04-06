@@ -1,21 +1,15 @@
-function settings(){
+function loadPage(page) {
     const contentMain = document.getElementById('main');
 
-    contentMain.style.setProperty('flex-direction', 'row');
-    contentMain.innerHTML = `
-    <button style="height: 42.18vh; flex-direction: column;" class="secondary-box">
-        <img style="width: 10.41vw; height: 19.53vh" class="paint-pallete-svg" src="svg/paint_palette.svg" alt="profile">
-        THEMES
-    </button>
-    <button style="height: 42.18vh; flex-direction: column;" class="primary-box">
-    <img style="width: 10.41vw; height: 19.53vh" class="profile-icon-svg" src="svg/profile_icon.svg" alt="profile">
-        PROFILE
-    </button>
-    <button style="height: 42.18vh; flex-direction: column;" class="secondary-box">
-    <img style="width: 10.41vw; height: 19.53vh" class="paint-pallete-svg" src="svg/paint_palette.svg" alt="profile">
-        MATCH
-    </button>
-    `;
+    fetch(`/${page}`)
+    .then(response => response.text())
+    .then(data => {
+        contentMain.innerHTML = data;
+    });
+}
+
+function settings(){
+    loadPage('settings');
 }
 
 function neonPong() {
