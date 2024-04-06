@@ -2,7 +2,9 @@ let vel_global = 0.025;
 let Vel_multiplier = 0.000001;
 
 export default class Ball {
-    constructor(ballElem) {
+    constructor(ballElem, maxY, minY) {
+        this.maxY = maxY
+        this.minY = minY
         this.ballElem = ballElem
         this.reset();
     }
@@ -47,7 +49,7 @@ export default class Ball {
         this.velocity += Vel_multiplier * delta;
         const rect = this.rect();
 
-        if(rect.top <= 0 || rect.bottom >= window.innerHeight) {
+        if(rect.top <= this.minY || rect.bottom >= this.maxY) {
             this.direction.y = -this.direction.y;
         }
 
