@@ -1,13 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+
+def fetch_redirect(file):
+    def decorator(func):
+        def view(request):
+            if request.headers.get("Sec-Fetch-Mode") == "navigate":
+                return render(request, "index.html", {"page": file.split(".")[0]})
+            return func(request)
+
+        return view
+
+    return decorator
+
+
+# Index redirects to home
+def index(request):
+    return redirect("home")
 
 
 def generic(file: str):
+    @fetch_redirect(file)
     def view(request):
         return render(request, file)
 
     return view
 
 
+@fetch_redirect("tournament.html")
 def tournament(request):
     spacing = 4.7
     return render(request, "tournament.html", {

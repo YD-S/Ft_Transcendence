@@ -1,15 +1,14 @@
+
 function loadPage(page) {
     const contentMain = document.getElementById('main');
 
     fetch(`/${page}`)
     .then(response => response.text())
     .then(data => {
-        history.pushState({data: data}, "", page === 'home' ? '/' : page);
+        history.pushState({data: data}, "", page);
         contentMain.innerHTML = data;
     });
 }
-
-window.onload = () => loadPage('home');
 
 window.onpopstate = (event) => {
     const contentMain = document.getElementById('main');
