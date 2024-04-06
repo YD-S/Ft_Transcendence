@@ -1,5 +1,14 @@
 import {Game} from './game.js';
 
+export class Global {
+    constructor() {
+        this.loadPage = loadPage;
+        this.invertColors = invertColors;
+        this.login = login;
+        this.logout = logout;
+    }
+}
+
 export function loadPage(page) {
     const contentMain = document.getElementById('main');
 
@@ -14,12 +23,7 @@ export function loadPage(page) {
         });
 }
 
-window.onpopstate = (event) => {
-    const contentMain = document.getElementById('main');
-    contentMain.innerHTML = event.state.data;
-}
-
-function invertColors() {
+export function invertColors() {
     const rootStyles = getComputedStyle(document.documentElement);
     const variableNames = [
         '--primary-color',
@@ -39,7 +43,7 @@ function invertColors() {
     });
 }
 
-function invertColor(hex) {
+export function invertColor(hex) {
     if (hex.indexOf('#') === 0) {
         hex = hex.slice(1);
     }
@@ -58,13 +62,13 @@ function invertColor(hex) {
     return '#' + padZero(r) + padZero(g) + padZero(b);
 }
 
-function padZero(str, len) {
+export function padZero(str, len) {
     len = len || 2;
     var zeros = new Array(len).join('0');
     return (zeros + str).slice(-len);
 }
 
-function login() {
+export function login() {
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
     let data = {
@@ -93,7 +97,7 @@ function login() {
         });
 }
 
-function logout() {
+export function logout() {
     fetch('/api/auth/logout/', {method: 'POST'})
         .then(response => {
             if (response.status !== 200) {
@@ -153,4 +157,10 @@ function saveToken(data) {
     sessionStorage.setItem('access_expiration', data.access_expiration * 1000);
     sessionStorage.setItem('refresh_expiration', data.refresh_expiration * 1000);
     setTimeout(() => refreshToken(), (data.access_expiration * 1000 - Date.now()) - 1000); // Refresh token 1 second before expiration
+}
+
+
+window.onpopstate = (event) => {
+    const contentMain = document.getElementById('main');
+    contentMain.innerHTML = event.state.data;
 }

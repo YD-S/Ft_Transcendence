@@ -26,9 +26,9 @@ class TokenManager:
         self.__initialized = True
         self.tokens = {}
 
-    def create_token_pair(self, user_id):
+    def create_token_pair(self, user_id, refresh_expiration=None):
         access_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION_MINUTES)
-        refresh_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRATION_DAYS)
+        refresh_expiration = refresh_expiration or datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRATION_DAYS)
         access_token = jwt.encode({'user_id': user_id, "exp": access_expiration}, settings.SECRET_KEY,
                                   algorithm='HS256')
         refresh_token = jwt.encode({'user_id': user_id, "exp": refresh_expiration}, settings.SECRET_KEY,
@@ -43,10 +43,11 @@ class TokenManager:
 
     def refresh_token(self, refresh_token):
         payload = self._test_token(refresh_token)
+        exp = datetime.datetime.strptime(payload.get('exp'), "%Y-%m-%d %H:%M:%S")
         if payload.get('user_id') not in self.tokens:
             raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
                                   content_type='application/json')
-        return self.create_token_pair(payload.get('user_id'))
+        return self.create_token_pair(payload.get('user_id'), exp)
 
     def validate_token(self, token):
         payload = self._test_token(token)

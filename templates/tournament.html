@@ -13,7 +13,7 @@
       {% for match in round.matches %}
         <div class="match" style="gap:{{ round.round }}vh">
           <div class="player">
-            <button class="player-button primary-box" onclick="loadPage('1v1')">
+            <button class="player-button primary-box" onclick="window.global.loadPage('1v1')">
               {{ match.player1 }}
             </button>
           </div>
@@ -21,7 +21,7 @@
             vs
           </div>
           <div class="player">
-            <button class="player-button secondary-box" onclick="loadPage('1v1')">
+            <button class="player-button secondary-box" onclick="window.global.loadPage('1v1')">
               {{ match.player2 }}
             </button>
           </div>
@@ -34,7 +34,7 @@
   <div class="final">
     <div class="final-match">
       <div class="player">
-        <button class="player-button primary-box" onclick="loadPage('1v1')">
+        <button class="player-button primary-box" onclick="window.global.loadPage('1v1')">
           {{ tournament.final.player1 }}
         </button>
       </div>
@@ -42,7 +42,7 @@
         vs
       </div>
       <div class="player">
-        <button class="player-button secondary-box" onclick="loadPage('1v1')">
+        <button class="player-button secondary-box" onclick="window.global.loadPage('1v1')">
           {{ tournament.final.player2 }}
         </button>
       </div>
@@ -55,7 +55,7 @@
       {% for match in round.matches %}
         <div class="match" style="gap:{{ round.round }}vh">
           <div class="player">
-            <button class="player-button primary-box" onclick="loadPage('1v1')">
+            <button class="player-button primary-box" onclick="window.global.loadPage('1v1')">
               {{ match.player1 }}
             </button>
           </div>
@@ -63,7 +63,7 @@
             vs
           </div>
           <div class="player">
-            <button class="player-button secondary-box" onclick="loadPage('1v1')">
+            <button class="player-button secondary-box" onclick="window.global.loadPage('1v1')">
               {{ match.player2 }}
             </button>
           </div>
