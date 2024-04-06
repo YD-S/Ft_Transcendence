@@ -1,13 +1,12 @@
-
 function loadPage(page) {
     const contentMain = document.getElementById('main');
 
     fetch(`/${page}`)
-    .then(response => response.text())
-    .then(data => {
-        history.pushState({data: data}, "", page);
-        contentMain.innerHTML = data;
-    });
+        .then(response => response.text())
+        .then(data => {
+            history.pushState({data: data}, "", page);
+            contentMain.innerHTML = data;
+        });
 }
 
 window.onpopstate = (event) => {
@@ -58,4 +57,30 @@ function padZero(str, len) {
     len = len || 2;
     var zeros = new Array(len).join('0');
     return (zeros + str).slice(-len);
+}
+
+function submit() {
+    let username = document.getElementById('username').value;
+    let password = document.getElementById('password').value;
+    let data = {
+        username: username,
+        password: password
+    };
+    fetch('/api/auth/login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            sessionStorage.setItem('access_token', data.access_token);
+            sessionStorage.setItem('refresh_token', data.refresh_token);
+
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 }

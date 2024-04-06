@@ -1,0 +1,15 @@
+{# Login page. Sends a json to the backend with username and password #}
+{# Simple page for testing #}
+
+
+{% block content %}
+  <h2>Login</h2>
+  <div>
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <button onclick="submit()">Login</button>
+  </div>
+  <div id="response"></div>
+{% endblock %}
