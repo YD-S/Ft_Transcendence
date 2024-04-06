@@ -1,5 +1,6 @@
 export default class Paddle {
-    constructor(PaddleElement) {
+    constructor(PaddleElement, id) {
+        this.id = id;
         this.PaddleElement = PaddleElement;
         this.reset();
     }
@@ -12,20 +13,12 @@ export default class Paddle {
         this.PaddleElement.style.setProperty('--pos', value);
     }
 
-    get heightPaddle1() {
-        return parseFloat(getComputedStyle(this.PaddleElement).getPropertyValue('--paddle1_height'));
+    get heightPaddle() {
+        return parseFloat(getComputedStyle(this.PaddleElement).getPropertyValue(`--paddle${this.id}_height`));
     }
 
-    set heightPaddle1(value) {
-        this.PaddleElement.style.setProperty('--paddle1_height', value);
-    }
-
-    get heightPaddle2() {
-        return parseFloat(getComputedStyle(this.PaddleElement).getPropertyValue('--paddle2_height'));
-    }
-
-    set heightPaddle2(value) {
-        this.PaddleElement.style.setProperty('--paddle2_height', value);
+    set heightPaddle(value) {
+        this.PaddleElement.style.setProperty(`--paddle${this.id}_height`, value);
     }
 
     rect() {
