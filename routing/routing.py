@@ -9,10 +9,10 @@ websocket_urlpatterns = [
 apiurls = [
     path('user/', include(("users.urls", "users"), namespace="users")),
     path('auth/', include(("authentication.urls", "authentication"), namespace="authentication")),
-    path("chat/", include("chat.urls")),
+    path("chat/", include(("chat.urls", "chat"), namespace="chat")),
 ]
 
 urlpatterns = [
     path("api/", include(apiurls)),
-    path("", include("website.urls")),
+    path("", include(("website.urls", "website"), namespace="website")),
 ]
