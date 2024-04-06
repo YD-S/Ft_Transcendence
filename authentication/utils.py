@@ -1,0 +1,5 @@
+import hashlib
+
+
+def hash_password(password):
+    return hashlib.sha256(password.encode("utf-8"), usedforsecurity=True).hexdigest()

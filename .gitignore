@@ -1,5 +1,5 @@
 # Ignore environment variables
-/.env
+**/.env
 
 # Ignore OS generated files
 .DS_Store
@@ -26,3 +26,5 @@ yarn.lock
 **/venv
 **/__pycache__
 **/*.pyc
+
+**/*.sqlite3

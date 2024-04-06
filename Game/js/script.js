@@ -5,8 +5,8 @@ import Paddle from "./Paddle.js";
 const paddleSpeed = 1;
 const keys = {};
 const ball = new Ball(document.getElementById('ball'));
-const paddle1 = new Paddle(document.getElementById('player1_paddle'));
-const paddle2 = new Paddle(document.getElementById('player2_paddle'));
+const paddle1 = new Paddle(document.getElementById('player1_paddle'), 1);
+const paddle2 = new Paddle(document.getElementById('player2_paddle'), 2);
 const Team1_score = document.getElementById('score__p1');
 const Team2_score = document.getElementById('score__p2');
 

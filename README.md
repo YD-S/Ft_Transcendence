@@ -1,38 +1,38 @@
 
 # Ft Transcendence
 
-## Backend
+- [Backend docs](docs/backend.md)
+- [Frontend docs](docs/frontend.md)
 
-Antes de trabajar con el proyecto del backend hay que tener un entorno virtual
+## Run the project
 
-```bash
-cd Backend
-python3 -m venv venv #
-```
-
-Para usarlo sólo hay que ejecutar lo siguiente
+Copy and configure the `.env` file
 
 ```bash
-source venv/bin/activate
+cp env.example .env
 ```
 
-A partir de ahí podemos utilizar el script `manage.py` de Django para administrar el proyecto y ejecutarlo
-
+Create database directory
+```bash
+mkdir -p ~/data/database
 ```
-cd Api
-python3 manage.py <command>
+
+Run the project
+
+```bash
+docker-compose up
 ```
 
 ## Modules
 
-* MAJOR: framework backend
-* MAJOR: AI
-* MAJOR: 2FA
-* MAJOR: User Management, auth
-* MAJOR: Remote players
-* MAJOR: Multiplayers
-* MAJOR: Live Chat
-* MAJOR: Server Side Pong
-* MINOR: frontend toolkit
-* MINOR: database
-* MINOR: USER STATS
+- [x] MAJOR: framework backend
+- [ ] MAJOR: AI
+- [ ] MAJOR: 2FA
+- [x] MAJOR: User Management, auth
+- [ ] MAJOR: Remote players
+- [ ] MAJOR: Multiplayers
+- [ ] MAJOR: Live Chat
+- [ ] MAJOR: Server Side Pong
+- [x] MINOR: frontend toolkit
+- [x] MINOR: database
+- [ ] MINOR: USER STATS
