@@ -89,7 +89,7 @@ def require_token(func):
         try:
             token = get_token(request)
             TokenManager().validate_token(token)
-        except ValidationError as e:
+        except ValidationError:
             return redirect("/login")
         return func(request, *args, **kwargs)
 

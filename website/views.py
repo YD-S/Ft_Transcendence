@@ -7,16 +7,14 @@ UNPROTECTED_PAGES = [
 ]
 
 
-def index(request):
-    return redirect("/home")
-
-
 @require_token
 def protected_main_view(request, page):
-    return render(request, "index.html", {page: page})
+    print(page)
+    return render(request, "index.html", {"page": page})
 
 
 def main_view(request, page):
+    print(page)
     if page in UNPROTECTED_PAGES:
         return render(request, "index.html", {"page": page})
     return protected_main_view(request, page)
