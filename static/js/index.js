@@ -12,7 +12,7 @@ export class Global {
 export function loadPage(page) {
     const contentMain = document.getElementById('main');
 
-    fetch(`/${page}`)
+    fetch(`/page/${page}.html`)
         .then(response => response.text())
         .then(data => {
             history.pushState({data: data}, "", page);

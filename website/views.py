@@ -3,33 +3,43 @@ from django.shortcuts import render, redirect
 from authentication.token import require_token
 
 
-def fetch_redirect(file):
-    def decorator(func):
-        def view(request):
-            if request.headers.get("Sec-Fetch-Mode") == "navigate":
-                return render(request, "index.html", {"page": file.split(".")[0]})
-            return func(request)
+UNPROTECTED_PAGES = [
+    "login"
+]
 
-        return view
-
-    return decorator
 
 
 def index(request):
     return redirect("home")
 
 
-def generic(file: str):
-    @require_token
-    @fetch_redirect(file)
-    def view(request):
-        return render(request, file)
+@require_token
+def protected_main_view(request, page):
+    return render(request, "index.html", {page: page})
 
-    return view
+
+def main_view(request, page):
+    if page in UNPROTECTED_PAGES:
+        return render(request, "index.html", {"page": "login"})
+    return protected_main_view(request, page)
 
 
 @require_token
-@fetch_redirect("tournament.html")
+def protected_page_view(request, file):
+    return render(request, file)
+
+
+def page_view(request, file):
+    if request.headers.get("Sec-Fetch-Mode") == "navigate":
+        return redirect("/home")
+    page = file.split(".")[0]
+    if page in UNPROTECTED_PAGES:
+        return render(request, file)
+    return protected_page_view(request, file)
+
+
+
+@require_token
 def tournament(request):
     spacing = 4.7
     return render(request, "tournament.html", {
@@ -165,8 +175,3 @@ def tournament(request):
             ],
         },
     })
-
-
-@fetch_redirect("login.html")
-def login(request):
-    return render(request, "login.html")

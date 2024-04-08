@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 
 import jwt
 from django.shortcuts import redirect
@@ -113,7 +114,7 @@ def get_token(request: HttpRequest):
     token = None
     for c in cookie.split(";"):
         if c.strip().startswith("Authorization="):
-            token = c.split("=")[1]
+            token = c.split("=")[1].strip()
             break
     if not token:
         raise ValidationError(json.dumps({"message": "Token is required", "type": "token_required"}),
