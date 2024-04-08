@@ -15,11 +15,11 @@
 <nav class="navbar d-flex justify-content-between navbar-custom">
   <!-- Left-aligned item -->
   <button class="px-2 mr-auto button">
-    <img class="settings-svg svg" src={% static "svg/settings.svg" %} alt="settings" width="80" height="80" onclick="window.global.loadPage('settings')">
+    <img class="settings-svg svg" src={% static "svg/settings.svg" %} alt="settings" width="80" height="80" onclick="window.global.pageManager.load('settings')">
   </button>
 
   <!-- Center-aligned item -->
-  <button class="neon-pong button" onclick="window.global.loadPage('home')">
+  <button class="neon-pong button" onclick="window.global.pageManager.load('home')">
     NEON PONG
   </button>
 
@@ -36,15 +36,14 @@
 
 <footer class="footer">
 </footer>
-<script src={% static "js/index.js" %} type="module"></script>
-<script src={% static "js/game.js" %} type="module"></script>
 <script type="module">
-    import {loadPage, Global} from "../static/js/index.js";
-    
+    import {Global} from "../static/js/global.js";
     window.global = new Global();
-
-    window.onload = () => window.global.loadPage("{{ page|safe }}" || "home");
+    window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
 </script>
+<script src={% static "js/pageManager.js" %} type="module"></script>
+<script src={% static "js/utils.js" %} type="module"></script>
+<script src={% static "js/game.js" %} type="module"></script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script> <!-- Some Bootstrap components require popper.js -->

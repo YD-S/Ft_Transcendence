@@ -1,6 +1,6 @@
-
 import Ball from "./Ball.js";
 import Paddle from "./Paddle.js";
+import {PageManager} from "./pageManager.js";
 
 export class Game {
     constructor() {
@@ -38,7 +38,7 @@ export class Game {
             this.ball.update(15, [this.paddle1.rect(), this.paddle2.rect()]);
             this.paddle1.update();
             this.paddle2.update();
-            if(this.isLoose()) this.handleLost();
+            if (this.isLose()) this.handleLost();
         }
         this.lastTimestamp = Date.now();
         window.requestAnimationFrame(() => this.update(this.lastTimestamp));
@@ -61,13 +61,11 @@ export class Game {
     }
 
 
-
     handleLost() {
         const rect = this.ball.rect();
-        if(rect.right >= window.innerWidth) {
+        if (rect.right >= window.innerWidth) {
             this.Team1_score.textContent = parseInt(this.Team1_score.textContent) + 1;
-        }
-        else
+        } else
             this.Team2_score.textContent = parseInt(this.Team2_score.textContent) + 1;
         this.ball.reset();
         this.paddle1.reset();
@@ -75,8 +73,14 @@ export class Game {
         this.lastTimestamp = null;
     }
 
-    isLoose() {
+    isLose() {
         const rect = this.ball.rect();
         return rect.right >= window.innerWidth || rect.left <= 0;
     }
 }
+
+let game = null;
+
+PageManager.getInstance().setOnPageLoad('game', () => {
+    game = new Game();
+})

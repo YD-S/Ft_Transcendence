@@ -1,27 +1,4 @@
-import {Game} from './game.js';
-
-export class Global {
-    constructor() {
-        this.loadPage = loadPage;
-        this.invertColors = invertColors;
-        this.login = login;
-        this.logout = logout;
-    }
-}
-
-export function loadPage(page) {
-    const contentMain = document.getElementById('main');
-
-    fetch(`/page/${page}.html`)
-        .then(response => response.text())
-        .then(data => {
-            history.pushState({data: data}, "", page);
-            contentMain.innerHTML = data;
-            if (page === 'game') {
-                new Game();
-            }
-        });
-}
+import {PageManager} from "./pageManager.js";
 
 export function invertColors() {
     const rootStyles = getComputedStyle(document.documentElement);
@@ -38,7 +15,6 @@ export function invertColors() {
         '--background-secondary-color'
     ];
     variableNames.forEach((variable) => {
-        console.log(rootStyles.getPropertyValue(variable));
         document.documentElement.style.setProperty(variable, invertColor(rootStyles.getPropertyValue(variable)));
     });
 }
@@ -90,7 +66,7 @@ export function login() {
         })
         .then(data => {
             saveToken(data);
-            loadPage('home');
+            PageManager.getInstance().load('home');
         })
         .catch((error) => {
             alert(error);
@@ -109,7 +85,7 @@ export function logout() {
         });
     sessionStorage.removeItem('refresh_token');
     sessionStorage.removeItem('access_token');
-    loadPage('login')
+    PageManager.getInstance().load('login')
     deleteCookie('Authorization');
 }
 
@@ -157,10 +133,4 @@ function saveToken(data) {
     sessionStorage.setItem('access_expiration', data.access_expiration * 1000);
     sessionStorage.setItem('refresh_expiration', data.refresh_expiration * 1000);
     setTimeout(() => refreshToken(), (data.access_expiration * 1000 - Date.now()) - 1000); // Refresh token 1 second before expiration
-}
-
-
-window.onpopstate = (event) => {
-    const contentMain = document.getElementById('main');
-    contentMain.innerHTML = event.state.data;
 }

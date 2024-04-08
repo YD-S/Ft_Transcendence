@@ -2,15 +2,13 @@ from django.shortcuts import render, redirect
 
 from authentication.token import require_token
 
-
 UNPROTECTED_PAGES = [
     "login"
 ]
 
 
-
 def index(request):
-    return redirect("home")
+    return redirect("/home")
 
 
 @require_token
@@ -20,13 +18,17 @@ def protected_main_view(request, page):
 
 def main_view(request, page):
     if page in UNPROTECTED_PAGES:
-        return render(request, "index.html", {"page": "login"})
+        return render(request, "index.html", {"page": page})
     return protected_main_view(request, page)
 
 
 @require_token
 def protected_page_view(request, file):
-    return render(request, file)
+    match file:
+        case "tournament.html":
+            return tournament(request)
+        case _:
+            return render(request, file)
 
 
 def page_view(request, file):
@@ -38,8 +40,6 @@ def page_view(request, file):
     return protected_page_view(request, file)
 
 
-
-@require_token
 def tournament(request):
     spacing = 4.7
     return render(request, "tournament.html", {
