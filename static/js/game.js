@@ -1,6 +1,6 @@
 import Ball from "./Ball.js";
 import Paddle from "./Paddle.js";
-import {PageManager} from "./pageManager.js";
+import {PageManager} from "./page-manager.js";
 
 export class Game {
     constructor() {
@@ -17,17 +17,20 @@ export class Game {
         this.Team2_score = document.getElementById('score__p2');
         this.lastTimestamp = null;
 
+        document.addEventListener('keydown', this.keydown.bind(this));
 
-        document.addEventListener('keydown', event => {
-            this.keys[event.key] = true;
-        });
-
-        document.addEventListener('keyup', event => {
-            this.keys[event.key] = false;
-        });
+        document.addEventListener('keyup', this.keyup.bind(this));
 
         this.lastTimestamp = Date.now();
         window.requestAnimationFrame(() => this.update(this.lastTimestamp));
+    }
+
+    keydown(event) {
+        this.keys[event.key] = true;
+    }
+
+    keyup(event) {
+        this.keys[event.key] = false;
     }
 
     update(timestamp) {
@@ -77,10 +80,22 @@ export class Game {
         const rect = this.ball.rect();
         return rect.right >= window.innerWidth || rect.left <= 0;
     }
+
+    destroy() {
+        document.removeEventListener('keydown', this.keydown.bind(this));
+        document.removeEventListener('keyup', this.keyup.bind(this));
+    }
 }
 
 let game = null;
 
 PageManager.getInstance().setOnPageLoad('game', () => {
     game = new Game();
+})
+
+PageManager.getInstance().setOnPageUnload('game', () => {
+    if (game) {
+        game.destroy();
+        game = null;
+    }
 })

@@ -1,5 +1,5 @@
 import {invertColors, login, logout} from "./utils.js";
-import {PageManager} from "./pageManager.js";
+import {PageManager} from "./page-manager.js";
 
 export class Global {
     constructor() {

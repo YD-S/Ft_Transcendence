@@ -1,4 +1,4 @@
-import {PageManager} from "./pageManager.js";
+import {PageManager} from "./page-manager.js";
 
 export function invertColors() {
     const rootStyles = getComputedStyle(document.documentElement);
