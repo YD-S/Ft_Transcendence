@@ -17,6 +17,8 @@ export class Game {
         this.Team2_score = document.getElementById('score__p2');
         this.lastTimestamp = null;
 
+        this.destroyed = false;
+
         document.addEventListener('keydown', this.keydown.bind(this));
 
         document.addEventListener('keyup', this.keyup.bind(this));
@@ -44,7 +46,9 @@ export class Game {
             if (this.isLose()) this.handleLost();
         }
         this.lastTimestamp = Date.now();
-        window.requestAnimationFrame(() => this.update(this.lastTimestamp));
+        if (!this.destroyed) {
+            window.requestAnimationFrame(() => this.update(this.lastTimestamp));
+        }
     }
 
     movePaddles() {
@@ -83,6 +87,7 @@ export class Game {
     destroy() {
         document.removeEventListener('keydown', this.keydown.bind(this));
         document.removeEventListener('keyup', this.keyup.bind(this));
+        this.destroyed = true;
     }
 }
 
