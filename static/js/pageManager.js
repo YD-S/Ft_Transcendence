@@ -13,8 +13,18 @@ export class PageManager {
         window.addEventListener('popstate', (event) => {
             this.contentRoot.innerHTML = event.state.data;
         });
+
+        if (PageManager.__instance === null) {
+            PageManager.__instance = this;
+        }
+
+        return PageManager.__instance
     }
 
+    /**
+     * Get the singleton instance of the PageManager
+     * @returns {PageManager} The singleton instance of the PageManager
+     */
     static getInstance() {
         if (this.__instance === null) {
             this.__instance = new PageManager();
