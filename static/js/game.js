@@ -48,7 +48,6 @@ export class Game {
     }
 
     movePaddles() {
-        console.log("movePaddles")
         if (this.keys['w'] || this.keys['W']) {
             this.paddle1.position -= this.paddleSpeed;
         }
