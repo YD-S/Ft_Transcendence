@@ -9,7 +9,7 @@ export class PageManager {
 
 
     constructor() {
-        this.contentRoot = document.getElementById('main');
+        this.contentRoot = document.getElementById('root');
         window.addEventListener('popstate', (event) => {
             this.contentRoot.innerHTML = event.state.data;
         });
