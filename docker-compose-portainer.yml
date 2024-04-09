@@ -1,4 +1,5 @@
 version: '3.3'
+pull_policy: build
 
 services:
   backend:
