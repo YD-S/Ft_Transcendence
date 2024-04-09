@@ -7,8 +7,7 @@ services:
     restart: unless-stopped
     build:
       context: .
-    volumes:
-      - .:/app
+      dockerfile: DockerfilePortainer
     networks:
       - internal
     env_file:
