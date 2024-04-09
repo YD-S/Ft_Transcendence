@@ -82,18 +82,22 @@ class TokenManager:
 
 
 # Decorator to automatically check the token
-def require_token(func):
-    def wrapper(request: HttpRequest, *args, **kwargs):
-        if settings.BYPASS_TOKEN:
+def require_token(login_redirect=True):
+    def decorator(func):
+        def wrapper(request: HttpRequest, *args, **kwargs):
+            if settings.BYPASS_TOKEN:
+                return func(request, *args, **kwargs)
+            try:
+                token = get_token(request)
+                TokenManager().validate_token(token)
+            except ValidationError as e:
+                if login_redirect:
+                    return redirect("/login")
+                return e.as_http_response()
             return func(request, *args, **kwargs)
-        try:
-            token = get_token(request)
-            TokenManager().validate_token(token)
-        except ValidationError:
-            return redirect("/login")
-        return func(request, *args, **kwargs)
 
-    return wrapper
+        return wrapper
+    return decorator
 
 
 def decode_token(token: str):

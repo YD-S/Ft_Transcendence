@@ -34,7 +34,13 @@ export class PageManager {
 
     load(page) {
         fetch(`/page/${page}.html`)
-            .then(response => response.text())
+            .then(response => {
+                if (response.status !== 200) {
+                    console.error(response)
+                    this.load('login')
+                }
+                return response.text();
+            })
             .then(data => {
                 history.pushState({data: data}, "", page);
                 this.contentRoot.innerHTML = data;

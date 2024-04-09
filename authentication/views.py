@@ -45,8 +45,8 @@ def login_view(request):
         return e.as_http_response()
 
 
+@require_token()
 @require_http_methods(["POST"])
-@require_token
 @wrap_funcview
 def logout(request: HttpRequest):
     try:

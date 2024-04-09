@@ -7,20 +7,19 @@ UNPROTECTED_PAGES = [
 ]
 
 
-@require_token
+@require_token()
 def protected_main_view(request, page):
     print(page)
     return render(request, "index.html", {"page": page})
 
 
 def main_view(request, page):
-    print(page)
     if page in UNPROTECTED_PAGES:
         return render(request, "index.html", {"page": page})
     return protected_main_view(request, page)
 
 
-@require_token
+@require_token(login_redirect=False)
 def protected_page_view(request, file):
     match file:
         case "tournament.html":
