@@ -8,6 +8,7 @@ from authentication.token import TokenManager, require_token, get_token
 from authentication.utils import hash_password
 from common.request import HttpRequest, wrap_funcview
 from users.models import User, UserManager
+from users.serializers import UserSerializer
 from utils.exception import ValidationError
 
 
@@ -177,3 +178,7 @@ def change_password(request):
         content_type='application/json',
         status=200
     )
+
+
+def me(request: HttpRequest):
+    return JsonResponse(UserSerializer(instance=request.user).data)
