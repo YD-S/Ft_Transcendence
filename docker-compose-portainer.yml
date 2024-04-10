@@ -3,7 +3,7 @@ version: '3.3'
 
 services:
   backend:
-    container_name: transcendence_backend
+    container_name: backend
     restart: unless-stopped
     build:
       context: .
@@ -15,7 +15,7 @@ services:
       - stack.env
 
   nginx:
-    container_name: transcendence_nginx
+    container_name: nginx
     restart: unless-stopped
     image: nginx:bullseye
     ports:
