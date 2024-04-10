@@ -19,19 +19,16 @@ services:
     restart: unless-stopped
     image: nginx:bullseye
     ports:
-      - "8624:443"
+      - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./nginx/certs:/etc/nginx/ssl
       - ./static:/var/www/static
     networks:
       - internal
-      - koltservices
     depends_on:
       - backend
 
 networks:
   internal:
     driver: bridge
-  koltservices:
-    external: true
