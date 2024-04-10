@@ -10,25 +10,12 @@ services:
       - .:/app
     networks:
       - internal
+    ports:
+      - "443:443"
     depends_on:
       - postgres
     env_file:
       - .env
-
-  nginx:
-    container_name: nginx
-    restart: unless-stopped
-    image: nginx:bullseye
-    ports:
-      - "443:443"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/ssl
-      - ./static:/var/www/static
-    networks:
-      - internal
-    depends_on:
-      - backend
 
   postgres:
     image: postgres:alpine

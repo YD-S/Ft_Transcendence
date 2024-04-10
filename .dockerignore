@@ -19,7 +19,3 @@ __pycache__
 *.sqlite3
 *.db-journal
 *.pytz
-
-# Ignore media and static files (served by a web server in production)
-media/
-static/
