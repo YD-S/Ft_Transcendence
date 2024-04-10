@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y netcat-traditional
 WORKDIR /app
 
 COPY backend-entrypoint.sh /tools/backend-entrypoint.sh
-COPY . /app
 COPY requirements.txt /app/requirements.txt
 
 
