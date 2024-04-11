@@ -6,8 +6,6 @@ services:
     restart: unless-stopped
     build:
       context: .
-    volumes:
-      - .:/app
     networks:
       - internal
     ports:
