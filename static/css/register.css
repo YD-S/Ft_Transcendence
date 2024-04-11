@@ -1,0 +1,9 @@
+
+#register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#register-form #submit {
+    margin-top: 20px;
+}

@@ -7,18 +7,12 @@ from common.models import BaseModel
 
 
 class UserManager(BaseUserManager):
-    def create_user(
-            self,
-            email,
-            password,
-            **extra_fields
-    ):
+    def create_user(self, email, password, **extra_fields):
         user = self.model(
             email=self.normalize_email(email),
             password=hash_password(password),
             **extra_fields
         )
-        user._password = hash_password(password)
         user.save()
         return user
 

@@ -5,6 +5,7 @@ from users.models import User
 
 UNPROTECTED_PAGES = [
     "login",
+    "register",
     "2fa",
 ]
 

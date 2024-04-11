@@ -1,0 +1,9 @@
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#login-form #submit {
+    margin-top: 20px;
+}

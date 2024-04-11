@@ -40,6 +40,7 @@
     width: 100%;
     background-color: var(--background-color);
     gap: 2vh;
+    color: #00c5c5;
 }
 
 .primary-box{

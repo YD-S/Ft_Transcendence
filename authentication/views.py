@@ -90,7 +90,6 @@ def verify_2fa(request: HttpRequest):
             content_type='application/json',
             status=400
         )
-    print(user.expected_2fa, code)
     if user.expected_2fa != code:
         return HttpResponse(
             json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
@@ -209,7 +208,7 @@ def register(request: HttpRequest):
         )
     try:
         # Create the user
-        UserManager().create_user(
+        User.objects.create_user(
             email=email,
             password=data.get('password'),
             username=username

@@ -44,38 +44,7 @@ export function padZero(str, len) {
     return (zeros + str).slice(-len);
 }
 
-export function login() {
-    let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
-    let data = {
-        username: username,
-        password: password
-    };
-    fetch('/api/auth/login/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-        .then(response => {
-            if (response.status >= 400) {
-                throw new Error("Invalid username or password");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.action === '2fa') {
-                PageManager.getInstance().load(`2fa`, data.email2fa, data.user_id);
-            } else if (data.action === 'login') {
-                saveToken(data);
-                PageManager.getInstance().load('home');
-            }
-        })
-        .catch((error) => {
-            alert(error);
-        });
-}
+
 
 export function logout() {
     fetch('/api/auth/logout/', {method: 'POST'})

@@ -1,15 +1,16 @@
 {# Login page. Sends a json to the backend with username and password #}
 {# Simple page for testing #}
 
+{% load static %}
 
-{% block content %}
-  <h2>Login</h2>
-  <div>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <button onclick="window.global.login()">Login</button>
-  </div>
-  <div id="response"></div>
-{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+<h2>Login</h2>
+<div id="login-form">
+  <label for="username">Username:</label>
+  <input type="text" id="username" name="username" required>
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required>
+  <button id="submit">Login</button>
+  
+  <a href="/register">Create account</a>
+</div>
