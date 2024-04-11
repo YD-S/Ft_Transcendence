@@ -29,51 +29,51 @@ Para añadir una página de ejemplo llamada `example`, se deben seguir los sigui
 
 1. Crear un nuevo archivo `example.html` en `templates` con el siguiente contenido:
 
-```html
-{% load static %}
-
-<link rel="stylesheet" href="{% static 'css/example.css' %}">
-<div id="example">
-  <h1>Example</h1>
-  <p>This is an example page</p>
-  <button id="example-button" onclick="window.global.pageHandler.load('home')">Go home!</button>
-  <button id="example-button2">Say hello world</button>
-</div>
-```
+    ```html
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'css/example.css' %}">
+    <div id="example">
+      <h1>Example</h1>
+      <p>This is an example page</p>
+      <button id="example-button" onclick="window.global.pageHandler.load('home')">Go home!</button>
+      <button id="example-button2">Say hello world</button>
+    </div>
+    ```
 
 2. Crear un nuevo archivo `example.css` en `static/css` con el siguiente contenido:
 
-```css
-#example {
-  text-align: center;
-  margin-top: 50px;
-}
-```
+    ```css
+    #example {
+      text-align: center;
+      margin-top: 50px;
+    }
+    ```
 
 3. Crear un nuevo archivo `example.js` en `static/js` con el siguiente contenido:
 
-```javascript
-import { PageManager } from './page-manager.js';
-
-document.getElementById('example-button2').addEventListener('click', () => {
-  alert('Hello world!');
-});
-
-PageManager.getInstance().setOnPageLoad('example', () => {
-  console.log('Example page loaded');
-});
-
-PageManager.getInstance().setOnPageUnload('example', () => {
-  console.log('Example page unloaded');
-});
-```
+    ```javascript
+    import { PageManager } from './page-manager.js';
+    
+    document.getElementById('example-button2').addEventListener('click', () => {
+      alert('Hello world!');
+    });
+    
+    PageManager.getInstance().setOnPageLoad('example', () => {
+      console.log('Example page loaded');
+    });
+    
+    PageManager.getInstance().setOnPageUnload('example', () => {
+      console.log('Example page unloaded');
+    });
+    ```
 
 4. Añadir el siguiente enlace al final del `body` del archivo `templates/index.html`:
 
-```html
-...
-<script src="{% static 'js/example.js' %}" type="module"></script>
-```
+    ```html
+    ...
+    <script src="{% static 'js/example.js' %}" type="module"></script>
+    ```
 
 ## Páginas con contexto
 
