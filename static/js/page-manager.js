@@ -32,7 +32,7 @@ export class PageManager {
         return this.__instance;
     }
 
-    load(page) {
+    load(page, ...args) {
         fetch(`/page/${page}.html`)
             .then(response => {
                 if (response.status !== 200) {
@@ -45,7 +45,7 @@ export class PageManager {
                 history.pushState({data: data}, "", page);
                 this.contentRoot.innerHTML = data;
                 if (this.onLoadCallbacks[page]) {
-                    this.onLoadCallbacks[page]();
+                    this.onLoadCallbacks[page](...args);
                 }
                 if (this.onUnloadCallbacks[this.previousPage]) {
                     this.onUnloadCallbacks[this.previousPage]();

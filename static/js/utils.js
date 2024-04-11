@@ -59,14 +59,18 @@ export function login() {
         body: JSON.stringify(data),
     })
         .then(response => {
-            if (response.status !== 200) {
+            if (response.status >= 400) {
                 throw new Error("Invalid username or password");
             }
             return response.json();
         })
         .then(data => {
-            saveToken(data);
-            PageManager.getInstance().load('home');
+            if (data.action === '2fa') {
+                PageManager.getInstance().load(`2fa`, data.email2fa, data.user_id);
+            } else if (data.action === 'login') {
+                saveToken(data);
+                PageManager.getInstance().load('home');
+            }
         })
         .catch((error) => {
             alert(error);
@@ -126,7 +130,7 @@ function refreshToken() {
         });
 }
 
-function saveToken(data) {
+export function saveToken(data) {
     setCookie('Authorization', `${data.access_token}`, 1);
     sessionStorage.setItem('access_token', data.access_token);
     sessionStorage.setItem('refresh_token', data.refresh_token);

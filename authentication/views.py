@@ -1,9 +1,12 @@
 import json
+import random
 
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
 
+from authentication.mail_client import MailClient
 from authentication.token import TokenManager, require_token, get_token
 from authentication.utils import hash_password
 from common.request import HttpRequest, wrap_funcview
@@ -31,12 +34,79 @@ def login_view(request):
             content_type='application/json',
             status=400
         )
+    if user.has_2fa:
+        send_2fa_code(user)
+        return JsonResponse({
+            "action": "2fa",
+            "email2fa": user.email,
+            "user_id": user.id
+        })
 
-    # Create JWT token
+    return generate_login(request, user)
+
+
+def send_2fa_code(user: User):
+    user.expected_2fa = random.randint(100000, 999999)
+    user.save()
+    mail_client = MailClient()
+    mail_client.send_mail(
+        mail=user.email,
+        subject="2FA",
+        reply_to="noreply@neon-pong.com",
+        message=f"<p>Your 2FA code is <pre>{user.expected_2fa}</pre></p>",
+        subtype="html"
+    )
+
+
+@require_http_methods(["POST"])
+@wrap_funcview
+def verify_2fa(request: HttpRequest):
+    data = request.json()
+    if not data.get('user_id'):
+        return HttpResponse(
+            json.dumps({"message": "User ID is required", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    if not data.get('code'):
+        return HttpResponse(
+            json.dumps({"message": "2FA code is required", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    try:
+        user = User.objects.get(pk=data.get('user_id'))
+    except User.DoesNotExist:
+        return HttpResponse(
+            json.dumps({"message": "User not found", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    try:
+        code = int(data.get('code'))
+    except ValueError:
+        return HttpResponse(
+            json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    if user.expected_2fa != code:
+        return HttpResponse(
+            json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    user.expected_2fa = None
+    user.save()
+    return generate_login(request, user)
+
+
+def generate_login(request: HttpRequest, user: User):
     try:
         access_token, refresh_token, access_expiration, refresh_expiration = TokenManager().create_token_pair(user.id)
         login(request, user, backend='authentication.backends.TokenBackend')
         return JsonResponse({
+            "action": "login",
             "access_token": access_token,
             "refresh_token": refresh_token,
             "access_expiration": f"{int(access_expiration.timestamp())}",
@@ -44,6 +114,32 @@ def login_view(request):
         })
     except ValidationError as e:
         return e.as_http_response()
+
+
+@require_http_methods(["POST"])
+@wrap_funcview
+def resend_2fa_code(request: HttpRequest):
+    data = request.json()
+    if not data.get('email'):
+        return HttpResponse(
+            json.dumps({"message": "Email is required", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    try:
+        user = User.objects.get(email=data.get('email'))
+    except User.DoesNotExist:
+        return HttpResponse(
+            json.dumps({"message": "User not found", "type": "2fa_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    send_2fa_code(user)
+    return HttpResponse(
+        json.dumps({"message": "2FA code sent"}),
+        content_type='application/json',
+        status=200
+    )
 
 
 @require_token()

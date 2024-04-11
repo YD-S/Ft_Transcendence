@@ -35,6 +35,15 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = [x.strip() for x in os.getenv("ALLOWED_HOSTS", "").split(',')]
 CSRF_TRUSTED_ORIGINS = [f"https://{x}" for x in ALLOWED_HOSTS]
 
+SMTP_SERVER = os.getenv("SMTP_SERVER")
+try:
+    SMTP_PORT = int(os.getenv("SMTP_PORT"))
+except ValueError:
+    SMTP_PORT = 587
+
+MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 
 from authentication.token import require_token
+from users.models import User
 
 UNPROTECTED_PAGES = [
-    "login"
+    "login",
+    "2fa",
 ]
 
 
@@ -172,3 +174,8 @@ def tournament(request):
             ],
         },
     })
+
+
+def two_factor_auth(request, user_id: int):
+    user = User.objects.get(id=user_id)
+    return render(request, "2fa.html", {"user": user})

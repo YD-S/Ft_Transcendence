@@ -41,8 +41,10 @@ class User(AbstractUser, BaseModel):
     password = models.CharField(max_length=255)
 
     last_login = models.DateTimeField(null=True, blank=True)
-
     objects = UserManager()
+
+    has_2fa = models.BooleanField(default=False)
+    expected_2fa = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.username}({self.id}) - {self.email}"
