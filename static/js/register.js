@@ -5,6 +5,7 @@ PageManager.getInstance().setOnPageLoad("register", () => {
         event.preventDefault();
         const username = document.getElementById("username").value;
         const email = document.getElementById("email").value;
+        const has_2fa = document.getElementById("2fa").checked;
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirm-password").value;
         if (password !== confirmPassword) {
@@ -16,7 +17,7 @@ PageManager.getInstance().setOnPageLoad("register", () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({username, email, password})
+            body: JSON.stringify({username, email, password, has_2fa})
         }).then(response => {
             if (response.ok) {
                 alert("Registration successful!");

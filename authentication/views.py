@@ -211,7 +211,8 @@ def register(request: HttpRequest):
         User.objects.create_user(
             email=email,
             password=data.get('password'),
-            username=username
+            username=username,
+            has_2fa=data.get('has_2fa', False)
         )
     except ValidationError as e:
         return e.as_http_response()
