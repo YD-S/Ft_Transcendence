@@ -4,7 +4,7 @@ import {saveToken} from "./utils.js";
 
 export function login() {
     document.getElementById('submit').setAttribute('disabled', 'true');
-    let username = document.getElementById('username').value;
+    let username = document.getElementById('username').value.trim();
     let password = document.getElementById('password').value;
     let data = {
         username: username,
