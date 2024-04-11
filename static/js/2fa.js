@@ -15,7 +15,6 @@ PageManager.getInstance().setOnPageLoad("2fa", (email2fa, user_id) => {
                 code: code,
                 user_id: localStorage.getItem('user_id')
             };
-            localStorage.removeItem('user_id');
             fetch('/api/auth/2fa/', {
                 method: 'POST',
                 headers: {
@@ -31,6 +30,7 @@ PageManager.getInstance().setOnPageLoad("2fa", (email2fa, user_id) => {
                 })
                 .then(data => {
                     window.global.saveToken(data);
+                    localStorage.removeItem('user_id');
                     PageManager.getInstance().load('home');
                 })
                 .catch((error) => {

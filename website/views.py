@@ -175,7 +175,3 @@ def tournament(request):
         },
     })
 
-
-def two_factor_auth(request, user_id: int):
-    user = User.objects.get(id=user_id)
-    return render(request, "2fa.html", {"user": user})
