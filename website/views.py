@@ -16,7 +16,6 @@ UNPROTECTED_PAGES = [
 
 @require_token()
 def protected_main_view(request, page):
-    print(page)
     return render(request, "index.html", {"page": page})
 
 
@@ -33,9 +32,7 @@ def protected_page_view(request, file):
         case "tournament.html":
             return tournament(request)
         case "me.html":
-            data = UserSerializer(instance=request.user).data
-            print(data)
-            return render(request, file, {"user": data})
+            return render(request, file, {"user": UserSerializer(instance=request.user).data})
         case _:
             return render(request, file)
 

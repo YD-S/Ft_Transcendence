@@ -44,7 +44,7 @@ class TokenManager:
 
     def refresh_token(self, refresh_token):
         payload = self._test_token(refresh_token)
-        exp = datetime.datetime.strptime(payload.get('exp'), "%Y-%m-%d %H:%M:%S")
+        exp = datetime.datetime.fromtimestamp(payload.get('exp'), datetime.UTC)
         if payload.get('user_id') not in self.tokens:
             raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
                                   content_type='application/json')
