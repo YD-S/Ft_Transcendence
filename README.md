@@ -25,7 +25,9 @@ docker-compose up
 
 ## Modules
 
-- Major modules:
+Total points: 5/7
+
+- Major modules (1 point each):
   - [x] MAJOR: framework backend
   - [x] MAJOR: 2FA, JWT
   - [x] MAJOR: User Management
@@ -36,7 +38,7 @@ docker-compose up
   - [ ] MAJOR: Live Chat
   - [ ] MAJOR: Server Side Pong
 
-- Minor modules:
+- Minor modules (0.5 points each):
   - [x] MINOR: frontend toolkit
   - [x] MINOR: database
   - [ ] MINOR: USER STATS
