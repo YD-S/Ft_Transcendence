@@ -27,8 +27,9 @@ docker-compose up
 
 - [x] MAJOR: framework backend
 - [ ] MAJOR: AI
-- [ ] MAJOR: 2FA
-- [x] MAJOR: User Management, auth
+- [x] MAJOR: 2FA, JWT
+- [x] MAJOR: User Management
+- [x] MAJOR: OAuth
 - [ ] MAJOR: Remote players
 - [ ] MAJOR: Multiplayers
 - [ ] MAJOR: Live Chat
