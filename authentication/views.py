@@ -1,11 +1,15 @@
+import hashlib
 import json
+import os
 import random
+from urllib.parse import urlencode
 
+import requests
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods
 
+from NeonPong import settings
 from authentication.mail_client import MailClient
 from authentication.token import TokenManager, require_token, get_token
 from authentication.utils import hash_password
@@ -277,5 +281,51 @@ def change_password(request):
     )
 
 
+@require_http_methods(["GET"])
+@wrap_funcview
 def me(request: HttpRequest):
     return JsonResponse(UserSerializer(instance=request.user).data)
+
+
+@require_http_methods(["GET"])
+@wrap_funcview
+def oauth(request: HttpRequest):
+    state = hashlib.sha256(os.urandom(1024)).hexdigest()
+    querystring = urlencode({
+        "client_id": settings.CLIENT_ID,
+        "redirect_uri": f"{settings.BASE_URL}/oauth_callback",
+        "response_type": "code",
+        "scope": "public",
+        "state": state
+    })
+    return JsonResponse({"url": f"https://api.intra.42.fr/oauth/authorize?{querystring}", "state": state})
+
+
+@require_http_methods(["POST"])
+@wrap_funcview
+def oauth_login(request: HttpRequest):
+    data = request.json()
+    if not data.get('code'):
+        return HttpResponse(
+            json.dumps({"message": "Code is required", "type": "oauth_login_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    code = data.get('code')
+    querystring = urlencode({
+        "grant_type": "authorization_code",
+        "client_id": settings.CLIENT_ID,
+        "client_secret": settings.CLIENT_SECRET,
+        "code": code,
+        "redirect_uri": f"{settings.BASE_URL}/oauth_callback"
+    })
+    response = requests.post(f"https://api.intra.42.fr/oauth/token?{querystring}")
+    if response.status_code != 200:
+        return HttpResponse(
+            json.dumps({"message": "Invalid code", "type": "oauth_login_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    data = response.json()
+    user = User.objects.get_or_create_42_user(data)
+    return generate_login(request, user)

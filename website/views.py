@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 
 from authentication.token import require_token
+from common.request import wrap_funcview
 from users.models import User
+from users.serializers import UserSerializer
 
 UNPROTECTED_PAGES = [
     "login",
     "register",
     "2fa",
+    "oauth",
+    "oauth_callback",
 ]
 
 
@@ -16,6 +20,7 @@ def protected_main_view(request, page):
     return render(request, "index.html", {"page": page})
 
 
+@wrap_funcview
 def main_view(request, page):
     if page in UNPROTECTED_PAGES:
         return render(request, "index.html", {"page": page})
@@ -27,10 +32,13 @@ def protected_page_view(request, file):
     match file:
         case "tournament.html":
             return tournament(request)
+        case "me.html":
+            return render(request, file, {"user": UserSerializer(instance=request.user).data})
         case _:
             return render(request, file)
 
 
+@wrap_funcview
 def page_view(request, file):
     if request.headers.get("Sec-Fetch-Mode") == "navigate":
         return redirect("/home")

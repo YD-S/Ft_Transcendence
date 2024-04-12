@@ -44,6 +44,11 @@ except ValueError:
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+
+BASE_URL = os.getenv("BASE_URL")
+
 # Application definition
 
 INSTALLED_APPS = [

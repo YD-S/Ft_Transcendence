@@ -25,7 +25,7 @@ export function login() {
         })
         .then(data => {
             if (data.action === '2fa') {
-                PageManager.getInstance().load(`2fa`, data.email2fa, data.user_id);
+                PageManager.getInstance().load(`2fa`, false, data.email2fa, data.user_id);
             } else if (data.action === 'login') {
                 saveToken(data);
                 PageManager.getInstance().load('home');
@@ -36,9 +36,29 @@ export function login() {
         });
 }
 
+function oauth() {
+    fetch('/api/auth/oauth/')
+        .then(response => {
+            if (response.status >= 400) {
+                throw new Error("There was an error with the OAuth request. Please try again.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            sessionStorage.setItem('oauth_state', data.state);
+            window.location.href = data.url;
+        })
+        .catch((error) => {
+            alert(error);
+        });
+}
+
 PageManager.getInstance().setOnPageLoad('login', () => {
     document.getElementById('submit').removeAttribute('disabled');
     document.getElementById('submit').addEventListener('click', (event) => {
         login();
+    });
+    document.getElementById('oauth').addEventListener('click', (event) => {
+        oauth();
     });
 })

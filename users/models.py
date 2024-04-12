@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -27,6 +28,20 @@ class UserManager(BaseUserManager):
         user.is_superuser = True
         user.save()
         return user
+
+    def get_or_create_42_user(self, data):
+        access_token = data.get("access_token")
+        response = requests.get('https://api.intra.42.fr/v2/me', headers={"Authorization": f"Bearer {access_token}"})
+        user_data = response.json()
+        user = self.model.objects.filter(username=user_data["login"])
+        if user.exists():
+            return user.first()
+        else:
+            return self.create_user(
+                email=user_data["email"],
+                username=user_data["login"],
+                password=hash_password(user_data["login"]),
+            )
 
 
 class User(AbstractUser, BaseModel):

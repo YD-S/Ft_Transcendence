@@ -32,17 +32,16 @@ export class PageManager {
         return this.__instance;
     }
 
-    load(page, ...args) {
+    load(page, preserve_query = true, ...args) {
         fetch(`/page/${page}.html`)
             .then(response => {
                 if (response.status !== 200) {
-                    console.error(response)
                     this.load('login')
                 }
                 return response.text();
             })
             .then(data => {
-                history.pushState({data: data}, "", page);
+                history.pushState({data: data}, "", page + (preserve_query ? window.location.search : ""));
                 this.contentRoot.innerHTML = data;
                 if (this.onLoadCallbacks[page]) {
                     this.onLoadCallbacks[page](...args);
