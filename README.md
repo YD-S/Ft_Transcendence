@@ -36,7 +36,6 @@ Total points: 5/7
   - [ ] MAJOR: Remote players
   - [ ] MAJOR: Multiplayers
   - [ ] MAJOR: Live Chat
-  - [ ] MAJOR: Server Side Pong
 
 - Minor modules (0.5 points each):
   - [x] MINOR: frontend toolkit
