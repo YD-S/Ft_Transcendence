@@ -3,12 +3,12 @@ from typing import Type
 from django.db import models
 from django.http import JsonResponse
 
-from common.request import HttpRequest, WrappedRequestMixin
+from common.request import HttpRequest, ViewMixin
 from utils.exception import NotFoundError
 from utils.modelserializer import ModelSerializer
 
 
-class ModelViewSet(WrappedRequestMixin):
+class ModelViewSet(ViewMixin):
     model: Type[models.Model]
     serializer: Type[ModelSerializer]
 

@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 
 from authentication.token import require_token
-from common.request import wrap_funcview
-from users.models import User
+from common.request import HttpRequest
 from users.serializers import UserSerializer
 
 UNPROTECTED_PAGES = [
@@ -15,19 +14,18 @@ UNPROTECTED_PAGES = [
 
 
 @require_token()
-def protected_main_view(request, page):
+def protected_main_view(request: HttpRequest, page: str):
     return render(request, "index.html", {"page": page})
 
 
-@wrap_funcview
-def main_view(request, page):
+def main_view(request: HttpRequest, page: str):
     if page in UNPROTECTED_PAGES:
         return render(request, "index.html", {"page": page})
     return protected_main_view(request, page)
 
 
 @require_token(login_redirect=False)
-def protected_page_view(request, file):
+def protected_page_view(request: HttpRequest, file: str):
     match file:
         case "tournament.html":
             return tournament(request)
@@ -37,8 +35,7 @@ def protected_page_view(request, file):
             return render(request, file)
 
 
-@wrap_funcview
-def page_view(request, file):
+def page_view(request: HttpRequest, file: str):
     if request.headers.get("Sec-Fetch-Mode") == "navigate":
         return redirect("/home")
     page = file.split(".")[0]
@@ -47,7 +44,7 @@ def page_view(request, file):
     return protected_page_view(request, file)
 
 
-def tournament(request):
+def tournament(request: HttpRequest):
     spacing = 4.7
     return render(request, "tournament.html", {
         "tournament": {

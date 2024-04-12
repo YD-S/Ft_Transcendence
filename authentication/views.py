@@ -13,15 +13,14 @@ from NeonPong import settings
 from authentication.mail_client import MailClient
 from authentication.token import TokenManager, require_token, get_token
 from authentication.utils import hash_password
-from common.request import HttpRequest, wrap_funcview
+from common.request import HttpRequest
 from users.models import User, UserManager
 from users.serializers import UserSerializer
 from utils.exception import ValidationError
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
-def login_view(request):
+def login_view(request: HttpRequest):
     # Read the username and password from the request
     data = request.json()
     if not data.get('username') or not data.get('password'):
@@ -63,7 +62,6 @@ def send_2fa_code(user: User):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
 def verify_2fa(request: HttpRequest):
     data = request.json()
     if not data.get('user_id'):
@@ -121,7 +119,6 @@ def generate_login(request: HttpRequest, user: User):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
 def resend_2fa_code(request: HttpRequest):
     data = request.json()
     if not data.get('email'):
@@ -148,7 +145,6 @@ def resend_2fa_code(request: HttpRequest):
 
 @require_token()
 @require_http_methods(["POST"])
-@wrap_funcview
 def logout(request: HttpRequest):
     try:
         TokenManager().revoke_token(get_token(request))
@@ -162,7 +158,6 @@ def logout(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
 def refresh(request: HttpRequest):
     # Read the token from the header
     data = request.json()
@@ -191,7 +186,6 @@ def refresh(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
 def register(request: HttpRequest):
     # Read the username and password from the request
     data = request.json()
@@ -227,8 +221,7 @@ def register(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
-def change_password(request):
+def change_password(request: HttpRequest):
     # Read the passwords from the request
     data = request.json()
     if not data.get('user_id'):
@@ -281,13 +274,11 @@ def change_password(request):
 
 
 @require_http_methods(["GET"])
-@wrap_funcview
 def me(request: HttpRequest):
     return JsonResponse(UserSerializer(instance=request.user).data)
 
 
 @require_http_methods(["GET"])
-@wrap_funcview
 def oauth(request: HttpRequest):
     state = hashlib.sha256(os.urandom(1024)).hexdigest()
     querystring = urlencode({
@@ -301,7 +292,6 @@ def oauth(request: HttpRequest):
 
 
 @require_http_methods(["POST"])
-@wrap_funcview
 def oauth_login(request: HttpRequest):
     data = request.json()
     if not data.get('code'):

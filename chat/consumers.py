@@ -1,4 +1,5 @@
 import django
+
 django.setup()
 
 import json
@@ -36,7 +37,7 @@ class ChatRoomConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         pass
 
-    def receive(self, text_data: str):
+    def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         # Message.objects.create(content=message, sender=self.scope['user'], room=self.room).save()
