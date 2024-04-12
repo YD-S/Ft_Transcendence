@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 
 from authentication.token import require_token
+from chat.models import Room
+from chat.serializers import RoomSerializer
 from common.request import HttpRequest
 from users.serializers import UserSerializer
 
@@ -31,6 +33,14 @@ def protected_page_view(request: HttpRequest, file: str):
             return tournament(request)
         case "me.html":
             return render(request, file, {"user": UserSerializer(instance=request.user).data})
+        case "chat.html":
+            rooms = Room.objects.all()
+            if "room" in request.GET:
+                current_room = rooms.filter(id=request.GET["room"])
+                if current_room.exists():
+                    serialized = RoomSerializer(instance=current_room.first()).data
+                    return render(request, file, {"rooms": rooms, "current_room": serialized})
+            return render(request, file, {"rooms": rooms})
         case _:
             return render(request, file)
 
@@ -179,4 +189,3 @@ def tournament(request: HttpRequest):
             ],
         },
     })
-

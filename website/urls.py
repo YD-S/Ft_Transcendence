@@ -7,3 +7,5 @@ urlpatterns = [
     path("<str:page>", views.main_view, name="main"),
     path("page/<str:file>", views.page_view, name="page"),
 ]
+
+

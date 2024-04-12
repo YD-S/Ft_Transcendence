@@ -25,7 +25,7 @@ export function login() {
         })
         .then(data => {
             if (data.action === '2fa') {
-                PageManager.getInstance().load(`2fa`, false, data.email2fa, data.user_id);
+                PageManager.getInstance().load(`2fa`, false, {args: { email2fa: data.email2fa, user_id: data.user_id }})
             } else if (data.action === 'login') {
                 saveToken(data);
                 PageManager.getInstance().load('home');

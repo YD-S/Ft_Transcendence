@@ -13,6 +13,8 @@ class ModelSerializer:
         fields: list | str = '__all__'
         excluded_fields: list = []
         default_fields: dict = {}
+        read_only_fields: list = []
+        write_only_fields: list = []
 
     def __init__(self, *, instance: models.Model = None, data: dict = None):
         self.none = object()
@@ -23,19 +25,20 @@ class ModelSerializer:
             raise ValidationError(json.dumps({"message": "Either instance or data must be provided", "type": "data"}), content_type='application/json')
 
         if instance is not None and data is not None:
-            self._update_instance(instance, {**self.Meta.default_fields, **data})
+            self._update_instance(instance, {**getattr(self.Meta, 'default_fields', {}), **data})
         elif instance is not None:
             self.instance = instance
             self._serialize_instance()
         else:
-            self._create_instance({**self.Meta.default_fields, **data})
+            self._create_instance({**getattr(self.Meta, 'default_fields', {}), **data})
 
     def _update_instance(self, instance, data):
         fields = self._get_fields()
+        fields = list(filter(lambda x: x not in getattr(self.Meta, 'read_only_fields', []), fields))
         auto_fields = map(lambda x: x.name, filter(lambda x: x.auto_created, self.Meta.model._meta.fields))
         for field in data:
             if field not in fields:
-                raise ValidationError(json.dumps({"message": f"Model {self.Meta.model.__name__} does not have field '{field}'", "type": "data"}),
+                raise ValidationError(json.dumps({"message": f"Model {self.Meta.model.__name__} does not have field '{field}' or it is read-only", "type": "data"}),
                                       content_type='application/json')
         self.data = data
         for field in data:
@@ -65,6 +68,7 @@ class ModelSerializer:
     def _serialize_instance(self):
         self.data = {}
         fields = self._get_fields()
+        fields = list(filter(lambda x: x not in getattr(self.Meta, 'write_only_fields', []), fields))
         for field in fields:
             serialize: Callable = getattr(self, f"serialize_{field}", self._serialize_value)
             self.data[field] = serialize(getattr(self.instance, field))
@@ -189,7 +193,7 @@ class ModelSerializer:
 
     def _get_fields(self, exclude=True):
         return filter(
-            lambda x: x not in self.Meta.excluded_fields if exclude else True,
+            lambda x: x not in getattr(self.Meta, 'excluded_fields', []) if exclude else True,
             map(
                 lambda x: x.name, self.Meta.model._meta.fields
             ) if self.Meta.fields == '__all__' else self.Meta.fields)

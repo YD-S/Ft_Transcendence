@@ -30,10 +30,10 @@ class Room(BaseModel):
     class Meta:
         ordering = ['created_at']
 
-    def get_direct_name(self, user: User) -> str:
+    def get_name(self, user: User) -> str:
         if self.is_direct:
             return self.members.exclude(id=user.id).first().username
-        return "None"
+        return self.name
 
     def join(self, user: User):
         self.members.add(user)

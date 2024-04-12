@@ -32,8 +32,14 @@ export class PageManager {
         return this.__instance;
     }
 
-    load(page, preserve_query = true, ...args) {
-        fetch(`/page/${page}.html`)
+    /**
+     * Load a page into the content root
+     * @param page {string} The page to load
+     * @param preserve_query {boolean} Whether to preserve the query string in the URL
+     * @param options {object} Options for loading the page
+     */
+    load(page, preserve_query = true, options = {args: [], query: ""}) {
+        fetch(`/page/${page}.html` + (options.query || ""))
             .then(response => {
                 if (response.status !== 200) {
                     this.load('login')
@@ -44,7 +50,7 @@ export class PageManager {
                 history.pushState({data: data}, "", page + (preserve_query ? window.location.search : ""));
                 this.contentRoot.innerHTML = data;
                 if (this.onLoadCallbacks[page]) {
-                    this.onLoadCallbacks[page](...args);
+                    this.onLoadCallbacks[page](...(options.args || []));
                 }
                 if (this.onUnloadCallbacks[this.previousPage]) {
                     this.onUnloadCallbacks[this.previousPage]();

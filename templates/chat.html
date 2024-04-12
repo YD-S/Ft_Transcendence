@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
+<div id="chat-page">
+  <div id="room-list-sidebar">
+    <h2>Room List</h2>
+    <ul>
+      {% for room in rooms %}
+        <li class="room">
+          <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
+        </li>
+      {% endfor %}
+    </ul>
+    <div id="create-room">
+      <label>
+        <span>Create a room:</span>
+        <input type="text" id="new-room-name" placeholder="Room name">
+      </label>
+      <button id="submit-create-room">Create</button>
+    </div>
+  </div>
+  <div id="current-room">
+    {% if current_room %}
+      <span style="display: none" id="room-id">{{ current_room.id }}</span>
+      <h2>{{ current_room.name }}</h2>
+      <div id="chat-log">
+        {% for message in current_room.messages %}
+          <div class="message">
+            <span class="timestamp">{{ message.created_at }}</span>
+            <span class="username">{{ message.sender }}</span>
+            <span class="content">{{ message.content }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <label for="chat-input">Message: </label><input type="text" id="chat-input" placeholder="Type your message here">
+      <button id="send-message">Send</button>
+    {% else %}
+      <h2>Welcome to the chatroom!</h2>
+    {% endif %}
+  </div>
+</div>
