@@ -25,15 +25,18 @@ docker-compose up
 
 ## Modules
 
-- [x] MAJOR: framework backend
-- [ ] MAJOR: AI
-- [x] MAJOR: 2FA, JWT
-- [x] MAJOR: User Management
-- [x] MAJOR: OAuth
-- [ ] MAJOR: Remote players
-- [ ] MAJOR: Multiplayers
-- [ ] MAJOR: Live Chat
-- [ ] MAJOR: Server Side Pong
-- [x] MINOR: frontend toolkit
-- [x] MINOR: database
-- [ ] MINOR: USER STATS
+- Major modules:
+  - [x] MAJOR: framework backend
+  - [x] MAJOR: 2FA, JWT
+  - [x] MAJOR: User Management
+  - [x] MAJOR: OAuth
+  - [ ] MAJOR: AI
+  - [ ] MAJOR: Remote players
+  - [ ] MAJOR: Multiplayers
+  - [ ] MAJOR: Live Chat
+  - [ ] MAJOR: Server Side Pong
+
+- Minor modules:
+  - [x] MINOR: frontend toolkit
+  - [x] MINOR: database
+  - [ ] MINOR: USER STATS
