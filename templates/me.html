@@ -2,12 +2,17 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/me.css' %}">
 
-<div id="profile">
+<div id="profile-page">
     <div>
         <div>
             <h1>My Profile</h1>
             <p>Username: {{ user.username }}</p>
             <p>Email: {{ user.email }}</p>
+            {% if user.is_oauth %}
+                <p>2FA: OAuth users don't have 2FA</p>
+            {% else %}
+                <p>2FA: {{ user.has_2fa|yesno:"enabled,disabled" }} <button id="toggle-2fa">Toggle</button></p>
+            {% endif %}
         </div>
     </div>
 </div>

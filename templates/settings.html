@@ -1,16 +1,15 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/settings.css' %}">
-<div id="settings" class="main">
+<div id="settings">
   <button class="button secondary-box">
     <img class="img paint-pallete-svg" src={% static "svg/paint_palette.svg" %} alt="paint">
     THEMES
   </button>
-  <button class="button primary-box">
+  <button onclick="window.global.pageManager.load('me')" class="button primary-box">
     <img class="img profile-icon-svg" src={% static "svg/profile_icon.svg" %} alt="profile">
     PROFILE
   </button>
-  "
   <button class="button secondary-box">
     <img class="img paint-pallete-svg" src={% static "svg/paint_palette.svg" %} alt="paint">
     MATCH

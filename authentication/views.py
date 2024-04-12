@@ -216,7 +216,6 @@ def register(request: HttpRequest):
             email=email,
             password=data.get('password'),
             username=username,
-            has_2fa=data.get('has_2fa', False)
         )
     except ValidationError as e:
         return e.as_http_response()

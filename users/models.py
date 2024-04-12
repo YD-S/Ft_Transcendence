@@ -41,6 +41,7 @@ class UserManager(BaseUserManager):
                 email=user_data["email"],
                 username=user_data["login"],
                 password=hash_password(user_data["login"]),
+                is_oauth=True
             )
 
 
@@ -54,6 +55,7 @@ class User(AbstractUser, BaseModel):
 
     has_2fa = models.BooleanField(default=False)
     expected_2fa = models.IntegerField(null=True, blank=True)
+    is_oauth = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.username}({self.id}) - {self.email}"
