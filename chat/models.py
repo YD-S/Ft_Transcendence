@@ -22,7 +22,7 @@ class Message(BaseModel):
 
 
 class Room(BaseModel):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     members = models.ManyToManyField('users.User', related_name='rooms')
     is_direct = models.BooleanField(default=False)
     code = models.CharField(max_length=8, unique=True, null=True)

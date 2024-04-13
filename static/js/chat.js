@@ -1,11 +1,24 @@
 import {PageManager} from "./page-manager.js";
 
 function createMessageHTML(message) {
+    if (!message.sender) {
+        return `<span class="timestamp">${message.created_at}</span>
+            <span class="system-message">${message.content}</span>`
+    }
     return `<span class="timestamp">${message.created_at}</span>
             <span class="username">${message.sender}:</span>
             <span class="content">${message.content}</span>`
 }
 
+
+let ws = null;
+let roomId = null;
+
+PageManager.getInstance().setOnPageUnload("chat", () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+    }
+})
 
 PageManager.getInstance().setOnPageLoad("chat", function () {
     document.getElementById("submit-create-room")
@@ -68,8 +81,6 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 })
         })
 
-    let ws = null;
-    let roomId = null
     if (document.getElementById("room-id")) {
         roomId = document.getElementById("room-id").innerHTML;
         ws = new WebSocket(`wss://${window.location.host}/ws/chat/${roomId}/`);

@@ -60,3 +60,12 @@
     width: 100%;
     margin-right: 5px;
 }
+
+#chat-page ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#chat-page li button {
+    text-align: left;
+}

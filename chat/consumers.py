@@ -35,12 +35,15 @@ class ChatRoomConsumer(WebsocketConsumer):
         )
         self.accept()
         self.send_group({
-            'sender': 'System',
             'content': f'{self.scope["user"].username} has joined the chat',
             'created_at': datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S')
         })
 
     def disconnect(self, close_code):
+        self.send_group({
+            'content': f'{self.scope["user"].username} has left the chat',
+            'created_at': datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S')
+        })
         self.channel_layer.group_discard(self.group, self.channel_name)
 
     def receive(self, text_data):

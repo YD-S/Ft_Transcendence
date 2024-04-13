@@ -7,6 +7,7 @@ from authentication.token import require_token
 from chat.models import Message, Room
 from chat.serializers import MessageSerializer, RoomSerializer
 from common.request import HttpRequest
+from users.models import User
 from utils.modelviewset import ModelViewSet
 
 
@@ -30,16 +31,29 @@ class RoomViewSet(ModelViewSet):
     @require_http_methods(["POST"])
     @require_token()
     def join(request: HttpRequest, code: str, *args, **kwargs):
-        instance: Room = Room.objects.get(code=code)
-        instance.join(request.user)
-        instance.save()
-        return JsonResponse(RoomViewSet.serializer(instance=instance).data)
+        room: Room = Room.objects.get(code=code)
+        room.join(request.user)
+        room.save()
+        return JsonResponse(RoomViewSet.serializer(instance=room).data)
 
     @staticmethod
     @require_http_methods(["POST"])
     @require_token()
     def leave(request: HttpRequest, pk: int, *args, **kwargs):
-        instance: Room = Room.objects.get(id=pk)
-        instance.leave(request.user)
-        instance.save()
-        return JsonResponse(RoomViewSet.serializer(instance=instance).data)
+        room: Room = Room.objects.get(id=pk)
+        room.leave(request.user)
+        room.save()
+        return JsonResponse(RoomViewSet.serializer(instance=room).data)
+
+    @staticmethod
+    @require_http_methods(["POST"])
+    @require_token()
+    def direct(request: HttpRequest, user_id: int, *args, **kwargs):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
+        room = Room.objects.create(name="", is_direct=True)
+        room.join(request.user)
+        room.join(user)
+        return JsonResponse(RoomViewSet.serializer(instance=room).data)
