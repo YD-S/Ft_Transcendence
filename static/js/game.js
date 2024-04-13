@@ -93,11 +93,11 @@ export class Game {
 
 let game = null;
 
-PageManager.getInstance().setOnPageLoad('game', () => {
+PageManager.getInstance().setOnPageLoad('pong/game', () => {
     game = new Game();
 })
 
-PageManager.getInstance().setOnPageUnload('game', () => {
+PageManager.getInstance().setOnPageUnload('pong/game', () => {
     if (game) {
         game.destroy();
         game = null;
