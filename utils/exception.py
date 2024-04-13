@@ -11,6 +11,12 @@ class HttpError(Exception):
         return HttpResponse(content=self.content, content_type=self.content_type, status=self.status)
 
 
+class UnauthorizedError(HttpError):
+    def __init__(self):
+        super().__init__(401, '{"message": "Unauthorized", "type": "unauthorized"}')
+        self.content_type = 'application/json'
+
+
 class NotFoundError(HttpError):
     def __init__(self):
         super().__init__(404, 'Not found')

@@ -9,7 +9,7 @@ from NeonPong import settings
 from common.request import HttpRequest
 
 from users.models import User
-from utils.exception import ValidationError
+from utils.exception import ValidationError, HttpError, UnauthorizedError
 
 
 class TokenManager:
@@ -46,18 +46,15 @@ class TokenManager:
         payload = self._test_token(refresh_token)
         exp = datetime.datetime.fromtimestamp(payload.get('exp'), datetime.UTC)
         if payload.get('user_id') not in self.tokens:
-            raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
-                                  content_type='application/json')
+            raise UnauthorizedError()
         return self.create_token_pair(payload.get('user_id'), exp)
 
     def validate_token(self, token):
         payload = self._test_token(token)
         if payload.get('user_id') not in self.tokens:
-            raise ValidationError(json.dumps({"message": "Invalid token1", "type": "invalid_token"}),
-                                  content_type='application/json')
+            raise UnauthorizedError()
         if self.tokens.get(payload.get('user_id')).get('access_token') != token:
-            raise ValidationError(json.dumps({"message": "Invalid token2", "type": "invalid_token"}),
-                                  content_type='application/json')
+            raise UnauthorizedError()
         return True
 
     def revoke_token(self, token):
@@ -90,7 +87,7 @@ def require_token(login_redirect=True):
             try:
                 token = get_token(request)
                 TokenManager().validate_token(token)
-            except ValidationError as e:
+            except HttpError as e:
                 if login_redirect and request.headers.get("Sec-Fetch-Mode") == "navigate":
                     return redirect("/login")
                 return e.as_http_response()
@@ -113,14 +110,12 @@ def get_token(request: HttpRequest):
     # Get token from Authorization cookie
     cookie = request.headers.get("Cookie")
     if not cookie:
-        raise ValidationError(json.dumps({"message": "Token is required", "type": "token_required"}),
-                              content_type='application/json')
+        raise UnauthorizedError()
     token = None
     for c in cookie.split(";"):
         if c.strip().startswith("Authorization="):
             token = c.split("=")[1].strip()
             break
     if not token:
-        raise ValidationError(json.dumps({"message": "Token is required", "type": "token_required"}),
-                              content_type='application/json')
+        raise UnauthorizedError()
     return token

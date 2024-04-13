@@ -42,7 +42,12 @@ export class PageManager {
         fetch(`/page/${page}.html` + (options.query || ""))
             .then(response => {
                 if (response.status !== 200) {
-                    this.load('login')
+                    if (response.status === 401) {
+                        this.load('login')
+                    } else {
+                        this.load('home')
+                    }
+                    return ''
                 }
                 return response.text();
             })
