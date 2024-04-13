@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import json
 import os
@@ -50,13 +51,14 @@ def login_view(request: HttpRequest):
 
 def send_2fa_code(user: User):
     user.expected_2fa = random.randint(100000, 999999)
+    user.expiration_2fa = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=5)
     user.save()
     mail_client = MailClient()
     mail_client.send_mail(
         mail=user.email,
         subject="2FA",
         reply_to="noreply@neon-pong.com",
-        message=f"<p>Your 2FA code is <pre>{user.expected_2fa}</pre></p>",
+        message=f"<p>Tu código de un solo uso es <pre>{user.expected_2fa}</pre></p><p>Caduca en 5 minutos</p>",
         subtype="html"
     )
 
@@ -92,13 +94,14 @@ def verify_2fa(request: HttpRequest):
             content_type='application/json',
             status=400
         )
-    if user.expected_2fa != code:
+    if user.expected_2fa != code or user.expiration_2fa < datetime.datetime.now(datetime.UTC):
         return HttpResponse(
             json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
     user.expected_2fa = None
+    user.expiration_2fa = None
     user.save()
     return generate_login(request, user)
 
@@ -121,14 +124,14 @@ def generate_login(request: HttpRequest, user: User):
 @require_http_methods(["POST"])
 def resend_2fa_code(request: HttpRequest):
     data = request.json()
-    if not data.get('email'):
+    if not data.get('user_id'):
         return HttpResponse(
-            json.dumps({"message": "Email is required", "type": "2fa_fail"}),
+            json.dumps({"message": "User ID is required", "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
     try:
-        user = User.objects.get(email=data.get('email'))
+        user = User.objects.get(id=data.get('user_id'))
     except User.DoesNotExist:
         return HttpResponse(
             json.dumps({"message": "User not found", "type": "2fa_fail"}),

@@ -3,7 +3,6 @@ import {saveToken} from "./utils.js";
 
 
 export function login() {
-    document.getElementById('submit').setAttribute('disabled', 'true');
     let username = document.getElementById('username').value.trim();
     let password = document.getElementById('password').value;
     let data = {
@@ -25,7 +24,7 @@ export function login() {
         })
         .then(data => {
             if (data.action === '2fa') {
-                PageManager.getInstance().load(`2fa`, false, {args: { email2fa: data.email2fa, user_id: data.user_id }})
+                PageManager.getInstance().load(`2fa`, false, {args: [data.email2fa, data.user_id]})
             } else if (data.action === 'login') {
                 saveToken(data);
                 PageManager.getInstance().load('home');
@@ -54,7 +53,6 @@ function oauth() {
 }
 
 PageManager.getInstance().setOnPageLoad('login', () => {
-    document.getElementById('submit').removeAttribute('disabled');
     document.getElementById('submit').addEventListener('click', (event) => {
         login();
     });

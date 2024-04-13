@@ -55,6 +55,7 @@ class User(AbstractUser, BaseModel):
 
     has_2fa = models.BooleanField(default=False)
     expected_2fa = models.IntegerField(null=True, blank=True)
+    expiration_2fa = models.DateTimeField(null=True, blank=True)
     is_oauth = models.BooleanField(default=False)
 
     def __str__(self):
