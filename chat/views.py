@@ -31,7 +31,10 @@ class RoomViewSet(ModelViewSet):
     @require_http_methods(["POST"])
     @require_token()
     def join(request: HttpRequest, code: str, *args, **kwargs):
-        room: Room = Room.objects.get(code=code)
+        try:
+            room: Room = Room.objects.get(code=code)
+        except Room.DoesNotExist:
+            return JsonResponse({"error": "Room not found"}, status=404)
         room.join(request.user)
         room.save()
         return JsonResponse(RoomViewSet.serializer(instance=room).data)
@@ -40,7 +43,10 @@ class RoomViewSet(ModelViewSet):
     @require_http_methods(["POST"])
     @require_token()
     def leave(request: HttpRequest, pk: int, *args, **kwargs):
-        room: Room = Room.objects.get(id=pk)
+        try:
+            room: Room = Room.objects.get(id=pk)
+        except Room.DoesNotExist:
+            return JsonResponse({"error": "Room not found"}, status=404)
         room.leave(request.user)
         room.save()
         return JsonResponse(RoomViewSet.serializer(instance=room).data)
