@@ -12,8 +12,19 @@ services:
       - "443:443"
     depends_on:
       - postgres
+      - redis-service
     env_file:
       - .env
+
+  redis-service:
+    container_name: redis-service
+    image: redis:6.2-alpine
+    restart: unless-stopped
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
 
   postgres:
     image: postgres:alpine
@@ -36,8 +47,13 @@ networks:
     driver: bridge
 
 volumes:
-    postgres_data:
-      driver_opts:
-        type: none
-        device: ~/data/database
-        o: bind
+  postgres_data:
+    driver_opts:
+      type: none
+      device: ~/data/database
+      o: bind
+  redis_data:
+    driver_opts:
+      type: none
+      device: ~/data/redis
+      o: bind

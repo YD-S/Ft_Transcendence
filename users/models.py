@@ -51,16 +51,12 @@ class User(AbstractUser, BaseModel):
     password = models.CharField(max_length=255)
 
     last_login = models.DateTimeField(null=True, blank=True)
-    objects = UserManager()
 
     has_2fa = models.BooleanField(default=False)
-    expected_2fa = models.IntegerField(null=True, blank=True)
-    expiration_2fa = models.DateTimeField(null=True, blank=True)
     is_oauth = models.BooleanField(default=False)
-
     verified_email = models.BooleanField(default=False)
-    email_code = models.CharField(max_length=255, null=True, blank=True)
-    email_code_expiration = models.DateTimeField(null=True, blank=True)
+
+    objects = UserManager()
 
     def __str__(self):
         return f"{self.username}({self.id}) - {self.email}"

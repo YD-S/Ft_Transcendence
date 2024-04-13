@@ -18,6 +18,7 @@ from common.request import HttpRequest
 from users.models import User
 from users.serializers import UserSerializer
 from utils.exception import ValidationError
+from django.core.cache import cache
 
 
 @require_http_methods(["POST"])
@@ -50,15 +51,14 @@ def login_view(request: HttpRequest):
 
 
 def send_2fa_code(user: User):
-    user.expected_2fa = random.randint(100000, 999999)
-    user.expiration_2fa = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=5)
-    user.save()
+    expected_2fa = random.randint(100000, 999999)
+    cache.set(f'{user.id}_2fa', expected_2fa, timeout=300)
     mail_client = MailClient()
     mail_client.send_mail(
         mail=user.email,
         subject="2FA",
         reply_to="noreply@neon-pong.com",
-        message=f"<p>Tu código de un solo uso es <pre>{user.expected_2fa}</pre></p><p>Caduca en 5 minutos</p>",
+        message=f"<p>Tu código de un solo uso es <pre>{expected_2fa}</pre></p><p>Caduca en 5 minutos</p>",
         subtype="html"
     )
 
@@ -94,15 +94,15 @@ def verify_2fa(request: HttpRequest):
             content_type='application/json',
             status=400
         )
-    if user.expected_2fa != code or user.expiration_2fa < datetime.datetime.now(datetime.UTC):
+    sentinel = object()
+    expected_2fa = cache.get(f'{user.id}_2fa', sentinel)
+    if expected_2fa is sentinel or expected_2fa != code:
         return HttpResponse(
             json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
-    user.expected_2fa = None
-    user.expiration_2fa = None
-    user.save()
+    cache.delete(f'{user.id}_2fa')
     return generate_login(request, user)
 
 
@@ -325,15 +325,15 @@ def oauth_login(request: HttpRequest):
 
 
 def send_verification_email(user: User):
-    user.email_code = str(hashlib.sha256(os.urandom(1024)).hexdigest())
-    user.email_code_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=5)
-    user.save()
+    email_code = str(hashlib.sha256(os.urandom(1024)).hexdigest())
+    cache.set(f'{user.id}_email_code', email_code, timeout=300)
+
     mail_client = MailClient()
     mail_client.send_mail(
         mail=user.email,
         subject="Verificación de email",
         reply_to="noreply@neon-pong.com",
-        message=f"<p>Haz click en el siguiente enlace para verificar tu correo electrónico: <a href='{settings.BASE_URL}/auth/verify_email?code={user.email_code}'>{settings.BASE_URL}/auth/verify_email?code={user.email_code}</a></p><p>Este enlace caducará en 5 minutos</p>",
+        message=f"<p>Haz click en el siguiente enlace para verificar tu correo electrónico: <a href='{settings.BASE_URL}/auth/verify_email?code={email_code}&user={user.id}'>{settings.BASE_URL}/auth/verify_email?code={email_code}&user={user.id}</a></p><p>Este enlace caducará en 5 minutos</p>",
         subtype="html"
     )
 
@@ -373,25 +373,26 @@ def verify_email(request: HttpRequest):
             status=400
         )
     code = data.get('code')
+    user_id = data.get('user')
     try:
-        user = User.objects.get(email_code=code)
+        user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return HttpResponse(
             json.dumps({"message": "Invalid code", "type": "verify_email_fail"}),
             content_type='application/json',
             status=400
         )
-    if user.email_code_expiration and user.email_code_expiration < datetime.datetime.now(datetime.UTC):
+    sentinel = object()
+    expected_code = cache.get(f'{user.id}_email_code', sentinel)
+    if expected_code is sentinel or expected_code != code:
         return HttpResponse(
             json.dumps({"message": "Code expired", "type": "verify_email_fail"}),
             content_type='application/json',
             status=400
         )
-    print("Verified email")
     user.verified_email = True
-    user.email_code = None
-    user.email_code_expiration = None
     user.save()
+    cache.delete(f'{user.id}_email_code')
     return HttpResponse(
         json.dumps({"message": "Email verified"}),
         content_type='application/json',

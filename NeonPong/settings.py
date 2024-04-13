@@ -106,9 +106,21 @@ TEMPLATES = [
 
 ASGI_APPLICATION = "NeonPong.asgi.application"
 
+
+REDIS_HOST = os.getenv("REDIS_HOST", "redis-service")
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, 6379)],
+        },
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379",
     }
 }
 
