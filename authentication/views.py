@@ -331,7 +331,7 @@ def send_verification_email(user: User):
     mail_client = MailClient()
     mail_client.send_mail(
         mail=user.email,
-        subject="2FA",
+        subject="Verificación de email",
         reply_to="noreply@neon-pong.com",
         message=f"<p>Haz click en el siguiente enlace para verificar tu correo electrónico: <a href='{settings.BASE_URL}/auth/verify_email?code={user.email_code}'>{settings.BASE_URL}/auth/verify_email?code={user.email_code}</a></p><p>Este enlace caducará en 5 minutos</p>",
         subtype="html"
