@@ -25,17 +25,17 @@ docker-compose up
 
 ## Modules
 
-Total points: 5/7
+Total points: 6/7
 
 - Major modules (1 point each):
   - [x] MAJOR: framework backend
   - [x] MAJOR: 2FA, JWT
   - [x] MAJOR: User Management
   - [x] MAJOR: OAuth
+  - [x] MAJOR: Live Chat
   - [ ] MAJOR: AI
   - [ ] MAJOR: Remote players
   - [ ] MAJOR: Multiplayers
-  - [ ] MAJOR: Live Chat
 
 - Minor modules (0.5 points each):
   - [x] MINOR: frontend toolkit
