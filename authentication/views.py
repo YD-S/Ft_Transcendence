@@ -322,3 +322,78 @@ def oauth_login(request: HttpRequest):
     data = response.json()
     user = User.objects.get_or_create_42_user(data)
     return generate_login(request, user)
+
+
+def send_verification_email(user: User):
+    user.email_code = str(hashlib.sha256(os.urandom(1024)).hexdigest())
+    user.email_code_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=5)
+    user.save()
+    mail_client = MailClient()
+    mail_client.send_mail(
+        mail=user.email,
+        subject="2FA",
+        reply_to="noreply@neon-pong.com",
+        message=f"<p>Haz click en el siguiente enlace para verificar tu correo electrónico: <a href='{settings.BASE_URL}/auth/verify_email?code={user.email_code}'>{settings.BASE_URL}/auth/verify_email?code={user.email_code}</a></p><p>Este enlace caducará en 5 minutos</p>",
+        subtype="html"
+    )
+
+
+@require_http_methods(["POST"])
+def send_verification_email_view(request: HttpRequest):
+    data = request.json()
+    if not data.get('user_id'):
+        return HttpResponse(
+            json.dumps({"message": "User ID is required", "type": "send_verification_email_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    try:
+        user: User = User.objects.get(pk=data.get('user_id'))
+    except User.DoesNotExist:
+        return HttpResponse(
+            json.dumps({"message": "User not found", "type": "send_verification_email_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    send_verification_email(user)
+    return HttpResponse(
+        json.dumps({"message": "Verification email sent"}),
+        content_type='application/json',
+        status=200
+    )
+
+
+@require_http_methods(["POST"])
+def verify_email(request: HttpRequest):
+    data = request.json()
+    if not data.get('code'):
+        return HttpResponse(
+            json.dumps({"message": "Code is required", "type": "verify_email_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    code = data.get('code')
+    try:
+        user = User.objects.get(email_code=code)
+    except User.DoesNotExist:
+        return HttpResponse(
+            json.dumps({"message": "Invalid code", "type": "verify_email_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    if user.email_code_expiration and user.email_code_expiration < datetime.datetime.now(datetime.UTC):
+        return HttpResponse(
+            json.dumps({"message": "Code expired", "type": "verify_email_fail"}),
+            content_type='application/json',
+            status=400
+        )
+    print("Verified email")
+    user.verified_email = True
+    user.email_code = None
+    user.email_code_expiration = None
+    user.save()
+    return HttpResponse(
+        json.dumps({"message": "Email verified"}),
+        content_type='application/json',
+        status=200
+    )

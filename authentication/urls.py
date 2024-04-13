@@ -13,4 +13,6 @@ urlpatterns = [
     path('resend-2fa/', views.resend_2fa_code, name='resend-2fa'),
     path('oauth/', views.oauth, name='oauth'),
     path('oauth_login/', views.oauth_login, name='oauth_login'),
+    path('send-verification/', views.send_verification_email_view, name='send_verification_email'),
+    path('verify-email/', views.verify_email, name='verify_email'),
 ]

@@ -28,4 +28,20 @@ PageManager.getInstance().setOnPageLoad("me", () => {
             }
         });
     })
+
+    document.getElementById("resend-verification").addEventListener("click", (event) => {
+        fetch("/api/auth/send-verification/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({user_id: document.getElementById("user_id").innerHTML})
+        }).then(response => {
+            if (response.ok) {
+                alert("Verification email sent!");
+            } else {
+                alert("Failed to send verification email!");
+            }
+        })
+    })
 })

@@ -13,6 +13,7 @@ UNPROTECTED_PAGES = [
     "auth/2fa",
     "oauth",
     "auth/oauth_callback",
+    "auth/verify_email",
 ]
 
 

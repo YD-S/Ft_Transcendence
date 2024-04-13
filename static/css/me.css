@@ -3,3 +3,8 @@
     display: flex;
     flex-direction: column;
 }
+
+#profile-page ul {
+    list-style-type: none;
+    padding: 0;
+}

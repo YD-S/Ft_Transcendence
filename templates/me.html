@@ -6,13 +6,22 @@
     <div>
         <div>
             <h1>My Profile</h1>
-            <p>Username: {{ user.username }}</p>
-            <p>Email: {{ user.email }}</p>
-            {% if user.is_oauth %}
-                <p>2FA: OAuth users don't have 2FA</p>
-            {% else %}
-                <p>2FA: {{ user.has_2fa|yesno:"enabled,disabled" }} <button id="toggle-2fa">Toggle</button></p>
-            {% endif %}
+            <ul>
+              <li id="user_id" hidden>{{ user.id }}</li>
+              <li>Username: {{ user.username }}</li>
+              <li>Email: {{ user.email }}</li>
+              {% if not user.verified_email %}
+                  <li>Email not verified</li>
+                  <button id="resend-verification">Resend verification email</button>
+              {% endif %}
+              {% if user.is_oauth %}
+                  <li>2FA: OAuth users don't have 2FA</li>
+              {% else %}
+                  <li>2FA: {{ user.has_2fa|yesno:"enabled,disabled" }}
+                    <button id="toggle-2fa" {% if not user.verified_email %} disabled {% endif %}>Toggle</button>
+                  </li>
+              {% endif %}
+            </ul>
         </div>
     </div>
 </div>
