@@ -3,11 +3,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/tournament.css' %}">
 <div id="tournament">
 
-  {# Generate tree like the previous one using django templates #}
-  {# Uses an object Tournament to populate the fields, which is a tree-like object from the finals to the first round #}
-  {# Would look like two trees growing from each side of the screen, touching at the tips #}
-  {# Uses classes instead of inline css #}
-
   {% for round in tournament.rounds_left %}
     <div class="round">
       {% for match in round.matches %}

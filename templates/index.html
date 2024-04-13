@@ -15,7 +15,7 @@
 <nav class="navbar d-flex justify-content-between navbar-custom">
   <!-- Left-aligned item -->
   <button class="px-2 mr-auto button">
-    <img class="settings-svg svg" src={% static "svg/settings.svg" %} alt="settings" width="80" height="80" onclick="window.global.pageManager.load('settings')">
+    <img class="settings-svg svg" src='{% static "svg/settings.svg" %}' alt="settings" width="80" height="80" onclick="window.global.pageManager.load('settings')">
   </button>
 
   <!-- Center-aligned item -->
@@ -31,7 +31,7 @@
   </button>
   <!-- Right-aligned item -->
   <button class="px-2 mr-auto button">
-    <img class="profile-icon-svg svg" src={% static "svg/profile_icon.svg" %} alt="profile" width="80" height="80" onclick="window.global.pageManager.load('me')">
+    <img class="profile-icon-svg svg" src='{% static "svg/profile_icon.svg" %}' alt="profile" width="80" height="80" onclick="window.global.pageManager.load('me')">
   </button>
 </nav>
 
@@ -44,15 +44,15 @@
     window.global = new Global();
     window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
 </script>
-<script src={% static "js/page-manager.js" %} type="module"></script>
-<script src={% static "js/utils.js" %} type="module"></script>
-<script src={% static "js/game.js" %} type="module"></script>
-<script src={% static "js/2fa.js" %} type="module"></script>
-<script src={% static "js/login.js" %} type="module"></script>
-<script src={% static "js/register.js" %} type="module"></script>
-<script src={% static "js/oauth_callback.js" %} type="module"></script>
-<script src={% static "js/me.js" %} type="module"></script>
-<script src={% static "js/chat.js" %} type="module"></script>
+<script src='{% static "js/page-manager.js" %}' type="module"></script>
+<script src='{% static "js/utils.js" %}' type="module"></script>
+<script src='{% static "js/game.js" %}' type="module"></script>
+<script src='{% static "js/2fa.js" %}' type="module"></script>
+<script src='{% static "js/login.js" %}' type="module"></script>
+<script src='{% static "js/register.js" %}' type="module"></script>
+<script src='{% static "js/oauth_callback.js" %}' type="module"></script>
+<script src='{% static "js/me.js" %}' type="module"></script>
+<script src='{% static "js/chat.js" %}' type="module"></script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script> <!-- Some Bootstrap components require popper.js -->
