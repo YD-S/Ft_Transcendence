@@ -1,3 +1,5 @@
+import random
+
 from django.db import models
 
 from common.models import BaseModel
@@ -23,12 +25,18 @@ class Room(BaseModel):
     name = models.CharField(max_length=255, unique=True)
     members = models.ManyToManyField('users.User', related_name='rooms')
     is_direct = models.BooleanField(default=False)
+    code = models.CharField(max_length=8, unique=True, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.members.all()}"
 
     class Meta:
         ordering = ['created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = self.generate_code()
+        super().save(*args, **kwargs)
 
     def get_name(self, user: User) -> str:
         if self.is_direct:
@@ -42,3 +50,7 @@ class Room(BaseModel):
         self.members.remove(user)
         if self.members.count() == 0:
             self.delete()
+
+    @staticmethod
+    def generate_code():
+        return ''.join(random.choices('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=8))

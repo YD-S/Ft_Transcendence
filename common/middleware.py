@@ -7,12 +7,4 @@ class HttpRequestMiddleware:
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        # Code to be executed for each request before
-        # the view (and later middleware) are called.
-
-        response = self.get_response(HttpRequest(request))
-
-        # Code to be executed for each request/response after
-        # the view is called.
-
-        return response
+        return self.get_response(HttpRequest(request))

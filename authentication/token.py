@@ -91,7 +91,7 @@ def require_token(login_redirect=True):
                 token = get_token(request)
                 TokenManager().validate_token(token)
             except ValidationError as e:
-                if login_redirect:
+                if login_redirect and request.headers.get("Sec-Fetch-Mode") == "navigate":
                     return redirect("/login")
                 return e.as_http_response()
             return func(request, *args, **kwargs)

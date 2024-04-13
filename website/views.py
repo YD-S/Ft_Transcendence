@@ -34,13 +34,21 @@ def protected_page_view(request: HttpRequest, file: str):
         case "me.html":
             return render(request, file, {"user": UserSerializer(instance=request.user).data})
         case "chat.html":
-            rooms = Room.objects.all()
+            group_rooms = Room.objects.filter(members__in=[request.user], is_direct=False)
+            direct_rooms = Room.objects.filter(members__in=[request.user], is_direct=True)
             if "room" in request.GET:
-                current_room = rooms.filter(id=request.GET["room"])
+                current_room = Room.objects.filter(members__in=[request.user], id=request.GET["room"])
                 if current_room.exists():
                     serialized = RoomSerializer(instance=current_room.first()).data
-                    return render(request, file, {"rooms": rooms, "current_room": serialized})
-            return render(request, file, {"rooms": rooms})
+                    return render(request, file, {
+                        "group_rooms": group_rooms,
+                        "direct_rooms": direct_rooms,
+                        "current_room": serialized
+                    })
+            return render(request, file, {
+                "group_rooms": group_rooms,
+                "direct_rooms": direct_rooms
+            })
         case _:
             return render(request, file)
 

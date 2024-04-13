@@ -2,14 +2,14 @@ import {PageManager} from "./page-manager.js";
 
 function createMessageHTML(message) {
     return `<span class="timestamp">${message.created_at}</span>
-            <span class="username">${message.sender}</span>
+            <span class="username">${message.sender}:</span>
             <span class="content">${message.content}</span>`
 }
+
 
 PageManager.getInstance().setOnPageLoad("chat", function () {
     document.getElementById("submit-create-room")
         .addEventListener("click", function (event) {
-            console.log("create room")
             const roomName = document.getElementById("new-room-name").value;
             if (!roomName.trim()) {
                 alert("Room name cannot be empty");
@@ -33,7 +33,6 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     }
                 })
                 .then(data => {
-                    console.log(data)
                     PageManager.getInstance().load("chat")
                 })
                 .catch(error => {
@@ -41,7 +40,34 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 })
         })
 
-    // Open websocket and bind send-message button
+    document.getElementById("submit-join-room")
+        .addEventListener("click", function (event) {
+            const roomCode = document.getElementById("join-room-code").value;
+            if (!roomCode.trim()) {
+                alert("Room code cannot be empty");
+                return;
+            }
+            fetch(`/api/chat/room/join/${roomCode.trim()}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Failed to join room");
+                    }
+                })
+                .then(data => {
+                    PageManager.getInstance().load("chat")
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
+        })
+
     let ws = null;
     let roomId = null
     if (document.getElementById("room-id")) {
@@ -57,10 +83,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
             document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
         }
 
-        // Scroll smoothly to the bottom of the chat log
-        document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
-
-        document.getElementById("send-message").addEventListener("click", function (event) {
+        function sendMessage(event) {
             const message = document.getElementById("chat-input").value;
             if (!message.trim()) {
                 alert("Message cannot be empty");
@@ -71,7 +94,40 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
             }))
             document.getElementById("chat-input").value = "";
             document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
+        }
+
+        // Scroll smoothly to the bottom of the chat log
+        document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
+
+        document.getElementById("send-message").addEventListener("click", sendMessage)
+        document.getElementById("chat-input").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                sendMessage(event);
+            }
         })
+
+        document.getElementById("leave-room").addEventListener("click", function (event) {
+            fetch(`/api/chat/room/leave/${roomId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Failed to leave room");
+                    }
+                })
+                .then(data => {
+                    PageManager.getInstance().load("chat")
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
+        })
+
     }
 
 

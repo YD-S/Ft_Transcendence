@@ -49,8 +49,9 @@ class ModelViewSet(ViewMixin):
         instance.delete()
         return JsonResponse(serializer.data)
 
-    def get_instance(self, pk: int):
-        qs = self.model.objects.filter(pk=pk)
+    @classmethod
+    def get_instance(cls, pk: int):
+        qs = cls.model.objects.filter(pk=pk)
         if not qs.exists():
             raise NotFoundError()
         return qs.first()

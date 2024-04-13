@@ -22,9 +22,10 @@ class RoomSerializer(ModelSerializer):
             'messages',
             'created_at',
             'updated_at',
+            'code',
             'is_direct'
         ]
-        read_only_fields = ('members', 'messages', 'created_at', 'updated_at', 'is_direct')
+        read_only_fields = ('members', 'messages', 'created_at', 'updated_at', 'is_direct', 'code')
 
     def serialize_members(self, obj):
         return [member.username for member in obj.all()]
