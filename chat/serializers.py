@@ -13,6 +13,11 @@ class MessageSerializer(ModelSerializer):
 
 
 class RoomSerializer(ModelSerializer):
+
+    def __init__(self, user=None, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Room
         fields = [
@@ -26,6 +31,11 @@ class RoomSerializer(ModelSerializer):
             'is_direct'
         ]
         read_only_fields = ('members', 'messages', 'created_at', 'updated_at', 'is_direct', 'code')
+
+    def serialize_name(self, obj):
+        if self.user:
+            return self.instance.get_name(self.user)
+        return self.instance.name
 
     def serialize_members(self, obj):
         return [member.username for member in obj.all()]

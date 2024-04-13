@@ -48,12 +48,12 @@ class RoomViewSet(ModelViewSet):
     @staticmethod
     @require_http_methods(["POST"])
     @require_token()
-    def direct(request: HttpRequest, user_id: int, *args, **kwargs):
+    def direct(request: HttpRequest, username: str, *args, **kwargs):
         try:
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
             return JsonResponse({"error": "User not found"}, status=404)
-        room = Room.objects.create(name="", is_direct=True)
+        room = Room.objects.create(name=f"{request.user.username} - {user.username}", is_direct=True)
         room.join(request.user)
         room.join(user)
         return JsonResponse(RoomViewSet.serializer(instance=room).data)

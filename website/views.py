@@ -34,21 +34,7 @@ def protected_page_view(request: HttpRequest, file: str):
         case "me.html":
             return render(request, file, {"user": UserSerializer(instance=request.user).data})
         case "chat.html":
-            group_rooms = Room.objects.filter(members__in=[request.user], is_direct=False)
-            direct_rooms = Room.objects.filter(members__in=[request.user], is_direct=True)
-            if "room" in request.GET:
-                current_room = Room.objects.filter(members__in=[request.user], id=request.GET["room"])
-                if current_room.exists():
-                    serialized = RoomSerializer(instance=current_room.first()).data
-                    return render(request, file, {
-                        "group_rooms": group_rooms,
-                        "direct_rooms": direct_rooms,
-                        "current_room": serialized
-                    })
-            return render(request, file, {
-                "group_rooms": group_rooms,
-                "direct_rooms": direct_rooms
-            })
+            return chat_view(request)
         case _:
             return render(request, file)
 
@@ -196,4 +182,26 @@ def tournament(request: HttpRequest):
                 },
             ],
         },
+    })
+
+
+def chat_view(request: HttpRequest):
+    def get_rooms(is_direct: bool):
+        return [RoomSerializer(request.user, instance=room).data for room in
+                Room.objects.filter(members__in=[request.user], is_direct=is_direct)]
+
+    group_rooms = get_rooms(False)
+    direct_rooms = get_rooms(True)
+    if "room" in request.GET:
+        current_room = Room.objects.filter(members__in=[request.user], id=request.GET["room"])
+        if current_room.exists():
+            serialized = RoomSerializer(instance=current_room.first()).data
+            return render(request, "chat.html", {
+                "group_rooms": group_rooms,
+                "direct_rooms": direct_rooms,
+                "current_room": {**serialized, 'name': current_room.first().get_name(request.user)}
+            })
+    return render(request, "chat.html", {
+        "group_rooms": group_rooms,
+        "direct_rooms": direct_rooms
     })

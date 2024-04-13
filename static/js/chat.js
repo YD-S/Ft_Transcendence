@@ -46,7 +46,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     }
                 })
                 .then(data => {
-                    PageManager.getInstance().load("chat")
+                    PageManager.getInstance().load("chat", false, {query: `?room=${data.id}`})
                 })
                 .catch(error => {
                     alert(error.message);
@@ -75,6 +75,34 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 })
                 .then(data => {
                     PageManager.getInstance().load("chat")
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
+        })
+
+    document.getElementById("submit-direct-room")
+        .addEventListener("click", function (event) {
+            const username = document.getElementById("direct-room-username").value;
+            if (!username.trim()) {
+                alert("Username cannot be empty");
+                return;
+            }
+            fetch(`/api/chat/room/direct/${username.trim()}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Failed to join room");
+                    }
+                })
+                .then(data => {
+                    PageManager.getInstance().load("chat", false, {query: `?room=${data.id}`})
                 })
                 .catch(error => {
                     alert(error.message);
