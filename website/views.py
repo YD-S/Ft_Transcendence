@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template.exceptions import TemplateDoesNotExist
 
 from authentication.token import require_token
 from chat.models import Room
@@ -36,7 +37,10 @@ def protected_page_view(request: HttpRequest, file: str):
         case "chat.html":
             return chat_view(request)
         case _:
-            return render(request, file)
+            try:
+                return render(request, file)
+            except TemplateDoesNotExist:
+                return render(request, "404.html")
 
 
 def page_view(request: HttpRequest, file: str):

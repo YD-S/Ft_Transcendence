@@ -47,11 +47,14 @@ export class PageManager {
                     } else {
                         this.load('home')
                     }
-                    return ''
+                    return '__redirected__'
                 }
                 return response.text();
             })
             .then(data => {
+                if (data === '__redirected__') {
+                    return
+                }
                 history.pushState({data: data}, "", '/' + page + (preserve_query ? window.location.search : ""));
                 this.contentRoot.innerHTML = data;
                 if (this.onLoadCallbacks[page]) {
