@@ -1,50 +1,68 @@
+{% load i18n %}
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href={% static "css/index.css" %}>
-    <title>NeonPong</title>
-    <script src={% static "js/index.js" %} type="module"></script>
-    <script src={% static "js/game.js" %} type="module"></script>
-    <script type="module">
-      import {loadPage} from "../static/js/index.js";
-
-      window.onload = () => loadPage("{{ page|safe }}" || "home");
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href={% static "css/index.css" %}>
+  <title>NeonPong</title>
 </head>
 <body>
 
-<nav class="navbar d-flex justify-content-between navbar-custom">
-        <!-- Left-aligned item -->
-        <button class="px-2 mr-auto button">
-            <img class="settings-svg svg" src={% static "svg/settings.svg" %} alt="settings" width="80" height="80" onclick="loadPage('settings')">
-        </button>
+<nav>
+  <button onclick="window.global.pageManager.load('settings')">
+    {% translate "Settings" %}
+  </button>
 
-        <!-- Center-aligned item -->
-        <button class="neon-pong button" onclick="loadPage('home')">
-            NEON PONG
-        </button>
+  <button class="neon-pong button" onclick="window.global.pageManager.load('home')">
+    NEON PONG
+  </button>
 
-        <!-- Right-aligned item -->
-        <button class="px-2 mr-auto button" style="color: #00c5c5" onclick="logout()">
-            logout
-        </button>
-        <button class="px-2 mr-auto button">
-            <img class="profile-icon-svg svg" src={% static "svg/profile_icon.svg" %} alt="profile" width="80" height="80" onclick="invertColors()">
-        </button>
+  <button onclick="window.global.pageManager.load('chat')">
+    {% translate "Chat" %}
+  </button>
+  <button onclick="window.global.logout()">
+    {% translate "Log out" %}
+  </button>
+  <!-- Right-aligned item -->
+  <button onclick="window.global.pageManager.load('me')">
+    {% translate "Profile" %}
+  </button>
+
+  {# Combo box for languages #}
+  <label for="language">{% translate "Select language" %}</label><select id="language" onchange="window.global.changeLanguage(this.value)">
+    <option id="en-US" value="en-US">English</option>
+    <option id="es-ES" value="es-ES">Español</option>
+    <option id="pt-PT" value="pt-PT">Português</option>
+  </select>
 </nav>
 
-<main class="main" id="main"></main>
+<main id="root"></main>
 
 <footer class="footer">
 </footer>
+<script type="module">
+    import {Global} from "../static/js/global.js";
+    import {getCookie} from "../static/js/utils.js";
+    
+    const lang = getCookie('django_language')
+    document.getElementById(lang).setAttribute('selected', 'selected')
+    
+    window.global = new Global();
+    window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
+</script>
+<script src='{% static "js/page-manager.js" %}' type="module"></script>
+<script src='{% static "js/utils.js" %}' type="module"></script>
+<script src='{% static "js/game.js" %}' type="module"></script>
+<script src='{% static "js/2fa.js" %}' type="module"></script>
+<script src='{% static "js/login.js" %}' type="module"></script>
+<script src='{% static "js/register.js" %}' type="module"></script>
+<script src='{% static "js/oauth_callback.js" %}' type="module"></script>
+<script src='{% static "js/me.js" %}' type="module"></script>
+<script src='{% static "js/chat.js" %}' type="module"></script>
+<script src='{% static "js/verify_email.js" %}' type="module"></script>
 
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script> <!-- Some Bootstrap components require popper.js -->
 </body>
 </html>

@@ -20,7 +20,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ACCESS_TOKEN_EXPIRATION_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRATION_MINUTES", "60"))
-REFRESH_TOKEN_EXPIRATION_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRATION_DAYS", "60"))
+REFRESH_TOKEN_EXPIRATION_HOURS = int(os.getenv("REFRESH_TOKEN_EXPIRATION_HOURS", "24"))
+REFRESH_TOKEN_HISTORY_SIZE = int(os.getenv("REFRESH_TOKEN_HISTORY_SIZE", "5"))
 
 BYPASS_TOKEN = False
 # Quick-start development settings - unsuitable for production
@@ -34,6 +35,20 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [x.strip() for x in os.getenv("ALLOWED_HOSTS", "").split(',')]
 CSRF_TRUSTED_ORIGINS = [f"https://{x}" for x in ALLOWED_HOSTS]
+
+SMTP_SERVER = os.getenv("SMTP_SERVER")
+try:
+    SMTP_PORT = int(os.getenv("SMTP_PORT"))
+except ValueError:
+    SMTP_PORT = 587
+
+MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+
+BASE_URL = os.getenv("BASE_URL")
 
 # Application definition
 
@@ -54,19 +69,19 @@ INSTALLED_APPS = [
     "channels",
 ]
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
-
 MIDDLEWARE = [
+    "common.middleware.HttpRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
 ]
 
 if not DEBUG:
@@ -95,6 +110,24 @@ TEMPLATES = [
 ]
 
 ASGI_APPLICATION = "NeonPong.asgi.application"
+
+
+REDIS_HOST = os.getenv("REDIS_HOST", "redis-service")
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, 6379)],
+        },
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379",
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

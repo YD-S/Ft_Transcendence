@@ -6,29 +6,25 @@ services:
     restart: unless-stopped
     build:
       context: .
-    volumes:
-      - .:/app
     networks:
       - internal
+    ports:
+      - "443:443"
     depends_on:
       - postgres
+      - redis-service
     env_file:
       - .env
 
-  nginx:
-    container_name: nginx
+  redis-service:
+    container_name: redis-service
+    image: redis:6.2-alpine
     restart: unless-stopped
-    image: nginx:bullseye
-    ports:
-      - "443:443"
+    command: redis-server --save 20 1 --loglevel warning
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./nginx/certs:/etc/nginx/ssl
-      - ./static:/var/www/static
+      - redis_data:/data
     networks:
       - internal
-    depends_on:
-      - backend
 
   postgres:
     image: postgres:alpine
@@ -51,8 +47,13 @@ networks:
     driver: bridge
 
 volumes:
-    postgres_data:
-      driver_opts:
-        type: none
-        device: ~/data/database
-        o: bind
+  postgres_data:
+    driver_opts:
+      type: none
+      device: ~/data/database
+      o: bind
+  redis_data:
+    driver_opts:
+      type: none
+      device: ~/data/redis
+      o: bind

@@ -3,12 +3,12 @@ from typing import Type
 from django.db import models
 from django.http import JsonResponse
 
-from common.request import HttpRequest, WrappedRequestMixin
+from common.request import HttpRequest, ViewMixin
 from utils.exception import NotFoundError
 from utils.modelserializer import ModelSerializer
 
 
-class ModelViewSet(WrappedRequestMixin):
+class ModelViewSet(ViewMixin):
     model: Type[models.Model]
     serializer: Type[ModelSerializer]
 
@@ -49,8 +49,9 @@ class ModelViewSet(WrappedRequestMixin):
         instance.delete()
         return JsonResponse(serializer.data)
 
-    def get_instance(self, pk: int):
-        qs = self.model.objects.filter(pk=pk)
+    @classmethod
+    def get_instance(cls, pk: int):
+        qs = cls.model.objects.filter(pk=pk)
         if not qs.exists():
             raise NotFoundError()
         return qs.first()

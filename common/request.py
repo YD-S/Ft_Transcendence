@@ -39,22 +39,6 @@ class ViewMixin:
         raise HttpError(405, 'Method not allowed')
 
 
-class WrappedRequestMixin(ViewMixin):
-    def dispatch(self, request, *args, **kwargs):
-        request = HttpRequest(request, *args, **kwargs)
-        return super().dispatch(request, *args, **kwargs)
-
-
-def wrap_funcview(func):
-    def wrapper(req, *args, **kwargs):
-        request: ASGIRequest | HttpRequest = req
-        if not isinstance(request, HttpRequest):
-            request = HttpRequest(request)
-        return func(request, *args, **kwargs)
-
-    return wrapper
-
-
 class HttpRequest(ASGIRequest):
 
     def __init__(self, request: ASGIRequest, *args, **kwargs):

@@ -1,0 +1,70 @@
+{% load i18n %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
+<div id="chat-page">
+  <div id="room-list-sidebar">
+    <div id="room-list">
+      <h2>{% translate "Chats" %}</h2>
+      <ul>
+        {% for room in rooms %}
+          <li class="room">
+            <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div id="room-inputs">
+      <div id="create-room">
+        <label>
+          <span>{% translate "Create a room" %}:</span>
+          <input type="text" id="new-room-name" placeholder="{% translate 'Room name' %}">
+        </label>
+        <button id="submit-create-room">{% translate "Create" %}</button>
+      </div>
+      <div id="join-room">
+        <label>
+          <span>{% translate "Join a room" %}:</span>
+          <input type="text" id="join-room-code" placeholder="{% translate 'Room code' %}">
+        </label>
+        <button id="submit-join-room">{% translate "Join" %}</button>
+      </div>
+      <div id="direct-room">
+        <label>
+          <span>{% translate "Direct message" %}:</span>
+          <input type="text" id="direct-room-username" placeholder="{% translate 'Username' %}">
+        </label>
+        <button id="submit-direct-room">{% translate "Join" %}</button>
+      </div>
+    </div>
+  </div>
+  <div id="current-room">
+    {% if current_room %}
+      <span style="display: none" id="room-id">{{ current_room.id }}</span>
+      <h2>
+        {{ current_room.name }}
+        {% if not current_room.is_direct %}
+          <h6><pre>{% translate "Room code" %}: {{ current_room.code }}</pre></h6>
+        {% endif %}
+      </h2>
+      {% if not current_room.is_direct %}
+      <button id="leave-room">{% translate "Leave room" %}</button>
+      {% endif %}
+      <div id="chat-log">
+        {% for message in current_room.messages %}
+          <div class="message">
+            <span class="timestamp">{{ message.created_at }}</span>
+            <span class="username">{{ message.sender }}:</span>
+            <span class="content">{{ message.content }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <div id="chat-input-box">
+        <input type="text" id="chat-input" placeholder="{% translate 'Type your message here' %}">
+        <button id="send-message">{% translate "Send" %}</button>
+      </div>
+    {% else %}
+      <h2>{% translate "Select a chat to start a conversation" %}</h2>
+    {% endif %}
+  </div>
+</div>
