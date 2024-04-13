@@ -52,14 +52,14 @@ export function logout() {
             if (response.status !== 200) {
                 throw new Error("Logout failed");
             }
+            deleteCookie('Authorization');
+            sessionStorage.removeItem('refresh_token');
+            sessionStorage.removeItem('access_token');
         })
         .catch((error) => {
             alert(error);
         });
-    sessionStorage.removeItem('refresh_token');
-    sessionStorage.removeItem('access_token');
     PageManager.getInstance().load('login')
-    deleteCookie('Authorization');
 }
 
 function setCookie(name, value, days) {
