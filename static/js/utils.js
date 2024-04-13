@@ -45,7 +45,6 @@ export function padZero(str, len) {
 }
 
 
-
 export function logout() {
     fetch('/api/auth/logout/', {method: 'POST'})
         .then(response => {
@@ -62,14 +61,12 @@ export function logout() {
     PageManager.getInstance().load('auth/login')
 }
 
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        let date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = `; expires=${date.toUTCString()}`;
-    }
-    document.cookie = `${name}=${value || ""}${expires}; path=/`;
+function setCookie(name, value, attributes) {
+    let cookie = `${name}=${value};`;
+    Object.keys(attributes).forEach((key) => {
+        cookie += typeof attributes[key] === 'boolean' ? `${key};` : `${key}=${attributes[key]}; `;
+    });
+    document.cookie = cookie;
 }
 
 function deleteCookie(name) {
@@ -100,10 +97,7 @@ function refreshToken() {
 }
 
 export function saveToken(data) {
-    setCookie('Authorization', `${data.access_token}`, 1);
-    sessionStorage.setItem('access_token', data.access_token);
-    sessionStorage.setItem('refresh_token', data.refresh_token);
-    sessionStorage.setItem('access_expiration', data.access_expiration * 1000);
-    sessionStorage.setItem('refresh_expiration', data.refresh_expiration * 1000);
+    setCookie('Authorization', `${data.access_token}`, { path: '/', expires: new Date(data.access_expiration * 1000), SameSite: 'None', Secure: true});
+    setCookie('refresh_token', data.refresh_token, { path: '/', expires: new Date(data.refresh_expiration * 1000), SameSite: 'None', Secure: true});
     setTimeout(() => refreshToken(), (data.access_expiration * 1000 - Date.now()) - 1000); // Refresh token 1 second before expiration
 }

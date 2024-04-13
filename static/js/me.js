@@ -29,7 +29,8 @@ PageManager.getInstance().setOnPageLoad("me", () => {
         });
     })
 
-    document.getElementById("resend-verification").addEventListener("click", (event) => {
+    const resend_verification = document.getElementById("resend-verification")
+    resend_verification ? resend_verification.addEventListener("click", (event) => {
         fetch("/api/auth/send-verification/", {
             method: "POST",
             headers: {
@@ -43,5 +44,5 @@ PageManager.getInstance().setOnPageLoad("me", () => {
                 alert("Failed to send verification email!");
             }
         })
-    })
+    }) : null;
 })

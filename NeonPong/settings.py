@@ -20,7 +20,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 ACCESS_TOKEN_EXPIRATION_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRATION_MINUTES", "60"))
-REFRESH_TOKEN_EXPIRATION_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRATION_DAYS", "60"))
+REFRESH_TOKEN_EXPIRATION_HOURS = int(os.getenv("REFRESH_TOKEN_EXPIRATION_HOURS", "24"))
+REFRESH_TOKEN_HISTORY_SIZE = int(os.getenv("REFRESH_TOKEN_HISTORY_SIZE", "5"))
 
 BYPASS_TOKEN = False
 # Quick-start development settings - unsuitable for production

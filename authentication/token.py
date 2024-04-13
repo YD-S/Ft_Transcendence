@@ -26,14 +26,18 @@ class TokenManager:
             return
         self.__initialized = True
         self.tokens = {}
+        self.refresh_token_history = {}
 
     def create_token_pair(self, user_id, refresh_expiration=None):
         access_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION_MINUTES)
-        refresh_expiration = refresh_expiration or datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRATION_DAYS)
+        refresh_expiration = refresh_expiration or datetime.datetime.now(datetime.UTC) + datetime.timedelta(
+            hours=settings.REFRESH_TOKEN_EXPIRATION_HOURS)
         access_token = jwt.encode({'user_id': user_id, "exp": access_expiration}, settings.SECRET_KEY,
                                   algorithm='HS256')
         refresh_token = jwt.encode({'user_id': user_id, "exp": refresh_expiration}, settings.SECRET_KEY,
                                    algorithm='HS256')
+        self.refresh_token_history[user_id] = self.refresh_token_history.get(user_id, [])[:-settings.REFRESH_TOKEN_HISTORY_SIZE]
+        self.refresh_token_history[user_id].append(refresh_token)
         self.tokens[user_id] = {
             "access_token": access_token,
             "refresh_token": refresh_token,
@@ -65,15 +69,23 @@ class TokenManager:
             raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
                                   content_type='application/json')
 
-    @staticmethod
-    def _test_token(token):
+    def _test_token(self, token, check_reuse=True):
+        # Check for refresh token reuse
+        if check_reuse:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'], options={"verify_exp": False})
+            tokens = self.refresh_token_history.get(payload.get('user_id'), [])
+            if token in tokens[:-1]:  # Check all but the last token, which is the current one
+                self.revoke_token(tokens[-1])  # Revoke the current token
+                raise ValidationError(json.dumps({"message": "Token reuse detected", "type": "token_reuse_detected"}),
+                                      content_type='application/json')
+
         try:
             payload = decode_token(token)
         except jwt.ExpiredSignatureError:
             raise ValidationError(json.dumps({"message": "Token expired", "type": "token_expired"}),
                                   content_type='application/json')
         except jwt.InvalidTokenError:
-            raise ValidationError(json.dumps({"message": "Invalid token3", "type": "invalid_token"}),
+            raise ValidationError(json.dumps({"message": "Invalid token", "type": "invalid_token"}),
                                   content_type='application/json')
         return payload
 
@@ -94,6 +106,7 @@ def require_token(login_redirect=True):
             return func(request, *args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
