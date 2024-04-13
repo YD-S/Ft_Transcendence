@@ -1,12 +1,11 @@
-import datetime
-
 import django
+
+django.setup()
+
+import datetime
 from asgiref.sync import async_to_sync
 
 from chat.serializers import MessageSerializer
-from users.serializers import UserSerializer
-
-django.setup()
 
 import json
 from channels.generic.websocket import WebsocketConsumer
