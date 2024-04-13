@@ -286,7 +286,7 @@ def oauth(request: HttpRequest):
     state = hashlib.sha256(os.urandom(1024)).hexdigest()
     querystring = urlencode({
         "client_id": settings.CLIENT_ID,
-        "redirect_uri": f"{settings.BASE_URL}/oauth_callback",
+        "redirect_uri": f"{settings.BASE_URL}/auth/oauth_callback",
         "response_type": "code",
         "scope": "public",
         "state": state
@@ -309,9 +309,10 @@ def oauth_login(request: HttpRequest):
         "client_id": settings.CLIENT_ID,
         "client_secret": settings.CLIENT_SECRET,
         "code": code,
-        "redirect_uri": f"{settings.BASE_URL}/oauth_callback"
+        "redirect_uri": f"{settings.BASE_URL}/auth/oauth_callback"
     })
     response = requests.post(f"https://api.intra.42.fr/oauth/token?{querystring}")
+    print(response.status_code)
     if response.status_code != 200:
         return HttpResponse(
             json.dumps({"message": "Invalid code", "type": "oauth_login_fail"}),

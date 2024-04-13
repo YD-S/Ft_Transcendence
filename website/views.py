@@ -43,7 +43,6 @@ def page_view(request: HttpRequest, file: str):
     if request.headers.get("Sec-Fetch-Mode") == "navigate":
         return redirect("/home")
     page = file.split(".")[0]
-    print("page", page)
     if page in UNPROTECTED_PAGES:
         return render(request, file)
     return protected_page_view(request, file)
@@ -51,7 +50,7 @@ def page_view(request: HttpRequest, file: str):
 
 def tournament(request: HttpRequest):
     spacing = 4.7
-    return render(request, "tournament.html", {
+    return render(request, "pong/tournament.html", {
         "tournament": {
             "name": "Tournament Name",
             "final": {

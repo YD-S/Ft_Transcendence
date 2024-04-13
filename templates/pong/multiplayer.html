@@ -1,0 +1,16 @@
+{% load static %}
+
+<link rel="stylesheet" href={% static "css/multiplayer.css" %}>
+
+<div id="multiplayer">
+  <button class="horizontal primary-box" onclick="window.global.pageManager.load('pong/1v1')">
+    1 vs 1
+  </button>
+  <button class="horizontal secondary-box" onclick="window.global.pageManager.load('pong/2v2')">
+    2 vs 2
+  </button>
+  <button class="vertical accent-box">
+    <img class="img cup-pallete-svg" src={% static "svg/cup.svg" %} alt="cup" onclick="window.global.pageManager.load('pong/tournament')">
+    TOURNAMENT
+  </button>
+</div>
