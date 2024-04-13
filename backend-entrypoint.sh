@@ -23,4 +23,4 @@ python3 manage.py createsuperuser --noinput --username "$DJANGO_SUPERUSER_USERNA
 nginx -g "daemon off;" &
 
 # Start the server
-DJANGO_SETTINGS_MODULE=NeonPong.settings daphne -b 0.0.0.0 -p 8000 NeonPong.asgi:application
+DJANGO_SETTINGS_MODULE=NeonPong.settings daphne -e ssl:8000:privateKey=/etc/nginx/ssl/neon-pong.com.key:certKey=/etc/nginx/ssl/neon-pong.com.crt NeonPong.asgi:application
