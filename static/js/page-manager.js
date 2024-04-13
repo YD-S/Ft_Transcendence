@@ -39,6 +39,7 @@ export class PageManager {
      * @param options {object} Options for loading the page
      */
     load(page, preserve_query = true, options = {args: [], query: ""}) {
+        this.setLoading();
         fetch(`/page/${page}.html` + (options.query || ""))
             .then(response => {
                 if (response.status !== 200) {
@@ -85,4 +86,7 @@ export class PageManager {
         this.onUnloadCallbacks[page] = callback;
     }
 
+    setLoading() {
+        this.contentRoot.innerHTML = "<div class='loader'>Loading</div>";
+    }
 }
