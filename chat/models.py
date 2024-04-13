@@ -4,6 +4,7 @@ from django.db import models
 
 from common.models import BaseModel
 from users.models import User
+from utils.exception import ValidationError
 
 
 # Create your models here.
@@ -44,6 +45,8 @@ class Room(BaseModel):
         return self.name
 
     def join(self, user: User):
+        if self.is_direct and self.members.count() == 2:
+            raise ValidationError("Direct rooms can only have 2 members")
         self.members.add(user)
 
     def leave(self, user: User):

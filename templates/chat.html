@@ -49,7 +49,12 @@
   <div id="current-room">
     {% if current_room %}
       <span style="display: none" id="room-id">{{ current_room.id }}</span>
-      <h2>{{ current_room.name }}<h6><pre>Room code: {{ current_room.code }}</pre></h6></h2>
+      <h2>
+        {{ current_room.name }}
+        {% if not current_room.is_direct %}
+          <h6><pre>Room code: {{ current_room.code }}</pre></h6>
+        {% endif %}
+      </h2>
       <button id="leave-room">Leave Room</button>
       <div id="chat-log">
         {% for message in current_room.messages %}

@@ -15,7 +15,7 @@ from authentication.mail_client import MailClient
 from authentication.token import TokenManager, require_token, get_token
 from authentication.utils import hash_password
 from common.request import HttpRequest
-from users.models import User, UserManager
+from users.models import User
 from users.serializers import UserSerializer
 from utils.exception import ValidationError
 
@@ -84,7 +84,7 @@ def verify_2fa(request: HttpRequest):
         return HttpResponse(
             json.dumps({"message": "User not found", "type": "2fa_fail"}),
             content_type='application/json',
-            status=400
+            status=404
         )
     try:
         code = int(data.get('code'))
