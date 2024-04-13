@@ -1,0 +1,181 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-13 23:09+0000\n"
+"PO-Revision-Date: 2024-04-14 00:38+0200\n"
+"Last-Translator: Ciro García Belmonte\n"
+"Language-Team: \n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: templates/404.html:4
+msgid "Page not found"
+msgstr ""
+
+#: templates/auth/2fa.html:2
+msgid "An email has been sent to your email account."
+msgstr ""
+
+#: templates/auth/2fa.html:5
+msgid "Code"
+msgstr ""
+
+#: templates/auth/2fa.html:7 templates/chat.html:64
+msgid "Send"
+msgstr ""
+
+#: templates/auth/2fa.html:9
+msgid "Request a new code"
+msgstr ""
+
+#: templates/auth/login.html:5
+msgid "Sign in to Neon Pong"
+msgstr ""
+
+#: templates/auth/login.html:7 templates/auth/register.html:6
+#: templates/chat.html:35 templates/me.html:12
+msgid "Username"
+msgstr ""
+
+#: templates/auth/login.html:9 templates/auth/register.html:8
+msgid "Password"
+msgstr ""
+
+#: templates/auth/login.html:11
+msgid "Sign in"
+msgstr ""
+
+#: templates/auth/login.html:12
+msgid "Sign in with 42"
+msgstr ""
+
+#: templates/auth/login.html:14
+msgid "Create a new account"
+msgstr ""
+
+#: templates/auth/oauth_callback.html:2
+msgid "Validating OAuth code"
+msgstr ""
+
+#: templates/auth/register.html:7 templates/me.html:13
+msgid "Email"
+msgstr ""
+
+#: templates/auth/register.html:9
+msgid "Confirm password"
+msgstr ""
+
+#: templates/auth/register.html:10
+msgid "Register"
+msgstr ""
+
+#: templates/auth/verify_email.html:2
+msgid "Verifying code"
+msgstr ""
+
+#: templates/chat.html:8
+msgid "Chats"
+msgstr ""
+
+#: templates/chat.html:20
+msgid "Create a room"
+msgstr ""
+
+#: templates/chat.html:21
+msgid "Room name"
+msgstr ""
+
+#: templates/chat.html:23
+msgid "Create"
+msgstr ""
+
+#: templates/chat.html:27
+msgid "Join a room"
+msgstr ""
+
+#: templates/chat.html:28 templates/chat.html:47
+msgid "Room code"
+msgstr ""
+
+#: templates/chat.html:30 templates/chat.html:37
+msgid "Join"
+msgstr ""
+
+#: templates/chat.html:34
+msgid "Direct message"
+msgstr ""
+
+#: templates/chat.html:51
+msgid "Leave room"
+msgstr ""
+
+#: templates/chat.html:63
+msgid "Type your message here"
+msgstr ""
+
+#: templates/chat.html:67
+msgid "Select a chat to start a conversation"
+msgstr ""
+
+#: templates/home.html:7
+msgid "Local Game"
+msgstr ""
+
+#: templates/index.html:16
+msgid "Settings"
+msgstr ""
+
+#: templates/index.html:24
+msgid "Chat"
+msgstr ""
+
+#: templates/index.html:27
+msgid "Log out"
+msgstr ""
+
+#: templates/index.html:31 templates/settings.html:7
+msgid "Profile"
+msgstr ""
+
+#: templates/index.html:35
+msgid "Select language"
+msgstr ""
+
+#: templates/me.html:9
+msgid "My Profile"
+msgstr ""
+
+#: templates/me.html:15
+msgid "Email not verified"
+msgstr ""
+
+#: templates/me.html:16
+msgid "Resend verification email"
+msgstr ""
+
+#: templates/me.html:19 templates/me.html:21
+msgid "Two-Factor Authentication"
+msgstr ""
+
+#: templates/me.html:19
+msgid "OAuth users don't need two-factor auth."
+msgstr ""
+
+#: templates/me.html:21
+msgid "enabled,disabled"
+msgstr ""
+
+#: templates/me.html:22
+msgid "Toggle"
+msgstr ""

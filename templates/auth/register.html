@@ -1,10 +1,11 @@
+{% load i18n %}
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
 <div id="register-form">
-  <label for="username">Username</label><input id="username">
-  <label for="email">Email</label><input id="email">
-  <label for="password">Password</label><input id="password" type="password">
-  <label for="confirm-password">Confirm password</label><input id="confirm-password" type="password">
-  <button id="submit">Register</button>
+  <label for="username">{% translate "Username" %}</label><input id="username">
+  <label for="email">{% translate "Email" %}</label><input id="email">
+  <label for="password">{% translate "Password" %}</label><input id="password" type="password">
+  <label for="confirm-password">{% translate "Confirm password" %}</label><input id="confirm-password" type="password">
+  <button id="submit">{% translate "Register" %}</button>
 </div>

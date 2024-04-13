@@ -1,9 +1,9 @@
-<h2 id="email-message">Se ha enviado un código a {{ user.email }}</h2>
-
+{% load i18n %}
+<h2 id="email-message">{% translate "An email has been sent to your email account." %}</h2>
 
 <div>
-  <span>Código</span>
+  <span>{% translate "Code" %}</span>
   <input id="code" type="text">
-  <button id="submit">Enviar</button>
+  <button id="submit">{% translate "Send" %}</button>
 </div>
-<button id="resend">Solicitar nuevo código</button>
+<button id="resend">{% translate "Request a new code" %}</button>

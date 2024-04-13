@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -11,26 +12,31 @@
 <body>
 
 <nav>
-  <!-- Left-aligned item -->
   <button onclick="window.global.pageManager.load('settings')">
-    settingss
+    {% translate "Settings" %}
   </button>
 
-  <!-- Center-aligned item -->
   <button class="neon-pong button" onclick="window.global.pageManager.load('home')">
     NEON PONG
   </button>
 
   <button onclick="window.global.pageManager.load('chat')">
-    chat
+    {% translate "Chat" %}
   </button>
   <button onclick="window.global.logout()">
-    logout
+    {% translate "Log out" %}
   </button>
   <!-- Right-aligned item -->
   <button onclick="window.global.pageManager.load('me')">
-    profile
+    {% translate "Profile" %}
   </button>
+
+  {# Combo box for languages #}
+  <label for="language">{% translate "Select language" %}</label><select id="language" onchange="window.global.changeLanguage(this.value)">
+    <option id="en-US" value="en-US">English</option>
+    <option id="es-ES" value="es-ES">Español</option>
+    <option id="pt-PT" value="pt-PT">Português</option>
+  </select>
 </nav>
 
 <main id="root"></main>
@@ -39,6 +45,11 @@
 </footer>
 <script type="module">
     import {Global} from "../static/js/global.js";
+    import {getCookie} from "../static/js/utils.js";
+    
+    const lang = getCookie('django_language')
+    document.getElementById(lang).setAttribute('selected', 'selected')
+    
     window.global = new Global();
     window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
 </script>

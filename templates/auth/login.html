@@ -1,17 +1,15 @@
-{# Login page. Sends a json to the backend with username and password #}
-{# Simple page for testing #}
-
+{% load i18n %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-<h2>Login</h2>
+<h2>{% translate "Sign in to Neon Pong" %}</h2>
 <div id="login-form">
-  <label for="username">Username:</label>
-  <input type="text" id="username" name="username" required>
-  <label for="password">Password:</label>
-  <input type="password" id="password" name="password" required>
-  <button id="submit">Login</button>
-  <button id="oauth">Sign in with 42</button>
+  <label for="username">{% translate "Username" %}:</label>
+  <input type="text" id="username" required>
+  <label for="password">{% translate "Password" %}:</label>
+  <input type="password" id="password" required>
+  <button id="submit">{% translate "Sign in" %}</button>
+  <button id="oauth">{% translate "Sign in with 42" %}</button>
   
-  <a onclick="window.global.pageManager.load('auth/register')">Create account</a>
+  <button onclick="window.global.pageManager.load('auth/register')">{% translate "Create a new account" %}</button>
 </div>

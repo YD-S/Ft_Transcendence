@@ -1,6 +1,8 @@
+{% load i18n %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 <button onclick="window.global.pageManager.load('pong/game')">
-  Local Game
+  {# Button for starting a local game (two players on the same device, on the same keyboard) #}
+  {% translate "Local Game" %}
 </button>

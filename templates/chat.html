@@ -1,21 +1,13 @@
+{% load i18n %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
 <div id="chat-page">
   <div id="room-list-sidebar">
     <div id="room-list">
-      <h2>Room List</h2>
-      <h3>Groups</h3>
+      <h2>{% translate "Chats" %}</h2>
       <ul>
-        {% for room in group_rooms %}
-          <li class="room">
-            <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
-          </li>
-        {% endfor %}
-      </ul>
-      <h3>Private messages</h3>
-      <ul>
-        {% for room in direct_rooms %}
+        {% for room in rooms %}
           <li class="room">
             <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
           </li>
@@ -25,24 +17,24 @@
     <div id="room-inputs">
       <div id="create-room">
         <label>
-          <span>Create a room:</span>
-          <input type="text" id="new-room-name" placeholder="Room name">
+          <span>{% translate "Create a room" %}:</span>
+          <input type="text" id="new-room-name" placeholder="{% translate 'Room name' %}">
         </label>
-        <button id="submit-create-room">Create</button>
+        <button id="submit-create-room">{% translate "Create" %}</button>
       </div>
       <div id="join-room">
         <label>
-          <span>Join a room:</span>
-          <input type="text" id="join-room-code" placeholder="Room code">
+          <span>{% translate "Join a room" %}:</span>
+          <input type="text" id="join-room-code" placeholder="{% translate 'Room code' %}">
         </label>
-        <button id="submit-join-room">Join</button>
+        <button id="submit-join-room">{% translate "Join" %}</button>
       </div>
       <div id="direct-room">
         <label>
-          <span>Direct message:</span>
-          <input type="text" id="direct-room-username" placeholder="Username">
+          <span>{% translate "Direct message" %}:</span>
+          <input type="text" id="direct-room-username" placeholder="{% translate 'Username' %}">
         </label>
-        <button id="submit-direct-room">Join</button>
+        <button id="submit-direct-room">{% translate "Join" %}</button>
       </div>
     </div>
   </div>
@@ -52,10 +44,12 @@
       <h2>
         {{ current_room.name }}
         {% if not current_room.is_direct %}
-          <h6><pre>Room code: {{ current_room.code }}</pre></h6>
+          <h6><pre>{% translate "Room code" %}: {{ current_room.code }}</pre></h6>
         {% endif %}
       </h2>
-      <button id="leave-room">Leave Room</button>
+      {% if not current_room.is_direct %}
+      <button id="leave-room">{% translate "Leave room" %}</button>
+      {% endif %}
       <div id="chat-log">
         {% for message in current_room.messages %}
           <div class="message">
@@ -66,11 +60,11 @@
         {% endfor %}
       </div>
       <div id="chat-input-box">
-        <input type="text" id="chat-input" placeholder="Type your message here">
-        <button id="send-message">Send</button>
+        <input type="text" id="chat-input" placeholder="{% translate 'Type your message here' %}">
+        <button id="send-message">{% translate "Send" %}</button>
       </div>
     {% else %}
-      <h2>Welcome to the chatroom!</h2>
+      <h2>{% translate "Select a chat to start a conversation" %}</h2>
     {% endif %}
   </div>
 </div>

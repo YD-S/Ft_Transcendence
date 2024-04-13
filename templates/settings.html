@@ -1,8 +1,9 @@
+{% load i18n %}
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/settings.css' %}">
 <div id="settings">
   <button onclick="window.global.pageManager.load('me')">
-    Profile
+    {% translate "Profile" %}
   </button>
 </div>

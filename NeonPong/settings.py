@@ -77,6 +77,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
 ]
 
 if not DEBUG:
