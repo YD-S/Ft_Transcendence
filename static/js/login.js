@@ -24,7 +24,7 @@ export function login() {
         })
         .then(data => {
             if (data.action === '2fa') {
-                PageManager.getInstance().load(`2fa`, false, {args: [data.email2fa, data.user_id]})
+                PageManager.getInstance().load(`auth/2fa`, false, {args: [data.email2fa, data.user_id]})
             } else if (data.action === 'login') {
                 saveToken(data);
                 PageManager.getInstance().load('home');
@@ -52,7 +52,7 @@ function oauth() {
         });
 }
 
-PageManager.getInstance().setOnPageLoad('login', () => {
+PageManager.getInstance().setOnPageLoad('auth/login', () => {
     document.getElementById('submit').addEventListener('click', (event) => {
         login();
     });

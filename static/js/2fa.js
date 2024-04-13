@@ -1,9 +1,9 @@
 import {PageManager} from "./page-manager.js";
 
 
-PageManager.getInstance().setOnPageLoad("2fa", (email2fa, user_id) => {
+PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
     if (!email2fa) {
-        window.global.pageManager.load('login')
+        window.global.pageManager.load('auth/login')
     }
     document.getElementById('email-message').innerText = `Se ha enviado un correo con el código de verificación a su cuenta de correo`;
 

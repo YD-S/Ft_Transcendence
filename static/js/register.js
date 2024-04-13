@@ -1,6 +1,6 @@
 import {PageManager} from "./page-manager.js";
 
-PageManager.getInstance().setOnPageLoad("register", () => {
+PageManager.getInstance().setOnPageLoad("auth/register", () => {
     document.getElementById("submit").addEventListener("click", (event) => {
         event.preventDefault();
         const username = document.getElementById("username").value.trim();
@@ -20,7 +20,7 @@ PageManager.getInstance().setOnPageLoad("register", () => {
         }).then(response => {
             if (response.ok) {
                 alert("Registration successful!");
-                window.location.href = "/login";
+                PageManager.getInstance().load('auth/login');
             } else {
                 alert("Registration failed!");
             }

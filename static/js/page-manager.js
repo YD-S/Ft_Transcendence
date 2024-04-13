@@ -43,7 +43,7 @@ export class PageManager {
             .then(response => {
                 if (response.status !== 200) {
                     if (response.status === 401) {
-                        this.load('login')
+                        this.load('auth/login')
                     } else {
                         this.load('home')
                     }
@@ -52,7 +52,7 @@ export class PageManager {
                 return response.text();
             })
             .then(data => {
-                history.pushState({data: data}, "", page + (preserve_query ? window.location.search : ""));
+                history.pushState({data: data}, "", '/' + page + (preserve_query ? window.location.search : ""));
                 this.contentRoot.innerHTML = data;
                 if (this.onLoadCallbacks[page]) {
                     this.onLoadCallbacks[page](...(options.args || []));

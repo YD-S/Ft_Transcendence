@@ -59,7 +59,7 @@ export function logout() {
         .catch((error) => {
             alert(error);
         });
-    PageManager.getInstance().load('login')
+    PageManager.getInstance().load('auth/login')
 }
 
 function setCookie(name, value, days) {

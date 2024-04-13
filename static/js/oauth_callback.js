@@ -2,7 +2,7 @@ import {PageManager} from "./page-manager.js";
 import {saveToken} from "./utils.js";
 
 
-PageManager.getInstance().setOnPageLoad('oauth_callback', () => {
+PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
     const original_state = sessionStorage.getItem('oauth_state');
     sessionStorage.removeItem('oauth_state');
     const query = new URLSearchParams(window.location.search)
@@ -10,7 +10,7 @@ PageManager.getInstance().setOnPageLoad('oauth_callback', () => {
     const state = query.get('state');
     if (!state || !code || state !== original_state) {
         alert('Invalid OAuth callback');
-        PageManager.getInstance().load('login');
+        PageManager.getInstance().load('auth/login');
         return;
     }
 

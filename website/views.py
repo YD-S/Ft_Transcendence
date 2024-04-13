@@ -7,11 +7,11 @@ from common.request import HttpRequest
 from users.serializers import UserSerializer
 
 UNPROTECTED_PAGES = [
-    "login",
-    "register",
-    "2fa",
+    "auth/login",
+    "auth/register",
+    "auth/2fa",
     "oauth",
-    "oauth_callback",
+    "auth/oauth_callback",
 ]
 
 
@@ -43,6 +43,7 @@ def page_view(request: HttpRequest, file: str):
     if request.headers.get("Sec-Fetch-Mode") == "navigate":
         return redirect("/home")
     page = file.split(".")[0]
+    print("page", page)
     if page in UNPROTECTED_PAGES:
         return render(request, file)
     return protected_page_view(request, file)
