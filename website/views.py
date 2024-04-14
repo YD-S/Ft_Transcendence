@@ -35,6 +35,8 @@ def protected_page_view(request: HttpRequest, file: str):
             return render(request, file, {"user": UserSerializer(instance=request.user).data})
         case "chat.html":
             return chat_view(request)
+        case "room.html":
+            return room_view(request)
         case _:
             try:
                 return render(request, file)
@@ -53,14 +55,15 @@ def page_view(request: HttpRequest, file: str):
 
 def chat_view(request: HttpRequest):
     rooms = [RoomSerializer(request.user, instance=room).data for room in Room.objects.filter(members__in=[request.user])]
-    if "room" in request.GET:
-        current_room = Room.objects.filter(members__in=[request.user], id=request.GET["room"])
-        if current_room.exists():
-            serialized = RoomSerializer(instance=current_room.first()).data
-            return render(request, "chat.html", {
-                "rooms": rooms,
-                "current_room": {**serialized, 'name': current_room.first().get_name(request.user)}
-            })
     return render(request, "chat.html", {
         "rooms": rooms
     })
+
+
+def room_view(request: HttpRequest):
+    current_room = Room.objects.filter(members__in=[request.user], id=request.GET.get("room", 0))
+    if current_room.exists():
+        return render(request, "room.html", {
+            "current_room": RoomSerializer(request.user, instance=current_room.first()).data
+        })
+    return render(request, "room.html")

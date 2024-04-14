@@ -5,13 +5,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href={% static "css/index.css" %}>
   <title>NeonPong</title>
 </head>
 <body>
-
-<nav>
+<div id="header">
   <button onclick="window.global.pageManager.load('settings')">
     {% translate "Settings" %}
   </button>
@@ -37,18 +35,24 @@
     <option id="es-ES" value="es-ES">Español</option>
     <option id="pt-PT" value="pt-PT">Português</option>
   </select>
-</nav>
+</div>
 
-<main id="root"></main>
+<div id="root"></div>
 
-<footer class="footer">
-</footer>
+<div id="footer">
+  <div>
+    Test footer content
+  </div>
+  <a href="https://neon-pong.com/">NeonPong</a>
+</div>
 <script type="module">
     import {Global} from "../static/js/global.js";
     import {getCookie} from "../static/js/utils.js";
     
     const lang = getCookie('django_language')
+    if (lang) {
     document.getElementById(lang).setAttribute('selected', 'selected')
+        }
     
     window.global = new Global();
     window.onload = () => window.global.pageManager.load("{{ page }}" || "home");

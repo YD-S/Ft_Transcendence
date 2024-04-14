@@ -41,26 +41,6 @@
     width: 100%;
 }
 
-#chat-page #chat-log {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    padding: 5px;
-    border: 1px solid #e9ecef;
-}
-
-#chat-page #chat-input-box {
-    width: 100%;
-    display: flex;
-    margin-top: 5px;
-    flex-direction: row;
-}
-
-#chat-page #chat-input {
-    width: 100%;
-    margin-right: 5px;
-}
-
 #chat-page ul {
     list-style-type: none;
     padding: 0;
