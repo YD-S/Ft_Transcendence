@@ -52,22 +52,15 @@ def page_view(request: HttpRequest, file: str):
 
 
 def chat_view(request: HttpRequest):
-    def get_rooms(is_direct: bool):
-        return [RoomSerializer(request.user, instance=room).data for room in
-                Room.objects.filter(members__in=[request.user], is_direct=is_direct)]
-
-    group_rooms = get_rooms(False)
-    direct_rooms = get_rooms(True)
+    rooms = [RoomSerializer(request.user, instance=room).data for room in Room.objects.filter(members__in=[request.user])]
     if "room" in request.GET:
         current_room = Room.objects.filter(members__in=[request.user], id=request.GET["room"])
         if current_room.exists():
             serialized = RoomSerializer(instance=current_room.first()).data
             return render(request, "chat.html", {
-                "group_rooms": group_rooms,
-                "direct_rooms": direct_rooms,
+                "rooms": rooms,
                 "current_room": {**serialized, 'name': current_room.first().get_name(request.user)}
             })
     return render(request, "chat.html", {
-        "group_rooms": group_rooms,
-        "direct_rooms": direct_rooms
+        "rooms": rooms
     })

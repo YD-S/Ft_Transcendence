@@ -20,6 +20,8 @@ from users.serializers import UserSerializer
 from utils.exception import ValidationError
 from django.core.cache import cache
 
+from django.utils.translation import gettext as _
+
 
 @require_http_methods(["POST"])
 def login_view(request: HttpRequest):
@@ -27,7 +29,7 @@ def login_view(request: HttpRequest):
     data = request.json()
     if not data.get('username') or not data.get('password'):
         return HttpResponse(
-            json.dumps({"message": "Username and password are required", "type": "login_fail"}),
+            json.dumps({"message": _("Username and password are required"), "type": "login_fail"}),
             content_type='application/json',
             status=400
         )
@@ -35,7 +37,7 @@ def login_view(request: HttpRequest):
     user: User = authenticate(request, username=data.get('username'), password=data.get('password'))
     if user is None:
         return HttpResponse(
-            json.dumps({"message": "Invalid username or password", "type": "login_fail"}),
+            json.dumps({"message": _("Invalid username or password"), "type": "login_fail"}),
             content_type='application/json',
             status=400
         )
@@ -56,9 +58,9 @@ def send_2fa_code(user: User):
     mail_client = MailClient()
     mail_client.send_mail(
         mail=user.email,
-        subject="2FA",
+        subject=_("Two-Factor Authentication"),
         reply_to="noreply@neon-pong.com",
-        message=f"<p>Tu código de un solo uso es <pre>{expected_2fa}</pre></p><p>Caduca en 5 minutos</p>",
+        message="<p>" + _("Your one-time passcode is") + f"<pre>{expected_2fa}</pre></p><p>" + _("It expires in 5 minutes") + "</p>",
         subtype="html"
     )
 
@@ -68,13 +70,13 @@ def verify_2fa(request: HttpRequest):
     data = request.json()
     if not data.get('user_id'):
         return HttpResponse(
-            json.dumps({"message": "User ID is required", "type": "2fa_fail"}),
+            json.dumps({"message": _("User ID is required"), "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
     if not data.get('code'):
         return HttpResponse(
-            json.dumps({"message": "2FA code is required", "type": "2fa_fail"}),
+            json.dumps({"message": _("2FA code is required"), "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
@@ -82,7 +84,7 @@ def verify_2fa(request: HttpRequest):
         user = User.objects.get(pk=data.get('user_id'))
     except User.DoesNotExist:
         return HttpResponse(
-            json.dumps({"message": "User not found", "type": "2fa_fail"}),
+            json.dumps({"message": _("User not found"), "type": "2fa_fail"}),
             content_type='application/json',
             status=404
         )
@@ -90,7 +92,7 @@ def verify_2fa(request: HttpRequest):
         code = int(data.get('code'))
     except ValueError:
         return HttpResponse(
-            json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
+            json.dumps({"message": _("Invalid 2FA code"), "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
@@ -98,7 +100,7 @@ def verify_2fa(request: HttpRequest):
     expected_2fa = cache.get(f'{user.id}_2fa', sentinel)
     if expected_2fa is sentinel or expected_2fa != code:
         return HttpResponse(
-            json.dumps({"message": "Invalid 2FA code", "type": "2fa_fail"}),
+            json.dumps({"message": _("Invalid 2FA code"), "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
@@ -126,7 +128,7 @@ def resend_2fa_code(request: HttpRequest):
     data = request.json()
     if not data.get('user_id'):
         return HttpResponse(
-            json.dumps({"message": "User ID is required", "type": "2fa_fail"}),
+            json.dumps({"message": _("User ID is required"), "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
@@ -134,13 +136,13 @@ def resend_2fa_code(request: HttpRequest):
         user = User.objects.get(id=data.get('user_id'))
     except User.DoesNotExist:
         return HttpResponse(
-            json.dumps({"message": "User not found", "type": "2fa_fail"}),
+            json.dumps({"message": _("User not found"), "type": "2fa_fail"}),
             content_type='application/json',
             status=400
         )
     send_2fa_code(user)
     return HttpResponse(
-        json.dumps({"message": "2FA code sent"}),
+        json.dumps({"message": _("2FA code sent")}),
         content_type='application/json',
         status=200
     )
@@ -154,7 +156,7 @@ def logout(request: HttpRequest):
     except ValidationError as e:
         return e.as_http_response()
     return HttpResponse(
-        json.dumps({"message": "Logout successful"}),
+        json.dumps({"message": _("Logout successful")}),
         content_type='application/json',
         status=200
     )
@@ -166,7 +168,7 @@ def refresh(request: HttpRequest):
     data = request.json()
     if not data.get('refresh_token'):
         return HttpResponse(
-            json.dumps({"message": "Refresh token is required", "type": "refresh_fail"}),
+            json.dumps({"message": _("Refresh token is required"), "type": "refresh_fail"}),
             content_type='application/json',
             status=400
         )
@@ -194,7 +196,7 @@ def register(request: HttpRequest):
     data = request.json()
     if not data.get('username') or not data.get('password') or not data.get('email'):
         return HttpResponse(
-            json.dumps({"message": "Username and password and email are required", "type": "register_fail"}),
+            json.dumps({"message": _("Username and password and email are required"), "type": "register_fail"}),
             content_type='application/json',
             status=400
         )
@@ -203,7 +205,7 @@ def register(request: HttpRequest):
     # Check if the username already exists
     if User.objects.filter(username=username).exists():
         return HttpResponse(
-            json.dumps({"message": "Username already exists", "type": "register_fail"}),
+            json.dumps({"message": _("Username already exists"), "type": "register_fail"}),
             content_type='application/json',
             status=400
         )
@@ -217,7 +219,7 @@ def register(request: HttpRequest):
     except ValidationError as e:
         return e.as_http_response()
     return HttpResponse(
-        json.dumps({"message": "User registered successfully"}),
+        json.dumps({"message": _("User registered successfully")}),
         content_type='application/json',
         status=200
     )
@@ -229,19 +231,19 @@ def change_password(request: HttpRequest):
     data = request.json()
     if not data.get('user_id'):
         return HttpResponse(
-            json.dumps({"message": "User ID is required", "type": "change_password_fail"}),
+            json.dumps({"message": _("User ID is required"), "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
     if not data.get('current_password'):
         return HttpResponse(
-            json.dumps({"message": "Current password is required", "type": "change_password_fail"}),
+            json.dumps({"message": _("Current password is required"), "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
     if not data.get('new_password'):
         return HttpResponse(
-            json.dumps({"message": "New password is required", "type": "change_password_fail"}),
+            json.dumps({"message": _("New password is required"), "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
@@ -249,28 +251,28 @@ def change_password(request: HttpRequest):
         user = User.objects.get(pk=data.get('user_id'))
     except User.DoesNotExist:
         return HttpResponse(
-            json.dumps({"message": "User not found", "type": "change_password_fail"}),
+            json.dumps({"message": _("User not found"), "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
     current_password = hash_password(data.get('current_password'))
     if user.password != current_password:
         return HttpResponse(
-            json.dumps({"message": "Current password is incorrect", "type": "change_password_fail"}),
+            json.dumps({"message": _("Current password is incorrect"), "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
     new_password = hash_password(data.get('new_password'))
     if new_password == current_password:
         return HttpResponse(
-            json.dumps({"message": "New password must be different from current password", "type": "change_password_fail"}),
+            json.dumps({"message": _("New password must be different from current password"), "type": "change_password_fail"}),
             content_type='application/json',
             status=400
         )
     user.password = new_password
     user.save()
     return HttpResponse(
-        json.dumps({"message": "Password changed successfully"}),
+        json.dumps({"message": _("Password changed successfully")}),
         content_type='application/json',
         status=200
     )
@@ -299,7 +301,7 @@ def oauth_login(request: HttpRequest):
     data = request.json()
     if not data.get('code'):
         return HttpResponse(
-            json.dumps({"message": "Code is required", "type": "oauth_login_fail"}),
+            json.dumps({"message": _("Code is required"), "type": "oauth_login_fail"}),
             content_type='application/json',
             status=400
         )
@@ -315,7 +317,7 @@ def oauth_login(request: HttpRequest):
     print(response.status_code)
     if response.status_code != 200:
         return HttpResponse(
-            json.dumps({"message": "Invalid code", "type": "oauth_login_fail"}),
+            json.dumps({"message": _("Invalid code"), "type": "oauth_login_fail"}),
             content_type='application/json',
             status=400
         )
@@ -331,9 +333,9 @@ def send_verification_email(user: User):
     mail_client = MailClient()
     mail_client.send_mail(
         mail=user.email,
-        subject="Verificación de email",
+        subject=_("Email verification"),
         reply_to="noreply@neon-pong.com",
-        message=f"<p>Haz click en el siguiente enlace para verificar tu correo electrónico: <a href='{settings.BASE_URL}/auth/verify_email?code={email_code}&user={user.id}'>{settings.BASE_URL}/auth/verify_email?code={email_code}&user={user.id}</a></p><p>Este enlace caducará en 5 minutos</p>",
+        message=f"<p>{_('Click on the following link to verify your email account')}: <a href='{settings.BASE_URL}/auth/verify_email?code={email_code}&user={user.id}'>{settings.BASE_URL}/auth/verify_email?code={email_code}&user={user.id}</a></p><p>{_('This link will expire in 5 minutes')}</p>",
         subtype="html"
     )
 
@@ -343,7 +345,7 @@ def send_verification_email_view(request: HttpRequest):
     data = request.json()
     if not data.get('user_id'):
         return HttpResponse(
-            json.dumps({"message": "User ID is required", "type": "send_verification_email_fail"}),
+            json.dumps({"message": _("User ID is required"), "type": "send_verification_email_fail"}),
             content_type='application/json',
             status=400
         )
@@ -351,13 +353,13 @@ def send_verification_email_view(request: HttpRequest):
         user: User = User.objects.get(pk=data.get('user_id'))
     except User.DoesNotExist:
         return HttpResponse(
-            json.dumps({"message": "User not found", "type": "send_verification_email_fail"}),
+            json.dumps({"message": _("User not found"), "type": "send_verification_email_fail"}),
             content_type='application/json',
             status=400
         )
     send_verification_email(user)
     return HttpResponse(
-        json.dumps({"message": "Verification email sent"}),
+        json.dumps({"message": _("Verification email sent")}),
         content_type='application/json',
         status=200
     )
@@ -368,7 +370,7 @@ def verify_email(request: HttpRequest):
     data = request.json()
     if not data.get('code'):
         return HttpResponse(
-            json.dumps({"message": "Code is required", "type": "verify_email_fail"}),
+            json.dumps({"message": _("Code is required"), "type": "verify_email_fail"}),
             content_type='application/json',
             status=400
         )
@@ -378,7 +380,7 @@ def verify_email(request: HttpRequest):
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return HttpResponse(
-            json.dumps({"message": "Invalid code", "type": "verify_email_fail"}),
+            json.dumps({"message": _("Invalid code"), "type": "verify_email_fail"}),
             content_type='application/json',
             status=400
         )
@@ -386,7 +388,7 @@ def verify_email(request: HttpRequest):
     expected_code = cache.get(f'{user.id}_email_code', sentinel)
     if expected_code is sentinel or expected_code != code:
         return HttpResponse(
-            json.dumps({"message": "Code expired", "type": "verify_email_fail"}),
+            json.dumps({"message": _("Code expired"), "type": "verify_email_fail"}),
             content_type='application/json',
             status=400
         )
@@ -394,7 +396,7 @@ def verify_email(request: HttpRequest):
     user.save()
     cache.delete(f'{user.id}_email_code')
     return HttpResponse(
-        json.dumps({"message": "Email verified"}),
+        json.dumps({"message": _("Email verified")}),
         content_type='application/json',
         status=200
     )

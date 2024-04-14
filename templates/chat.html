@@ -44,7 +44,7 @@
       <h2>
         {{ current_room.name }}
         {% if not current_room.is_direct %}
-          <h6><pre>{% translate "Room code" %}: {{ current_room.code }}</pre></h6>
+          <h4><pre>{% translate "Room code" %}: {{ current_room.code }}</pre></h4>
         {% endif %}
       </h2>
       {% if not current_room.is_direct %}
