@@ -25,7 +25,7 @@ docker-compose up
 
 ## Modules
 
-Total points: 6/7
+Total points: 6/14
 
 - Major modules (1 point each):
   - [x] MAJOR: framework backend
@@ -35,9 +35,15 @@ Total points: 6/7
   - [x] MAJOR: Live Chat
   - [ ] MAJOR: AI
   - [ ] MAJOR: Remote players
-  - [ ] MAJOR: Multiplayers
+  - [ ] MAJOR: 3D rendering
+  - [ ] MAJOR: Server Side Pong
+  - [ ] MAJOR: User History and matchmaking
+  - [ ] MAJOR: Multiplayer
 
 - Minor modules (0.5 points each):
   - [x] MINOR: frontend toolkit
   - [x] MINOR: database
   - [ ] MINOR: USER STATS
+  - [ ] MINOR: SSR
+  - [ ] MINOR: Translation
+  - [ ] MINOR: Game customization
