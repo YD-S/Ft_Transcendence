@@ -38,7 +38,6 @@ Total points: 7/14
   - [ ] MAJOR: 3D rendering
   - [ ] MAJOR: Server-side Pong
   - [ ] MAJOR: User history and Matchmaking
-  - [ ] MAJOR: Multiplayer
 
 - Minor modules (0.5 points each):
   - [x] MINOR: Frontend toolkit
