@@ -33,6 +33,8 @@ const COLORS = {
 
 class NeonPong {
     constructor() {
+        this.websocket = new WebSocket(`wss://${window.location.host}/ws/matchmaking/`);
+        this.amIfirst = false;
         this.keys = {};
         this.twoD = true;
         this.scene = new THREE.Scene();
@@ -70,6 +72,8 @@ class NeonPong {
 
         document.getElementById("game-canvas").appendChild(this.renderer.domElement);
     }
+
+
 
     setCameraAngle() {
         if (this.twoD === false) {
