@@ -7,6 +7,14 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href={% static "css/index.css" %}>
   <title>NeonPong</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@v0.163.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.163.0/examples/jsm/"
+    }
+  }
+</script>
 </head>
 <body>
 <div id="header">
@@ -67,6 +75,7 @@
 <script src='{% static "js/me.js" %}' type="module"></script>
 <script src='{% static "js/chat.js" %}' type="module"></script>
 <script src='{% static "js/verify_email.js" %}' type="module"></script>
+<script src='{% static "js/test.js" %}' type="module"></script>
 
 </body>
 </html>
