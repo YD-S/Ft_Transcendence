@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 23:09+0000\n"
+"POT-Creation-Date: 2024-04-13 23:34+0000\n"
 "PO-Revision-Date: 2024-04-14 00:38+0200\n"
 "Last-Translator: Ciro García Belmonte\n"
 "Language-Team: \n"
@@ -18,6 +18,128 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
+
+#: authentication/token.py:70 authentication/token.py:89
+msgid "Invalid token"
+msgstr ""
+
+#: authentication/token.py:80
+msgid "Token reuse detected"
+msgstr ""
+
+#: authentication/token.py:86
+msgid "Token expired"
+msgstr ""
+
+#: authentication/views.py:32
+msgid "Username and password are required"
+msgstr ""
+
+#: authentication/views.py:40
+msgid "Invalid username or password"
+msgstr ""
+
+#: authentication/views.py:61 templates/me.html:19 templates/me.html:21
+msgid "Two-Factor Authentication"
+msgstr ""
+
+#: authentication/views.py:63
+msgid "Your one-time passcode is"
+msgstr ""
+
+#: authentication/views.py:63
+msgid "It expires in 5 minutes"
+msgstr ""
+
+#: authentication/views.py:73 authentication/views.py:131
+#: authentication/views.py:234 authentication/views.py:348
+msgid "User ID is required"
+msgstr ""
+
+#: authentication/views.py:79
+msgid "2FA code is required"
+msgstr ""
+
+#: authentication/views.py:87 authentication/views.py:139
+#: authentication/views.py:254 authentication/views.py:356 chat/views.py:62
+msgid "User not found"
+msgstr ""
+
+#: authentication/views.py:95 authentication/views.py:103
+msgid "Invalid 2FA code"
+msgstr ""
+
+#: authentication/views.py:145
+msgid "2FA code sent"
+msgstr ""
+
+#: authentication/views.py:159
+msgid "Logout successful"
+msgstr ""
+
+#: authentication/views.py:171
+msgid "Refresh token is required"
+msgstr ""
+
+#: authentication/views.py:199
+msgid "Username and password and email are required"
+msgstr ""
+
+#: authentication/views.py:208
+msgid "Username already exists"
+msgstr ""
+
+#: authentication/views.py:222
+msgid "User registered successfully"
+msgstr ""
+
+#: authentication/views.py:240
+msgid "Current password is required"
+msgstr ""
+
+#: authentication/views.py:246
+msgid "New password is required"
+msgstr ""
+
+#: authentication/views.py:261
+msgid "Current password is incorrect"
+msgstr ""
+
+#: authentication/views.py:268
+msgid "New password must be different from current password"
+msgstr ""
+
+#: authentication/views.py:275
+msgid "Password changed successfully"
+msgstr ""
+
+#: authentication/views.py:304 authentication/views.py:373
+msgid "Code is required"
+msgstr ""
+
+#: authentication/views.py:320 authentication/views.py:383
+msgid "Invalid code"
+msgstr ""
+
+#: authentication/views.py:336
+msgid "Email verification"
+msgstr ""
+
+#: authentication/views.py:362
+msgid "Verification email sent"
+msgstr ""
+
+#: authentication/views.py:391
+msgid "Code expired"
+msgstr ""
+
+#: authentication/views.py:399
+msgid "Email verified"
+msgstr ""
+
+#: chat/views.py:38 chat/views.py:50
+msgid "Room not found"
+msgstr ""
 
 #: templates/404.html:4
 msgid "Page not found"
@@ -162,10 +284,6 @@ msgstr ""
 
 #: templates/me.html:16
 msgid "Resend verification email"
-msgstr ""
-
-#: templates/me.html:19 templates/me.html:21
-msgid "Two-Factor Authentication"
 msgstr ""
 
 #: templates/me.html:19

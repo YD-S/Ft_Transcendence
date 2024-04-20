@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 23:09+0000\n"
-"PO-Revision-Date: 2024-04-14 01:10+0200\n"
+"POT-Creation-Date: 2024-04-13 23:34+0000\n"
+"PO-Revision-Date: 2024-04-14 01:57+0200\n"
 "Last-Translator: Ciro García Belmonte\n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -18,6 +18,128 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
+
+#: authentication/token.py:70 authentication/token.py:89
+msgid "Invalid token"
+msgstr "Token inválido"
+
+#: authentication/token.py:80
+msgid "Token reuse detected"
+msgstr "Reutilización de tokens detectada"
+
+#: authentication/token.py:86
+msgid "Token expired"
+msgstr "Token caducado"
+
+#: authentication/views.py:32
+msgid "Username and password are required"
+msgstr "El usuario y la contraseña son obligatorios"
+
+#: authentication/views.py:40
+msgid "Invalid username or password"
+msgstr "Usuario o contraseña incorrectos"
+
+#: authentication/views.py:61 templates/me.html:19 templates/me.html:21
+msgid "Two-Factor Authentication"
+msgstr "Autenticación en dos pasos"
+
+#: authentication/views.py:63
+msgid "Your one-time passcode is"
+msgstr "Tú código de un solo uso es"
+
+#: authentication/views.py:63
+msgid "It expires in 5 minutes"
+msgstr "Expira en 5 minutos"
+
+#: authentication/views.py:73 authentication/views.py:131
+#: authentication/views.py:234 authentication/views.py:348
+msgid "User ID is required"
+msgstr "La ID de usuario es obligatoria"
+
+#: authentication/views.py:79
+msgid "2FA code is required"
+msgstr "El código de un solo uso es obligatorio"
+
+#: authentication/views.py:87 authentication/views.py:139
+#: authentication/views.py:254 authentication/views.py:356 chat/views.py:62
+msgid "User not found"
+msgstr "Usuario no encontrado"
+
+#: authentication/views.py:95 authentication/views.py:103
+msgid "Invalid 2FA code"
+msgstr "Código de un solo uso inválido"
+
+#: authentication/views.py:145
+msgid "2FA code sent"
+msgstr "Código de un solo uso enviado"
+
+#: authentication/views.py:159
+msgid "Logout successful"
+msgstr "Sesión cerrada correctamente"
+
+#: authentication/views.py:171
+msgid "Refresh token is required"
+msgstr "El token de refresco es obligatorio"
+
+#: authentication/views.py:199
+msgid "Username and password and email are required"
+msgstr "El nombre de usuario, contraseña e email son obligatorios"
+
+#: authentication/views.py:208
+msgid "Username already exists"
+msgstr "El nombre de usuario ya existe"
+
+#: authentication/views.py:222
+msgid "User registered successfully"
+msgstr "Usuario registrado correctamente"
+
+#: authentication/views.py:240
+msgid "Current password is required"
+msgstr "La contraseña actual es obligatoria"
+
+#: authentication/views.py:246
+msgid "New password is required"
+msgstr "La nueva contraseña es obligatoria"
+
+#: authentication/views.py:261
+msgid "Current password is incorrect"
+msgstr "La contraseña actual es incorrecta"
+
+#: authentication/views.py:268
+msgid "New password must be different from current password"
+msgstr "La nueva contraseña debe ser distinta de la actual"
+
+#: authentication/views.py:275
+msgid "Password changed successfully"
+msgstr "Contraseña cambiada correctamente"
+
+#: authentication/views.py:304 authentication/views.py:373
+msgid "Code is required"
+msgstr "El código es obligatorio"
+
+#: authentication/views.py:320 authentication/views.py:383
+msgid "Invalid code"
+msgstr "Código inválido"
+
+#: authentication/views.py:336
+msgid "Email verification"
+msgstr "Verificación de email"
+
+#: authentication/views.py:362
+msgid "Verification email sent"
+msgstr "Reenviar correo de verificación"
+
+#: authentication/views.py:391
+msgid "Code expired"
+msgstr "Código caducado"
+
+#: authentication/views.py:399
+msgid "Email verified"
+msgstr "Email verificado"
+
+#: chat/views.py:38 chat/views.py:50
+msgid "Room not found"
+msgstr "Sala no encontrada"
 
 #: templates/404.html:4
 msgid "Page not found"
@@ -163,10 +285,6 @@ msgstr "Email sin verificar"
 #: templates/me.html:16
 msgid "Resend verification email"
 msgstr "Reenviar correo de verificación"
-
-#: templates/me.html:19 templates/me.html:21
-msgid "Two-Factor Authentication"
-msgstr "Autenticación en dos pasos"
 
 #: templates/me.html:19
 msgid "OAuth users don't need two-factor auth."

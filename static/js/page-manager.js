@@ -38,8 +38,12 @@ export class PageManager {
      * @param preserve_query {boolean} Whether to preserve the query string in the URL
      * @param options {object} Options for loading the page
      */
-    load(page, preserve_query = true, options = {args: [], query: ""}) {
-        this.setLoading();
+    load(page, preserve_query = true, options = {}) {
+        this.loadToContainer(page, this.contentRoot, preserve_query, options)
+    }
+
+    loadToContainer(page, container, preserve_query = true, options = {}) {
+        this.setLoading(container);
         fetch(`/page/${page}.html` + (options.query || ""))
             .then(response => {
                 if (response.status !== 200) {
@@ -56,15 +60,19 @@ export class PageManager {
                 if (data === '__redirected__') {
                     return
                 }
-                history.pushState({data: data}, "", '/' + page + (preserve_query ? window.location.search : ""));
-                this.contentRoot.innerHTML = data;
-                if (this.onLoadCallbacks[page]) {
-                    this.onLoadCallbacks[page](...(options.args || []));
+                if (options.storeInHistory !== false) {
+                    history.pushState({data: data}, "", '/' + page + (preserve_query ? window.location.search : ""));
                 }
+                container.innerHTML = data;
                 if (this.onUnloadCallbacks[this.previousPage]) {
                     this.onUnloadCallbacks[this.previousPage]();
                 }
-                this.previousPage = page;
+                if (this.onLoadCallbacks[page]) {
+                    this.onLoadCallbacks[page](...(options.args || []));
+                }
+                if (options.storeInHistory !== false) {
+                    this.previousPage = page;
+                }
             });
     }
 
@@ -86,7 +94,7 @@ export class PageManager {
         this.onUnloadCallbacks[page] = callback;
     }
 
-    setLoading() {
-        this.contentRoot.innerHTML = "<div class='loader'>Loading</div>";
+    setLoading(container) {
+        container.innerHTML = "<div class='loader'>Loading</div>";
     }
 }

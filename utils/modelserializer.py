@@ -22,7 +22,7 @@ class ModelSerializer:
         self.instance = None
 
         if instance is None and data is None:
-            raise ValidationError(json.dumps({"message": "Either instance or data must be provided", "type": "data"}), content_type='application/json')
+            raise ValueError("Either instance or data must be provided")
 
         if instance is not None and data is not None:
             self._update_instance(instance, {**getattr(self.Meta, 'default_fields', {}), **data})
@@ -38,8 +38,7 @@ class ModelSerializer:
         auto_fields = map(lambda x: x.name, filter(lambda x: x.auto_created, self.Meta.model._meta.fields))
         for field in data:
             if field not in fields:
-                raise ValidationError(json.dumps({"message": f"Model {self.Meta.model.__name__} does not have field '{field}' or it is read-only", "type": "data"}),
-                                      content_type='application/json')
+                raise ValueError("Model {self.Meta.model.__name__} does not have field '{field}' or it is read-only")
         self.data = data
         for field in data:
             if field not in auto_fields:
@@ -101,7 +100,7 @@ class ModelSerializer:
 
     def save(self):
         if not self.instance:
-            raise ValidationError(json.dumps({"message": "Cannot save data without instance", "type": "data"}), content_type='application/json')
+            raise ValueError("Cannot save data without instance")
         self.instance.save()
         return self.instance
 
@@ -109,8 +108,7 @@ class ModelSerializer:
         fields = self._get_fields()
         for field in self.data:
             if field not in fields:
-                raise ValidationError(json.dumps({"message": f"Model {self.Meta.model.__name__} does not have field '{field}'", "type": "data"}),
-                                      content_type='application/json')
+                raise AttributeError(f"Model {self.Meta.model.__name__} does not have field '{field}'")
         # Check model fields for required fields and check if they are present in data
         for field in self.Meta.model._meta.fields:
             if field.name not in self.data and (not field.null and not field.blank):
@@ -132,9 +130,7 @@ class ModelSerializer:
         if value is not self.none and not field.null and not field.blank:
             if isinstance(field, models.ForeignKey):
                 if not field.related_model.objects.filter(pk=value).exists():
-                    raise ValidationError(
-                        json.dumps({"message": f"Foreign key '{field.name}' does not exist", "type": "invalid_foreign_key", "field": field.name}),
-                        content_type='application/json')
+                    raise AttributeError(f"Foreign key '{field.name}' does not exist")
             elif isinstance(field, models.DateTimeField):
                 try:
                     datetime.datetime.strptime(value, "%Y-%m-%d %H:%M:%S")

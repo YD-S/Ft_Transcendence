@@ -38,33 +38,5 @@
       </div>
     </div>
   </div>
-  <div id="current-room">
-    {% if current_room %}
-      <span style="display: none" id="room-id">{{ current_room.id }}</span>
-      <h2>
-        {{ current_room.name }}
-        {% if not current_room.is_direct %}
-          <h6><pre>{% translate "Room code" %}: {{ current_room.code }}</pre></h6>
-        {% endif %}
-      </h2>
-      {% if not current_room.is_direct %}
-      <button id="leave-room">{% translate "Leave room" %}</button>
-      {% endif %}
-      <div id="chat-log">
-        {% for message in current_room.messages %}
-          <div class="message">
-            <span class="timestamp">{{ message.created_at }}</span>
-            <span class="username">{{ message.sender }}:</span>
-            <span class="content">{{ message.content }}</span>
-          </div>
-        {% endfor %}
-      </div>
-      <div id="chat-input-box">
-        <input type="text" id="chat-input" placeholder="{% translate 'Type your message here' %}">
-        <button id="send-message">{% translate "Send" %}</button>
-      </div>
-    {% else %}
-      <h2>{% translate "Select a chat to start a conversation" %}</h2>
-    {% endif %}
-  </div>
+  <div id="current-room"></div>
 </div>

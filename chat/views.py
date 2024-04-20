@@ -9,6 +9,7 @@ from chat.serializers import MessageSerializer, RoomSerializer
 from common.request import HttpRequest
 from users.models import User
 from utils.modelviewset import ModelViewSet
+from django.utils.translation import gettext as _
 
 
 class MessageViewSet(ModelViewSet):
@@ -34,7 +35,7 @@ class RoomViewSet(ModelViewSet):
         try:
             room: Room = Room.objects.get(code=code)
         except Room.DoesNotExist:
-            return JsonResponse({"error": "Room not found"}, status=404)
+            return JsonResponse({"error": _("Room not found")}, status=404)
         room.join(request.user)
         room.save()
         return JsonResponse(RoomViewSet.serializer(instance=room).data)
@@ -46,7 +47,7 @@ class RoomViewSet(ModelViewSet):
         try:
             room: Room = Room.objects.get(id=pk)
         except Room.DoesNotExist:
-            return JsonResponse({"error": "Room not found"}, status=404)
+            return JsonResponse({"error": _("Room not found")}, status=404)
         room.leave(request.user)
         room.save()
         return JsonResponse(RoomViewSet.serializer(instance=room).data)
@@ -58,7 +59,7 @@ class RoomViewSet(ModelViewSet):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            return JsonResponse({"error": "User not found"}, status=404)
+            return JsonResponse({"error": _("User not found")}, status=404)
         room = Room.objects.create(name=f"{request.user.username} - {user.username}", is_direct=True)
         room.join(request.user)
         room.join(user)

@@ -6,7 +6,7 @@ export function login() {
     let username = document.getElementById('username').value.trim();
     let password = document.getElementById('password').value;
     let data = {
-        username: username,
+        username: username.trim(),
         password: password
     };
     fetch('/api/auth/login/', {
