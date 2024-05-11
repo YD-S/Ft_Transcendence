@@ -31,7 +31,7 @@ python3 manage.py migrate
 # Create a superuser
 python3 manage.py createsuperuser
 
-# Run the project
+# Run the dev server
 python3 manage.py runserver
 ```
 
