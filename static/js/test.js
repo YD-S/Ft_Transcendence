@@ -35,49 +35,88 @@ class NeonPong {
     constructor() {
         this.websocket = new WebSocket(`wss://${window.location.host}/ws/matchmaking/`);
         this.amIfirst = false;
+        this.me = null;
+        this.opponent = null;
         this.keys = {};
-        this.twoD = true;
+        this.twoD = false;
         this.scene = new THREE.Scene();
         this.camera = makeCamera(this.twoD);
-        this.setCameraAngle();
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(GAME_WIDTH, GAME_HEIGHT);
 
-        this.grid = new THREE.GridHelper(WALL_DEPTH, 10);
-        this.scene.add(this.grid);
+        this.pivot =  new THREE.Object3D();
+        this.pivot.rotation.y = Math.PI / 2;
+
+        this.pivot2 = new THREE.Object3D();
+        this.pivot2.rotation.y = -Math.PI / 2;
+
+
+        const radius = 15;
+        const sectors = 16;
+        const rings = 8;
+        const divisions = 64;
+
+        const helper = new THREE.PolarGridHelper( radius, sectors, rings, divisions );
+        this.scene.add( helper );
+
+        //this.grid = new THREE.GridHelper(WALL_DEPTH, 10);
+        //this.scene.add(this.grid);
 
         this.wall1 = new THREE.Mesh(new THREE.BoxGeometry(1, WALL_HEIGHT, WALL_DEPTH), new THREE.MeshBasicMaterial({color: COLORS.white}));
         this.wall1.position.set(half(WALL_DEPTH), half(WALL_DEPTH), 0);
-        this.scene.add(this.wall1);
+        //this.scene.add(this.wall1);
 
         this.wall2 = new THREE.Mesh(new THREE.BoxGeometry(1, WALL_HEIGHT, WALL_DEPTH), new THREE.MeshBasicMaterial({color: COLORS.white}));
         this.wall2.position.set(-half(WALL_DEPTH), half(WALL_DEPTH), 0);
-        this.scene.add(this.wall2);
+        //this.scene.add(this.wall2);
 
         document.addEventListener('keydown', this.keydown.bind(this));
 
         document.addEventListener('keyup', this.keyup.bind(this));
 
         this.paddle1 = makePaddle(PLAYER_COLORS.emerald);
-        this.paddle1.position.set(0, 0.5, 9);
-        this.scene.add(this.paddle1);
+        this.paddle1.position.set(0, 0.5, 15);
+        this.pivot.add(this.paddle1);
 
         this.paddle2 = makePaddle(PLAYER_COLORS.aqua);
-        this.paddle2.position.set(0, 0.5, -10);
-        this.scene.add(this.paddle2);
+        this.paddle2.position.set(this.paddle1.position.x, this.paddle1.position.y, this.paddle1.position.z);
+        this.pivot2.add(this.paddle2);
 
         this.ball = makeBall(COLORS.pink);
         this.ball.position.set(0, 5, 0);
         this.scene.add(this.ball);
 
+        this.scene.add(this.pivot);
+        this.scene.add(this.pivot2);
+
         document.getElementById("game-canvas").appendChild(this.renderer.domElement);
+
+
+        this.websocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === "game_start") {
+                console.log("Game started");
+                this.amIfirst = data.player;
+                if (this.amIfirst === true) {
+                    this.me = this.pivot;
+                    this.opponent = this.pivot2;
+                }
+                else {
+                    this.me = this.pivot2;
+                    this.opponent = this.pivot;
+                }
+                this.setCameraAngle();
+            }
+            else if (data.type === "move") {
+                this.me.position.x = data.x;
+            }
+        }
     }
-
-
-
     setCameraAngle() {
         if (this.twoD === false) {
-            this.camera.position.set(0, 2, 20);
+            this.camera.position.set(-20, 25, 20);
+            this.scene.rotation.y = -Math.PI / 2;
+            this.camera.lookAt(0, 0, 0);
         } else {
             this.camera.position.set(0, 25, 0);
             this.scene.rotation.y = -Math.PI / 2;
@@ -99,27 +138,39 @@ class NeonPong {
         }
     }
 
-    updateCameraPosition() {
+/*    updateCameraPosition() {
         if (this.twoD === false) {
-            this.camera.position.set(this.paddle1.position.x, this.paddle1.position.y + 1.5, this.paddle1.position.z + 9.5);
+            if (this.amIfirst === true) {
+                this.camera.position.set(this.paddle1.position.x, this.paddle1.position.y + 1.5, this.paddle1.position.z + 9.5);
+                this.camera.rotation.y = 0;
+            } else {
+                this.camera.position.set(this.paddle2.position.x, this.paddle2.position.y + 1.5, this.paddle2.position.z - 8.5);
+                this.camera.rotation.y = Math.PI;
+            }
         } else {
             this.camera.position.set(0, 25, 0);
             this.camera.lookAt(0, 0, 0);
         }
     }
-
+*/
     movePaddles() {
-        if (this.keys['a'] && this.twoD === false) {
-            this.paddle1.position.x -= 0.1;
+        if(this.twoD === false){
+            if (this.keys['a']) {
+                this.me.rotation.y += 0.01;
+                //this.websocket.send(JSON.stringify({type: "move", direction: "left", playerId: this.amIfirst, x: this.me.position.x}));
+            }
+            if (this.keys['d']) {
+                this.me.rotation.y -= 0.01;
+                //this.websocket.send(JSON.stringify({type: "move", direction: "right", playerId: this.amIfirst, x: this.me.position.x}));
+            }
         }
-        if (this.keys['d'] && this.twoD === false) {
-            this.paddle1.position.x += 0.1;
-        }
-        if (this.keys['w'] && this.twoD === true) {
-            this.paddle1.position.x -= 0.1;
-        }
-        if (this.keys['s'] && this.twoD === true) {
-            this.paddle1.position.x += 0.1;
+        else {
+            if (this.keys['w']) {
+                this.websocket.send(JSON.stringify({type: "move", direction: "left", playerId: this.amIfirst, x: this.me.position.x}));
+            }
+            if (this.keys['s']) {
+                this.websocket.send(JSON.stringify({type: "move", direction: "right", playerId: this.amIfirst, x: this.me.position.x}));
+            }
         }
     }
 
@@ -136,7 +187,7 @@ class NeonPong {
         this.movePaddles();
         this.renderer.render(this.scene, this.camera);
         this.checkPaddleWallCollision(); // Check for paddle wall collision in the render loop
-        this.updateCameraPosition(); // Update camera position in the render loop
+       // this.updateCameraPosition(); // Update camera position in the render loop
     }
 }
 

@@ -19,7 +19,7 @@ export function makeCamera(twoD) {
         return new THREE.PerspectiveCamera(55, GAME_WIDTH / GAME_HEIGHT, 0.1, 1000);
     }else
     {
-        return new THREE.PerspectiveCamera(40, GAME_WIDTH / GAME_HEIGHT, 0.1, 1000);
+        return new THREE.PerspectiveCamera(55, GAME_WIDTH / GAME_HEIGHT, 0.1, 1000);
     }
 }
 
@@ -38,7 +38,7 @@ export function makePaddle(color) {
 
         const extrudeSettings = {
             depth: 1,
-            bevelEnabled: false
+            bevelEnabled: true
         };
         const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
         const material = new THREE.MeshBasicMaterial({color: color});
