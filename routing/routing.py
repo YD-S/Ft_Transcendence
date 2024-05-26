@@ -1,10 +1,12 @@
 from django.urls import path, re_path, include
-from ServerSidePong.consumers import MatchmakingConsumer
+from Game.consumers import GameConsumer
+from Matchmaking.consumers import MatchmakingConsumer
 from chat.consumers import ChatRoomConsumer
 
 websocket_urlpatterns = [
     re_path(r'ws/chat/(?P<room_id>\w+)/$', ChatRoomConsumer.as_asgi(), name='chat'),
     path('ws/matchmaking/', MatchmakingConsumer.as_asgi(), name='matchmaking'),
+    re_path(r'ws/game/(?P<game_id>\w+)/$', GameConsumer.as_asgi(), name='game'),
 ]
 
 apiurls = [

@@ -50,3 +50,12 @@ export function makeBall(color) {
     const material = new THREE.MeshBasicMaterial({color: color});
     return new THREE.Mesh(geometry, material);
 }
+
+export function makeGrid() {
+    const radius = 15;
+    const sectors = 16;
+    const rings = 8;
+    const divisions = 64;
+
+    return new THREE.PolarGridHelper(radius, sectors, rings, divisions);
+}
