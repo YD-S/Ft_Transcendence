@@ -4,6 +4,7 @@ export default class Matchmaking {
         this.room_id = null;
         this.amIfirst = null;
         this.GameSocket = null;
+        this.playerId = null;
 
         this.Matchmakingsocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -11,6 +12,7 @@ export default class Matchmaking {
                 console.log("Game starting!");
                 this.amIfirst = data.player;
                 this.room_id = data.room_id;
+                this.playerId = data.playerId;
             } else if (data.type === "redirect") {
                 this.Matchmakingsocket.close();
             }

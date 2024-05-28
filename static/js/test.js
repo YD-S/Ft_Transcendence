@@ -1,17 +1,10 @@
 import {PageManager} from "./page-manager.js";
 import Matchmaking from "./Matchmaking.js";
 import * as THREE from 'three';
-import {height_aspect_ratio, makeBall, makeCamera, makePaddle, half, PAD_H, PAD_W, makeGrid} from './Objects.js';
+import {height_aspect_ratio, makeBall, makeCamera, makePaddle, makeGrid} from './Objects.js';
 
 const GAME_WIDTH = 1000;
-
 const GAME_HEIGHT = height_aspect_ratio(GAME_WIDTH);
-
-const WALL_HEIGHT = 20;
-
-const WALL_DEPTH = 20;
-
-const MAX_SCORE = 5;
 
 const PLAYER_COLORS = {
     mindaro: 0xe2ef70,
@@ -23,7 +16,7 @@ const PLAYER_COLORS = {
     aqua: 0x42f2f7,
     persian_blue: 0x072ac8,
     emerald: 0x48bf84,
-}
+};
 
 const COLORS = {
     white: 0xf8f9fa,
@@ -32,7 +25,6 @@ const COLORS = {
     space_cadet: 0x202646,
 };
 
-
 class NeonPong {
     constructor(matchmaking) {
         this.Matchmaking = matchmaking;
@@ -40,10 +32,12 @@ class NeonPong {
         this.me = null;
         this.opponent = null;
         this.amIfirst = this.Matchmaking.amIfirst;
-        this.camera = makeCamera(this.twoD);
-        this.scene = new THREE.Scene();
+        this.playerId = this.Matchmaking.playerId;
         this.twoD = false;
         this.keys = {};
+
+        this.camera = makeCamera(this.twoD);
+        this.scene = new THREE.Scene();
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(GAME_WIDTH, GAME_HEIGHT);
 
@@ -97,14 +91,16 @@ class NeonPong {
     async processMessage(message) {
         switch (message.type) {
             case "move":
-                console.log("Moving paddle");
-                this.me.position.y = message.y;
+                if (message.playerId === this.playerId) {
+                    this.me.rotation.y = message.y;
+                } else {
+                    this.opponent.rotation.y = message.y;
+                }
                 break;
         }
     }
 
     setPlayers() {
-        console.log(this.amIfirst);
         if (this.amIfirst === true) {
             this.me = this.pivot;
             this.opponent = this.pivot2;
@@ -128,19 +124,17 @@ class NeonPong {
     }
 
     movePaddles() {
-        if (this.twoD === false) {
-            if (this.keys['a']) {
-                this.GameSocket.send(JSON.stringify({ type: "move", direction: "left", playerId: this.amIfirst, y: this.me.position.y }));
-            }
-            if (this.keys['d']) {
-                this.GameSocket.send(JSON.stringify({ type: "move", direction: "right", playerId: this.amIfirst, y: this.me.position.y }));
-            }
-        } else {
-            if (this.keys['w']) {
-                this.GameSocket.send(JSON.stringify({ type: "move", direction: "left", playerId: this.amIfirst, y: this.me.position.y }));
-            }
-            if (this.keys['s']) {
-                this.GameSocket.send(JSON.stringify({ type: "move", direction: "right", playerId: this.amIfirst, y: this.me.position.y }));
+        const directionMap = this.twoD ? { 'w': 'left', 's': 'right' } : { 'a': 'left', 'd': 'right' };
+
+        for (let key in directionMap) {
+            if (this.keys[key]) {
+                this.GameSocket.send(JSON.stringify({
+                    type: "move",
+                    direction: directionMap[key],
+                    amIfirst: this.amIfirst,
+                    y: this.me.rotation.y,
+                    playerId: this.playerId
+                }));
             }
         }
     }
@@ -168,9 +162,7 @@ class NeonPong {
 
 // Ensure WebSocket is ready before starting the game
 PageManager.getInstance().setOnPageLoad("test", () => {
-
     const matchmaking = new Matchmaking();
-
     matchmaking.onGameSocketReady = () => {
         const game = new NeonPong(matchmaking);
         game.render();
