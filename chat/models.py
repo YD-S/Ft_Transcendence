@@ -1,6 +1,7 @@
 import random
 
 from django.db import models
+from django.utils.translation import gettext as _
 
 from common.models import BaseModel
 from users.models import User
@@ -41,12 +42,13 @@ class Room(BaseModel):
 
     def get_name(self, user: User) -> str:
         if self.is_direct:
-            return self.members.exclude(id=user.id).first().username
+            other = self.members.exclude(id=user.id).first()
+            return other.username if other else _("* deleted user *")
         return self.name
 
     def join(self, user: User):
         if self.is_direct and self.members.count() == 2:
-            raise ValidationError("Direct rooms can only have 2 members")
+            raise ValidationError(_("Direct rooms can only have 2 members"))
         self.members.add(user)
 
     def leave(self, user: User):
