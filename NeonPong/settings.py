@@ -111,6 +111,7 @@ TEMPLATES = [
 
 ASGI_APPLICATION = "NeonPong.asgi.application"
 
+ENABLE_CACHE = os.getenv("ENABLE_CACHE", "False").lower() == "true"
 
 REDIS_HOST = os.getenv("REDIS_HOST", "redis-service")
 CHANNEL_LAYERS = {
@@ -119,12 +120,16 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [(REDIS_HOST, 6379)],
         },
+    } if ENABLE_CACHE else {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     }
 }
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "BACKEND": "django.core.cache.backends.redis.RedisCache"
+        if ENABLE_CACHE else
+        "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": f"redis://{REDIS_HOST}:6379",
     }
 }
