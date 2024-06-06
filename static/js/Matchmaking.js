@@ -9,7 +9,6 @@ export default class Matchmaking {
         this.Matchmakingsocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.type === "game_start") {
-                console.log("Game starting!");
                 this.amIfirst = data.player;
                 this.room_id = data.room_id;
                 this.playerId = data.playerId;
