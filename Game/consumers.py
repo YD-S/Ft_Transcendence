@@ -8,6 +8,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.player1 = None
+        self.player2 = None
         self.game_id = None
 
     async def connect(self):
@@ -23,12 +25,12 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['type']
-        direction = text_data_json['direction']
-        y = text_data_json['y']
-        amIfirst = text_data_json['amIfirst']
-        playerId = text_data_json['playerId']
 
         if message == 'move':
+            direction = text_data_json['direction']
+            y = text_data_json['y']
+            amIfirst = text_data_json['amIfirst']
+            playerId = text_data_json['playerId']
             if direction == 'left':
                 y += 0.01 if not amIfirst else -0.01
             elif direction == 'right':
@@ -44,6 +46,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     }
                 }
             )
+        elif message == 'initial_data':
+            self.player1 = text_data_json['player1']
+            self.player2 = text_data_json['player2']
 
     async def create_group(self, group_name):
         await self.channel_layer.group_add(
@@ -67,3 +72,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.players -= 1
         if self.scope['user'].username in self.player_names:
             self.player_names.remove(self.scope['user'].username)
+
+    async def send_every_frame(self):
+        while 1:
+            await self.channel_layer.group_send(
+                self.game_id,
+                {
+                    'type': 'move',
+                    'data': {
+                    }
+                }
+            )

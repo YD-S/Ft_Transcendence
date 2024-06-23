@@ -33,8 +33,11 @@ class NeonPong {
         this.opponent = null;
         this.amIfirst = this.Matchmaking.amIfirst;
         this.playerId = this.Matchmaking.playerId;
+        this.opponentId = this.Matchmaking.opponentId;
         this.twoD = false;
         this.keys = {};
+
+        this.sendIntialData();
 
         this.camera = makeCamera(this.twoD);
         this.scene = new THREE.Scene();
@@ -98,6 +101,25 @@ class NeonPong {
                 }
                 break;
         }
+    }
+
+    sendIntialData(){
+        let Player1;
+        let Player2;
+            if (this.amIfirst){
+                Player1 = this.playerId;
+                Player2 = this.opponentId
+            }else {
+                Player2 = this.playerId;
+                Player1 = this.opponentId
+            }
+        this.GameSocket.send(JSON.stringify(
+            {
+                type: "initial_data",
+                player1: Player1,
+                player2: Player2,
+            }
+        ));
     }
 
     setPlayers() {

@@ -12,6 +12,7 @@ export default class Matchmaking {
                 this.amIfirst = data.player;
                 this.room_id = data.room_id;
                 this.playerId = data.playerId;
+                this.opponentId = data.opponentId;
             } else if (data.type === "redirect") {
                 this.Matchmakingsocket.close();
             }
