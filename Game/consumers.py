@@ -1,4 +1,6 @@
+import asyncio
 import json
+import math
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
@@ -10,7 +12,10 @@ class GameConsumer(AsyncWebsocketConsumer):
         super().__init__(*args, **kwargs)
         self.player1 = None
         self.player2 = None
+        self.player1_y = math.pi / 2
+        self.player2_y = -math.pi / 2
         self.game_id = None
+        self.frame_task = None  # Task to manage the frame sending coroutine
 
     async def connect(self):
         if self.players < 2:
@@ -19,36 +24,32 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.create_group(self.game_id)
             self.player_names.append(self.scope['user'].username)
             self.players += 1
+
+            if self.players == 2 and self.frame_task is None:
+                self.frame_task = asyncio.create_task(self.send_every_frame())
         else:
             await self.close(400)
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['type']
-
         if message == 'move':
             direction = text_data_json['direction']
-            y = text_data_json['y']
             amIfirst = text_data_json['amIfirst']
-            playerId = text_data_json['playerId']
-            if direction == 'left':
-                y += 0.01 if not amIfirst else -0.01
-            elif direction == 'right':
-                y += -0.01 if not amIfirst else 0.01
-
-            await self.channel_layer.group_send(
-                self.game_id,
-                {
-                    'type': 'move',
-                    'data': {
-                        'y': y,
-                        'playerId': playerId
-                    }
-                }
-            )
+            await self.calculate_y(direction, amIfirst)
         elif message == 'initial_data':
             self.player1 = text_data_json['player1']
             self.player2 = text_data_json['player2']
+
+    async def calculate_y(self, direction, amIfirst):
+        y = self.player1_y if amIfirst else self.player2_y
+        increment = 0.01 if 'left' in direction else -0.01
+        y += increment
+        y = y % (2 * math.pi)
+        if amIfirst:
+            self.player1_y = y
+        else:
+            self.player2_y = y
 
     async def create_group(self, group_name):
         await self.channel_layer.group_add(
@@ -60,8 +61,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         data = event['data']
         await self.send(text_data=json.dumps({
             'type': event['type'],
-            'y': data['y'],
-            'playerId': data['playerId']
+            'player1_y': data['player1_y'],
+            'player2_y': data['player2_y'],
         }))
 
     async def disconnect(self, close_code):
@@ -73,13 +74,25 @@ class GameConsumer(AsyncWebsocketConsumer):
         if self.scope['user'].username in self.player_names:
             self.player_names.remove(self.scope['user'].username)
 
-    async def send_every_frame(self):
-        while 1:
-            await self.channel_layer.group_send(
-                self.game_id,
-                {
-                    'type': 'move',
-                    'data': {
+        # Cancel the frame sending coroutine if a player disconnects
+        if self.players < 2 and self.frame_task is not None:
+            self.frame_task.cancel()
+            self.frame_task = None
+
+    async def send_every_frame(self, frame_rate=60):
+        frame_duration = 1 / frame_rate
+        try:
+            while True:
+                await self.channel_layer.group_send(
+                    self.game_id,
+                    {
+                        'type': 'move',
+                        'data': {
+                            'player1_y': self.player1_y,
+                            'player2_y': self.player2_y,
+                        }
                     }
-                }
-            )
+                )
+                await asyncio.sleep(frame_duration)
+        except asyncio.CancelledError:
+            pass

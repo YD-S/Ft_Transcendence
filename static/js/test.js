@@ -94,10 +94,13 @@ class NeonPong {
     async processMessage(message) {
         switch (message.type) {
             case "move":
-                if (message.playerId === this.playerId) {
-                    this.me.rotation.y = message.y;
-                } else {
-                    this.opponent.rotation.y = message.y;
+                if (this.amIfirst) {
+                    this.me.rotation.y = message.player1_y;
+                    this.opponent.rotation.y = message.player2_y;
+                }
+                else {
+                    this.me.rotation.y = message.player2_y;
+                    this.opponent.rotation.y = message.player1_y;
                 }
                 break;
         }
@@ -154,8 +157,6 @@ class NeonPong {
                     type: "move",
                     direction: directionMap[key],
                     amIfirst: this.amIfirst,
-                    y: this.me.rotation.y,
-                    playerId: this.playerId
                 }));
             }
         }
