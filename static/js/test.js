@@ -94,10 +94,13 @@ class NeonPong {
     async processMessage(message) {
         switch (message.type) {
             case "move":
-                if (message.playerId === this.playerId) {
-                    this.me.rotation.y = message.y;
-                } else {
-                    this.opponent.rotation.y = message.y;
+                if (this.amIfirst) {
+                    this.me.rotation.y = message.player1_y;
+                    this.opponent.rotation.y = message.player2_y;
+                }
+                else {
+                    this.me.rotation.y = message.player2_y;
+                    this.opponent.rotation.y = message.player1_y;
                 }
                 break;
         }
@@ -113,11 +116,13 @@ class NeonPong {
                 Player2 = this.playerId;
                 Player1 = this.opponentId
             }
+        console.log(Player1, Player2);
         this.GameSocket.send(JSON.stringify(
             {
                 type: "initial_data",
-                player1: Player1,
-                player2: Player2,
+                Player1: Player1,
+                Player2: Player2,
+                amIfirst: this.amIfirst,
             }
         ));
     }
@@ -154,8 +159,6 @@ class NeonPong {
                     type: "move",
                     direction: directionMap[key],
                     amIfirst: this.amIfirst,
-                    y: this.me.rotation.y,
-                    playerId: this.playerId
                 }));
             }
         }
