@@ -116,11 +116,13 @@ class NeonPong {
                 Player2 = this.playerId;
                 Player1 = this.opponentId
             }
+        console.log(Player1, Player2);
         this.GameSocket.send(JSON.stringify(
             {
                 type: "initial_data",
-                player1: Player1,
-                player2: Player2,
+                Player1: Player1,
+                Player2: Player2,
+                amIfirst: this.amIfirst,
             }
         ));
     }

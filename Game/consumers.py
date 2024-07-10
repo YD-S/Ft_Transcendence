@@ -7,25 +7,25 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class GameConsumer(AsyncWebsocketConsumer):
     players = 0
     player_names = []
+    player1_y = math.pi / 2
+    player2_y = -math.pi / 2
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.player1 = None
         self.player2 = None
-        self.player1_y = math.pi / 2
-        self.player2_y = -math.pi / 2
         self.game_id = None
         self.frame_task = None  # Task to manage the frame sending coroutine
 
     async def connect(self):
-        if self.players < 2:
+        if GameConsumer.players < 2:
             await self.accept()
             self.game_id = self.scope["url_route"]["kwargs"]["game_id"]
             await self.create_group(self.game_id)
             self.player_names.append(self.scope['user'].username)
-            self.players += 1
+            GameConsumer.players += 1
 
-            if self.players == 2 and self.frame_task is None:
+            if GameConsumer.players == 2 and self.frame_task is None:
                 self.frame_task = asyncio.create_task(self.send_every_frame())
         else:
             await self.close(400)
@@ -33,23 +33,29 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['type']
+        amIfirst = text_data_json['amIfirst']
+
         if message == 'move':
             direction = text_data_json['direction']
-            amIfirst = text_data_json['amIfirst']
             await self.calculate_y(direction, amIfirst)
         elif message == 'initial_data':
-            self.player1 = text_data_json['player1']
-            self.player2 = text_data_json['player2']
+            await self.setPlayer(amIfirst, text_data_json)
+
+    async def setPlayer(self, amIfirst, text_data_json):
+        if amIfirst:
+            self.player1 = text_data_json['Player1']
+        else:
+            self.player2 = text_data_json['Player2']
 
     async def calculate_y(self, direction, amIfirst):
-        y = self.player1_y if amIfirst else self.player2_y
+        y = GameConsumer.player1_y if amIfirst else GameConsumer.player2_y
         increment = 0.01 if 'left' in direction else -0.01
         y += increment
         y = y % (2 * math.pi)
         if amIfirst:
-            self.player1_y = y
+            GameConsumer.player1_y = y
         else:
-            self.player2_y = y
+            GameConsumer.player2_y = y
 
     async def create_group(self, group_name):
         await self.channel_layer.group_add(
@@ -70,12 +76,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game_id,
             self.channel_name
         )
-        self.players -= 1
+        GameConsumer.players -= 1
         if self.scope['user'].username in self.player_names:
             self.player_names.remove(self.scope['user'].username)
 
         # Cancel the frame sending coroutine if a player disconnects
-        if self.players < 2 and self.frame_task is not None:
+        if GameConsumer.players < 2 and self.frame_task is not None:
             self.frame_task.cancel()
             self.frame_task = None
 
@@ -88,8 +94,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                     {
                         'type': 'move',
                         'data': {
-                            'player1_y': self.player1_y,
-                            'player2_y': self.player2_y,
+                            'player1_y': GameConsumer.player1_y,
+                            'player2_y': GameConsumer.player2_y,
                         }
                     }
                 )
