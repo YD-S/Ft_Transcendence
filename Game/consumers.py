@@ -72,6 +72,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         }))
 
     async def disconnect(self, close_code):
+        if self.game_id is None:
+            return
         await self.channel_layer.group_discard(
             self.game_id,
             self.channel_name
