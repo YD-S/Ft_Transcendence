@@ -89,6 +89,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def send_every_frame(self, frame_rate=60):
         frame_duration = 1 / frame_rate
+        GameConsumer.player1_y = math.pi / 2
+        GameConsumer.player2_y = -math.pi / 2
         try:
             while True:
                 await self.channel_layer.group_send(
