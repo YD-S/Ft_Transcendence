@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y netcat-traditional nginx
 WORKDIR /app
 
 # link the current directory to the working directory but not copy the files
-VOLUME . /app
+COPY . /app
 
 COPY backend-entrypoint-dev.sh /tools/backend-entrypoint.sh
 COPY requirements.txt /app/requirements.txt

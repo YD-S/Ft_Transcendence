@@ -9,6 +9,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     player_names = []
     player1_y = math.pi / 2
     player2_y = -math.pi / 2
+    last_collision = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -38,8 +39,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         if message == 'move':
             direction = text_data_json['direction']
             await self.calculate_y(direction, amIfirst)
+        elif message == 'ball_collision':
+            await self.calculate_ball_collision(text_data_json)
         elif message == 'initial_data':
             await self.setPlayer(amIfirst, text_data_json)
+
+    async def calculate_ball_collision(self, text_data_json):
+        paddleColided = text_data_json['PlayerId']
+        GameConsumer.last_collision = self.player1 if paddleColided == self.player1 else self.player2
 
     async def setPlayer(self, amIfirst, text_data_json):
         if amIfirst:

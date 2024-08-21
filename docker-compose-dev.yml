@@ -10,6 +10,8 @@ services:
       - internal
     ports:
       - "443:443"
+    volumes:
+      - ./:/app
     depends_on:
       - postgres
       - redis-service-transcendence
