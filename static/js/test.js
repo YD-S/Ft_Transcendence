@@ -84,7 +84,6 @@ class NeonPong {
     async handleMessage(event) {
         try {
             const message = JSON.parse(event.data);
-            console.log("Received message: ", message);
             await this.processMessage(message);
         } catch (error) {
             console.error("Error handling message: ", error);
@@ -116,7 +115,6 @@ class NeonPong {
                 Player2 = this.playerId;
                 Player1 = this.opponentId
             }
-        console.log(Player1, Player2);
         this.GameSocket.send(JSON.stringify(
             {
                 type: "initial_data",
