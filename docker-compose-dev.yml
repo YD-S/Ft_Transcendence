@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+  backend:
+    container_name: backend
+    restart: unless-stopped
+    build:
+      context: .
+    networks:
+      - internal
+    ports:
+      - "443:443"
+    depends_on:
+      - postgres
+      - redis-service-transcendence
+    env_file:
+      - .env
+
+  redis-service-transcendence:
+    container_name: redis-service
+    image: redis:6.2-alpine
+    restart: unless-stopped
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ~/data/redis:/data
+    networks:
+      - internal
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ~/data/database:/var/lib/postgresql/data
+    networks:
+      - internal
+    env_file:
+      - .env
+
+
+networks:
+  internal:
+    driver: bridge

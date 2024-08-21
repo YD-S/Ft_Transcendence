@@ -6,8 +6,10 @@ RUN apt-get update && apt-get install -y netcat-traditional nginx
 # Set the working directory
 WORKDIR /app
 
-COPY . /app
-COPY backend-entrypoint.sh /tools/backend-entrypoint.sh
+# link the current directory to the working directory but not copy the files
+VOLUME . /app
+
+COPY backend-entrypoint-dev.sh /tools/backend-entrypoint.sh
 COPY requirements.txt /app/requirements.txt
 
 RUN rm /etc/nginx/sites-enabled/default

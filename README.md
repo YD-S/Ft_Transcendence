@@ -23,6 +23,12 @@ Run the project
 docker-compose up
 ```
 
+Run the project in development mode
+
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
 ## Modules
 
 Total points: 7/14
