@@ -1,7 +1,5 @@
 
 # Ft Transcendence
-
-- [Backend docs](docs/backend.md)
 - [Frontend docs](docs/frontend.md)
 
 ## Run the project
@@ -12,26 +10,27 @@ Copy and configure the `.env` file
 cp env.example .env
 ```
 
-Create database directory
+Create volume directory
 ```bash
 mkdir -p ~/data/database
+mkdir -p ~/data/redis
 ```
 
-Run the project
+Run the project in production mode
 
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 Run the project in development mode
 
 ```bash
-docker-compose -f docker-compose.dev.yml up
+docker-compose -f docker-compose-dev.yml up --build
 ```
 
 ## Modules
 
-Total points: 7/14
+Total points: 10/12
 
 - Major modules (1 point each):
   - [x] MAJOR: Backend framework
@@ -39,11 +38,10 @@ Total points: 7/14
   - [x] MAJOR: User management
   - [x] MAJOR: OAuth
   - [x] MAJOR: Live chat
+  - [x] MAJOR: Remote players
+  - [x] MAJOR: 3D rendering
+  - [x] MAJOR: Server-side Pong
   - [ ] MAJOR: AI
-  - [ ] MAJOR: Remote players
-  - [ ] MAJOR: 3D rendering
-  - [ ] MAJOR: Server-side Pong
-  - [ ] MAJOR: User history and Matchmaking
 
 - Minor modules (0.5 points each):
   - [x] MINOR: Frontend toolkit
