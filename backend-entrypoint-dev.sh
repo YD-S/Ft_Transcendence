@@ -23,4 +23,4 @@ python3 manage.py createsuperuser --noinput --username "$DJANGO_SUPERUSER_USERNA
 nginx -g "daemon off;" &
 
 # Start the server
-python3 manage.py runserver
+python3 manage.py runserver_plus --cert-file nginx/certs/neon-pong.com.crt --key-file nginx/certs/neon-pong.com.key

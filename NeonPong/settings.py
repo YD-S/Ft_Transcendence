@@ -35,6 +35,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [x.strip() for x in os.getenv("ALLOWED_HOSTS", "").split(',')]
 CSRF_TRUSTED_ORIGINS = [f"https://{x}" for x in ALLOWED_HOSTS]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SMTP_SERVER = os.getenv("SMTP_SERVER")
 try:
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     "chat.apps.ChatConfig",
     "website.apps.WebsiteConfig",
     "channels",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
