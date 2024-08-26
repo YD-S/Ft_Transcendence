@@ -2,6 +2,7 @@ import asyncio
 import json
 import math
 import random
+from typing import Any
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -10,8 +11,9 @@ COURT_RADIUS = 15
 PLAYER_WIDTH = GAME_SIZE / 350
 BALL_RADIUS = GAME_SIZE / 1500
 
+
 class Vector:
-    def __init__(self, x, y):
+    def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
 
@@ -34,10 +36,10 @@ class Vector:
         return Vector(-self.x, -self.y)
 
     def __str__(self):
-        return f"({self.x}, {self.y})"
+        return f"({self.x:.5f}, {self.y:.5f})"
 
     def __repr__(self):
-        return f"({self.x}, {self.y})"
+        return str(self)
 
     def magnitude(self):
         return math.sqrt(self.x ** 2 + self.y ** 2)
@@ -58,21 +60,6 @@ class Vector:
 
     def dot(self, other):
         return self.x * other.x + self.y * other.y
-
-    def project(self, other):
-        return other * (self.dot(other) / other.magnitude() ** 2)
-
-    def reflect(self, normal):
-        return self - normal * 2 * self.dot(normal)
-
-    def bounce(self, normal):
-        return self.reflect(normal).normalize()
-
-    def to_tuple(self):
-        return self.x, self.y
-
-    def to_list(self):
-        return [self.x, self.y]
 
     @staticmethod
     def from_angle(angle):
@@ -109,16 +96,16 @@ class GameConsumer(AsyncWebsocketConsumer):
         else:
             await self.close(400)
 
-    async def receive(self, text_data):
+    async def receive(self, text_data: Any | None = None, bytes_data: bytes | None = None):
         text_data_json = json.loads(text_data)
         message = text_data_json['type']
-        amIfirst = text_data_json['amIfirst']
+        is_player_first = text_data_json['amIfirst']
 
         if message == 'move':
             direction = text_data_json['direction']
-            await self.calculate_y(direction, amIfirst)
+            await self.calculate_angle(direction, is_player_first)
         elif message == 'initial_data':
-            await self.setPlayer(amIfirst, text_data_json)
+            await self.set_player(is_player_first, text_data_json)
 
     async def calculate_ball_collision(self):
         # difference between vector angles < angle span from center to paddle edges
@@ -142,21 +129,22 @@ class GameConsumer(AsyncWebsocketConsumer):
         else:
             GameConsumer.last_collision = None
 
-    async def setPlayer(self, amIfirst, text_data_json):
-        if amIfirst:
+    async def set_player(self, is_player_first, text_data_json):
+        if is_player_first:
             self.player1 = text_data_json['Player1']
         else:
             self.player2 = text_data_json['Player2']
 
-    async def calculate_y(self, direction, amIfirst):
-        y = GameConsumer.player1_angle if amIfirst else GameConsumer.player2_angle
+    @staticmethod
+    async def calculate_angle(direction, is_player_first):
+        a = GameConsumer.player1_angle if is_player_first else GameConsumer.player2_angle
         increment = 0.01 if 'left' in direction else -0.01
-        y += increment
-        y = y % (2 * math.pi)
-        if amIfirst:
-            GameConsumer.player1_angle = y
+        a += increment
+        a = a % (2 * math.pi)
+        if is_player_first:
+            GameConsumer.player1_angle = a
         else:
-            GameConsumer.player2_angle = y
+            GameConsumer.player2_angle = a
 
     async def create_group(self, group_name):
         await self.channel_layer.group_add(
@@ -221,7 +209,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             GameConsumer.ball_pos += GameConsumer.ball_velocity * GameConsumer.ball_speed
             await self.calculate_ball_collision()
 
-    def reset_ball(self):
+    @staticmethod
+    def reset_ball():
         GameConsumer.last_collision = None
         GameConsumer.ball_pos = Vector(0, 0)
         GameConsumer.ball_velocity = Vector.from_angle(random.random() * 2 * math.pi).normalize()
