@@ -65,7 +65,10 @@ class NeonPong {
         this.pivot2.add(this.paddle2);
 
         this.ball = makeBall(COLORS.pink);
-        this.ball.position.set(0, 5, 0);
+
+        //this.ball.position.set(0, 5, 0);
+        this.ball.position.set(0, 0, 0);
+
         this.scene.add(this.ball);
 
         this.scene.add(this.pivot);
@@ -101,6 +104,10 @@ class NeonPong {
                     this.me.rotation.y = message.player2_y;
                     this.opponent.rotation.y = message.player1_y;
                 }
+                this.ball.position.x = message.ball_x;
+                this.ball.position.z = message.ball_y;
+                console.log("Ball x: ", this.ball.position.x);
+                console.log("Ball y: ", this.ball.position.y);
                 break;
         }
     }
