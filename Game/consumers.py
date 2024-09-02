@@ -107,24 +107,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         elif message == 'initial_data':
             await self.set_player(is_player_first, text_data_json)
 
-    async def calculate_ball_collision(self):
-        # difference between vector angles < angle span from center to paddle edges
+    def calculate_ball_collision(self):
+        # Calculate the distance of the ball from the center of the court
         ball_distance = self.ball_pos.magnitude()
 
-        margin = Vector(BALL_RADIUS + PLAYER_WIDTH / 2, COURT_RADIUS).angle()
-        diff1 = abs(self.ball_pos.angle() - GameConsumer.player1_angle)
-        diff2 = abs(self.ball_pos.angle() - GameConsumer.player2_angle)
-
-        print(f'diff1: {diff1} {margin} {diff1 < margin}')
-        print(f'diff1: {diff2} {margin} {diff2 < margin}')
-        if ball_distance > COURT_RADIUS + 1:
+        # Check if the ball is out of bounds
+        if ball_distance > (COURT_RADIUS + BALL_RADIUS):
             print("OUT OF BOUNDS")
-            if diff1 < margin:
-                GameConsumer.last_collision = self.player1
-                print("COLLISION PLAYER 1")
-            elif diff2 < margin:
-                GameConsumer.last_collision = self.player2
-                print("COLLISION PLAYER 2")
             self.reset_ball()
         else:
             GameConsumer.last_collision = None
@@ -207,7 +196,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.reset_ball()
         else:
             GameConsumer.ball_pos += GameConsumer.ball_velocity * GameConsumer.ball_speed
-            await self.calculate_ball_collision()
+            self.calculate_ball_collision()
 
     @staticmethod
     def reset_ball():

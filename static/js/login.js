@@ -56,6 +56,17 @@ PageManager.getInstance().setOnPageLoad('auth/login', () => {
     document.getElementById('submit').addEventListener('click', (event) => {
         login();
     });
+    // if enter key is pressed while in the password or username field, login
+    document.getElementById('password').addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            login();
+        }
+    });
+    document.getElementById('username').addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            login();
+        }
+    });
     document.getElementById('oauth').addEventListener('click', (event) => {
         oauth();
     });

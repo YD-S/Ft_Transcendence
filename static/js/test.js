@@ -106,8 +106,6 @@ class NeonPong {
                 }
                 this.ball.position.x = message.ball_x;
                 this.ball.position.z = message.ball_y;
-                console.log("Ball x: ", this.ball.position.x);
-                console.log("Ball y: ", this.ball.position.y);
                 break;
         }
     }
