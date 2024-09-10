@@ -12,7 +12,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /Users/yash/projects/42Cursus/Ft_transcendence:/app
+      - .:/app
     depends_on:
       - postgres
       - redis-service-transcendence
