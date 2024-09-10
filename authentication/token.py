@@ -73,7 +73,11 @@ class TokenManager:
     def _test_token(self, token, check_reuse=True):
         # Check for refresh token reuse
         if check_reuse:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'], options={"verify_exp": False})
+            try:
+                payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'], options={"verify_exp": False})
+            except jwt.DecodeError:
+                raise ValidationError(json.dumps({"message": _("Invalid token"), "type": "invalid_token"}),
+                                      content_type='application/json')
             tokens = self.refresh_token_history.get(payload.get('user_id'), [])
             if token in tokens[:-1]:  # Check all but the last token, which is the current one
                 self.revoke_token(tokens[-1])  # Revoke the current token

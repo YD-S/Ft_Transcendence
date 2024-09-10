@@ -33,21 +33,22 @@ class UserManager(BaseUserManager):
         access_token = data.get("access_token")
         response = requests.get('https://api.intra.42.fr/v2/me', headers={"Authorization": f"Bearer {access_token}"})
         user_data = response.json()
-        user = self.model.objects.filter(username=user_data["login"])
+        user = self.model.objects.filter(username=user_data["login"] + "@42")
         if user.exists():
             return user.first()
         else:
             return self.create_user(
                 email=user_data["email"],
-                username=user_data["login"],
+                username=user_data["login"] + "@42",
                 password=hash_password(user_data["login"]),
-                is_oauth=True
+                is_oauth=False,
+                verified_email=True
             )
 
 
 class User(AbstractUser, BaseModel):
     username = models.CharField(max_length=255, unique=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     password = models.CharField(max_length=255)
 
     last_login = models.DateTimeField(null=True, blank=True)
