@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-
+from django.shortcuts import redirect
 
 class HttpError(Exception):
     def __init__(self, status: int, content: str):
@@ -7,7 +7,9 @@ class HttpError(Exception):
         self.content = content
         self.content_type = 'text/plain'
 
-    def as_http_response(self):
+    def as_http_response(self, do_redirect=False):
+        if do_redirect:
+            return redirect(f'error/{self.status}')
         return HttpResponse(content=self.content, content_type=self.content_type, status=self.status)
 
 

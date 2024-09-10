@@ -1,0 +1,10 @@
+{% load i18n %}
+{% load static %}
+
+
+<form method="post" action="edit-profile" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="avatar">{% translate "Avatar" %}</label>
+    <input type="file" name="avatar" id="avatar">
+    <button type="submit">{% translate "Save" %}</button>
+</form>
