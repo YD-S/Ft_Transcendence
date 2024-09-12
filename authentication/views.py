@@ -201,6 +201,12 @@ def register(request: HttpRequest):
             status=400
         )
     username = data.get('username')
+    if '@' in username:
+        return HttpResponse(
+            json.dumps({"message": _("Username cannot contain '@'"), "type": "register_fail"}),
+            content_type='application/json',
+            status=400
+        )
     email = data.get('email')
     # Check if the username already exists
     if User.objects.filter(username=username).exists():
@@ -323,6 +329,13 @@ def oauth_login(request: HttpRequest):
         )
     data = response.json()
     user = User.objects.get_or_create_42_user(data)
+    if user.has_2fa:
+        send_2fa_code(user)
+        return JsonResponse({
+            "action": "2fa",
+            "email2fa": user.email,
+            "user_id": user.id
+        })
     return generate_login(request, user)
 
 

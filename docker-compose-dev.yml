@@ -12,7 +12,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - /Users/yash/projects/42Cursus/Ft_transcendence:/app
+      - .:/app
     depends_on:
       - postgres
       - redis-service-transcendence
@@ -30,13 +30,15 @@ services:
       - internal
 
   postgres:
-    image: postgres:alpine
+    image: postgres:16-alpine
     container_name: postgres
     restart: unless-stopped
     environment:
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
     volumes:
       - ~/data/database:/var/lib/postgresql/data
     networks:

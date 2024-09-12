@@ -5,7 +5,8 @@ from authentication.token import require_token
 from chat.models import Room
 from chat.serializers import RoomSerializer
 from common.request import HttpRequest
-from users.serializers import UserSerializer
+from users.forms import UserForm
+from utils.exception import NotFoundError, HttpError
 
 UNPROTECTED_PAGES = [
     "auth/login",
@@ -17,26 +18,47 @@ UNPROTECTED_PAGES = [
 ]
 
 
+def handle_post(request: HttpRequest, page: str):
+    match page:
+        case 'edit-profile':
+            form = UserForm(data=request.POST, files=request.FILES, instance=request.user)
+
+            if form.is_valid():
+                form.save()
+                return redirect("/me")
+
+    raise NotFoundError()
+
+
 @require_token()
 def protected_main_view(request: HttpRequest, page: str):
-    return render(request, "index.html", {"page": page})
+    print("r:", request.method, request.FILES)
+    if request.method == 'POST':
+        return handle_post(request, page)
+    if request.method == 'GET':
+        return render(request, "index.html", {"page": page})
 
 
 def main_view(request: HttpRequest, page: str):
-    if page in UNPROTECTED_PAGES:
-        return render(request, "index.html", {"page": page})
-    return protected_main_view(request, page)
+    try:
+        if page in UNPROTECTED_PAGES:
+            return render(request, "index.html", {"page": page})
+        return protected_main_view(request, page)
+    except HttpError as e:
+        return e.as_http_response(True)
 
 
 @require_token(login_redirect=False)
 def protected_page_view(request: HttpRequest, file: str):
     match file:
         case "me.html":
-            return render(request, file, {"user": UserSerializer(instance=request.user).data})
+            return render(request, file, {"user": request.user})
         case "chat.html":
             return chat_view(request)
         case "room.html":
             return room_view(request)
+        case "edit-profile.html":
+            return render(request, file, {"form": UserForm(instance=request.user)})
         case _:
             try:
                 return render(request, file)
@@ -45,12 +67,15 @@ def protected_page_view(request: HttpRequest, file: str):
 
 
 def page_view(request: HttpRequest, file: str):
-    if request.headers.get("Sec-Fetch-Mode") == "navigate":
-        return redirect("/home")
-    page = file.split(".")[0]
-    if page in UNPROTECTED_PAGES:
-        return render(request, file)
-    return protected_page_view(request, file)
+    try:
+        if request.headers.get("Sec-Fetch-Mode") == "navigate":
+            return redirect("/home")
+        page = file.split(".")[0]
+        if page in UNPROTECTED_PAGES:
+            return render(request, file)
+        return protected_page_view(request, file)
+    except HttpError as e:
+        return e.as_http_response()
 
 
 def chat_view(request: HttpRequest):
