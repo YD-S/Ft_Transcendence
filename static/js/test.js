@@ -45,10 +45,10 @@ class NeonPong {
         this.renderer.setSize(GAME_WIDTH, GAME_HEIGHT);
 
         this.pivot = new THREE.Object3D();
-        this.pivot.rotation.y = Math.PI / 2;
+        this.pivot.rotation.y = 0;
 
         this.pivot2 = new THREE.Object3D();
-        this.pivot2.rotation.y = -Math.PI / 2;
+        this.pivot2.rotation.y = 0;
 
         const helper = makeGrid();
         this.scene.add(helper);
@@ -97,15 +97,18 @@ class NeonPong {
         switch (message.type) {
             case "move":
                 if (this.amIfirst) {
-                    this.me.rotation.y = message.player1_y;
-                    this.opponent.rotation.y = message.player2_y;
+                    this.me.rotation.y = -message.player1_y + Math.PI / 2;
+                    this.opponent.rotation.y = -message.player2_y + Math.PI / 2;
                 }
                 else {
-                    this.me.rotation.y = message.player2_y;
-                    this.opponent.rotation.y = message.player1_y;
+                    this.me.rotation.y = -message.player2_y + Math.PI / 2;
+                    this.opponent.rotation.y = -message.player1_y + Math.PI / 2;
                 }
                 this.ball.position.x = message.ball_x;
                 this.ball.position.z = message.ball_y;
+                break;
+            case "test" :
+                console.log(message.data);
                 break;
         }
     }
@@ -166,7 +169,6 @@ class NeonPong {
             }
         }
     }
-
     keydown(event) {
         if (event.repeat) {
             return;

@@ -2,6 +2,7 @@ import asyncio
 import json
 import math
 import random
+from dataclasses import dataclass
 from typing import Any
 
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -10,6 +11,9 @@ GAME_SIZE = 1000
 COURT_RADIUS = 15
 PLAYER_WIDTH = GAME_SIZE / 350
 BALL_RADIUS = GAME_SIZE / 1500
+
+ANGLE_MARGIN = math.asin((PLAYER_WIDTH + BALL_RADIUS) / 2 / COURT_RADIUS)
+BOUNCE_MARGIN = math.pi/6
 
 
 class Vector:
@@ -66,14 +70,21 @@ class Vector:
         return Vector(math.cos(angle), math.sin(angle))
 
 
+def angle_difference(angle1: float, angle2: float):
+    return min([
+        abs(angle1 - angle2),
+        abs(angle1 - angle2 + 2 * math.pi),
+        abs(angle1 - angle2 - 2 * math.pi),
+    ])
+
 class GameConsumer(AsyncWebsocketConsumer):
     players = 0
     player_names = []
-    player1_angle = math.pi / 2
-    player2_angle = -math.pi / 2
+    player1_angle = 0
+    player2_angle = math.pi
     last_collision = None
     ball_pos = Vector(0, 0)
-    ball_velocity = Vector.from_angle(random.random() * 2 * math.pi).normalize()
+    ball_velocity = Vector.from_angle(random.random() * 2 * math.pi)
     ball_speed = 0.1
 
     def __init__(self, *args, **kwargs):
@@ -107,14 +118,18 @@ class GameConsumer(AsyncWebsocketConsumer):
         elif message == 'initial_data':
             await self.set_player(is_player_first, text_data_json)
 
-    def calculate_ball_collision(self):
+    async def calculate_ball_collision(self):
         # Calculate the distance of the ball from the center of the court
         ball_distance = self.ball_pos.magnitude()
-
+        ball_angle = self.ball_velocity.angle()
         # Check if the ball is out of bounds
         if ball_distance > (COURT_RADIUS + BALL_RADIUS):
-            print("OUT OF BOUNDS")
-            self.reset_ball()
+            if angle_difference(self.player1_angle, ball_angle) < ANGLE_MARGIN:
+                await self.bounce(self.player1_angle, 'player1')
+            elif angle_difference(self.player2_angle, ball_angle) < ANGLE_MARGIN:
+                await self.bounce(self.player2_angle, 'player2')
+            else :
+                self.reset_ball()
         else:
             GameConsumer.last_collision = None
 
@@ -123,6 +138,26 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.player1 = text_data_json['Player1']
         else:
             self.player2 = text_data_json['Player2']
+
+    async def bounce (self, player_angle, player_name):
+        with open('bounce.txt', 'a') as f:
+            f.write(f'{player_angle}\n')
+            f.write(f'{GameConsumer.ball_velocity.angle()}\n')
+        await self.channel_layer.group_send(
+            self.game_id,
+            {
+                'type': 'test',
+                'data': player_name
+            })
+        self.ball_velocity = Vector.from_angle(player_angle + (random.random() * BOUNCE_MARGIN - BOUNCE_MARGIN / 2))
+        await self.ball_movement()
+
+    async def test(self, event):
+        data = event['data']
+        await self.send(text_data=json.dumps({
+            'type': 'test',
+            'data': data
+        }))
 
     @staticmethod
     async def calculate_angle(direction, is_player_first):
@@ -169,8 +204,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def send_every_frame(self, frame_rate=60):
         frame_duration = 1 / frame_rate
-        GameConsumer.player1_angle = math.pi / 2
-        GameConsumer.player2_angle = -math.pi / 2
+        GameConsumer.player1_angle = 0
+        GameConsumer.player2_angle = math.pi
         self.reset_ball()
         try:
             while True:
@@ -193,13 +228,16 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def ball_movement(self):
         if GameConsumer.last_collision is not None:
-            self.reset_ball()
+            #self.reset_ball()
+            pass
         else:
             GameConsumer.ball_pos += GameConsumer.ball_velocity * GameConsumer.ball_speed
-            self.calculate_ball_collision()
+            await self.calculate_ball_collision()
 
     @staticmethod
     def reset_ball():
         GameConsumer.last_collision = None
         GameConsumer.ball_pos = Vector(0, 0)
-        GameConsumer.ball_velocity = Vector.from_angle(random.random() * 2 * math.pi).normalize()
+        GameConsumer.ball_velocity = Vector.from_angle(math.pi / 4 * 3)
+        GameConsumer.player1_angle = 0
+        GameConsumer.player2_angle = math.pi
