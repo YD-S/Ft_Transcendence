@@ -107,9 +107,12 @@ class NeonPong {
                 this.ball.position.x = message.ball_x;
                 this.ball.position.z = message.ball_y;
                 this.ball.position.y = (((message.ball_x * message.ball_x + message.ball_y * message.ball_y) / -60) + 3.4) * 2;
+                console.log(message)
+                document.getElementById("score1").innerText = message.player1_score;
+                document.getElementById("score2").innerText = message.player2_score;
                 break;
-            case "test" :
-                console.log(message.data);
+            case "winner" :
+                console.log("winner is: " + message.winner);
                 break;
         }
     }

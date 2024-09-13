@@ -2,7 +2,6 @@ import asyncio
 import json
 import math
 import random
-from dataclasses import dataclass
 from typing import Any
 
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -78,6 +77,8 @@ def angle_difference(angle1: float, angle2: float):
     ])
 
 class GameConsumer(AsyncWebsocketConsumer):
+    player1_score = 0
+    player2_score = 0
     players = 0
     player_names = []
     player1_angle = 0
@@ -129,9 +130,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             elif angle_difference(self.player2_angle, ball_angle) < ANGLE_MARGIN:
                 await self.bounce(self.player2_angle, 'player2')
             else :
+                GameConsumer.add_score()
                 self.reset_ball()
-        else:
-            GameConsumer.last_collision = None
 
     async def set_player(self, is_player_first, text_data_json):
         if is_player_first:
@@ -139,25 +139,12 @@ class GameConsumer(AsyncWebsocketConsumer):
         else:
             self.player2 = text_data_json['Player2']
 
-    async def bounce (self, player_angle, player_name):
-        with open('bounce.txt', 'a') as f:
-            f.write(f'{player_angle}\n')
-            f.write(f'{GameConsumer.ball_velocity.angle()}\n')
-        await self.channel_layer.group_send(
-            self.game_id,
-            {
-                'type': 'test',
-                'data': player_name
-            })
+    @staticmethod
+    async def bounce (player_angle, player_name):
+        GameConsumer.last_collision = player_name
         GameConsumer.ball_velocity = - Vector.from_angle(player_angle + (random.random() * BOUNCE_MARGIN - BOUNCE_MARGIN / 2))
         GameConsumer.ball_pos = GameConsumer.ball_pos.normalize() * ((COURT_RADIUS - BALL_RADIUS) * 0.98)
 
-    async def test(self, event):
-        data = event['data']
-        await self.send(text_data=json.dumps({
-            'type': 'test',
-            'data': data
-        }))
 
     @staticmethod
     async def calculate_angle(direction, is_player_first):
@@ -184,6 +171,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             'player2_y': data['player2_y'],
             'ball_x': data['ball_x'],
             'ball_y': data['ball_y'],
+            'player1_score': GameConsumer.player1_score,
+            'player2_score': GameConsumer.player2_score,
+            'last_collision': GameConsumer.last_collision
         }))
 
     async def disconnect(self, close_code):
@@ -210,6 +200,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.reset_ball()
         try:
             while True:
+                await self.check_winner()
                 await self.ball_movement()
                 await self.channel_layer.group_send(
                     self.game_id,
@@ -228,10 +219,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
 
     async def ball_movement(self):
-        if GameConsumer.last_collision is not None:
-            #self.reset_ball()
-            pass
-        else:
             GameConsumer.ball_pos += GameConsumer.ball_velocity * GameConsumer.ball_speed
             await self.calculate_ball_collision()
 
@@ -242,3 +229,39 @@ class GameConsumer(AsyncWebsocketConsumer):
         GameConsumer.ball_velocity = Vector.from_angle(math.pi / 4 * 3)
         GameConsumer.player1_angle = 0
         GameConsumer.player2_angle = math.pi
+
+    @staticmethod
+    def add_score():
+        with open('score.txt', 'a') as f:
+            f.write(f'last_collision: {GameConsumer.last_collision}\n')
+        if GameConsumer.last_collision == 'player1':
+            GameConsumer.player1_score += 1
+        elif GameConsumer.last_collision == 'player2':
+            GameConsumer.player2_score += 1
+
+    async def check_winner(self):
+        if GameConsumer.player1_score == 5:
+            await self.send_winner_message(self.player1, self.player2, GameConsumer.player1_score, GameConsumer.player2_score)
+        elif GameConsumer.player2_score == 5:
+            await self.send_winner_message(self.player2, self.player1, GameConsumer.player2_score, GameConsumer.player1_score)
+
+    async def winner(self, event):
+        data = event['data']
+        await self.send(text_data=json.dumps({
+            'type': 'winner',
+            'data': data
+        }))
+
+    async def send_winner_message(self, winner, looser, winner_score, looser_score):
+        from users.models import User, Match
+        winner_obj = User.objects.get(username=winner)
+        looser_obj = User.objects.get(username=looser)
+        Match.objects.create(winner=winner_obj, loser=looser_obj, winner_score=winner_score, loser_score=looser_score)
+        await self.channel_layer.group_send(
+            self.game_id,
+            {
+                'type': 'winner',
+                'data': winner
+            }
+        )
+        await self.close()
