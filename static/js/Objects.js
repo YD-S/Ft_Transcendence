@@ -4,6 +4,7 @@ const GAME_WIDTH = 1000;
 const GAME_HEIGHT = height_aspect_ratio(GAME_WIDTH);
 export const PAD_H = GAME_HEIGHT / 1000;
 export const PAD_W = GAME_WIDTH / 350;
+const RADIUS = 15;
 const BALL_SIZE = GAME_WIDTH / 1500;
 
 export function half(value) {
@@ -52,7 +53,7 @@ export function makeBall(color) {
 }
 
 export function makeGrid() {
-    const radius = 15;
+    const radius = RADIUS;
     const sectors = 16;
     const rings = 8;
     const divisions = 64;

@@ -12,8 +12,8 @@ COURT_RADIUS = 15
 PLAYER_WIDTH = GAME_SIZE / 350
 BALL_RADIUS = GAME_SIZE / 1500
 
-ANGLE_MARGIN = math.asin((PLAYER_WIDTH + BALL_RADIUS) / 2 / COURT_RADIUS)
-BOUNCE_MARGIN = math.pi/6
+ANGLE_MARGIN = math.asin((PLAYER_WIDTH / 2 + BALL_RADIUS) / COURT_RADIUS)
+BOUNCE_MARGIN = math.pi/3
 
 
 class Vector:
@@ -120,10 +120,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def calculate_ball_collision(self):
         # Calculate the distance of the ball from the center of the court
-        ball_distance = self.ball_pos.magnitude()
-        ball_angle = self.ball_velocity.angle()
+        ball_distance = GameConsumer.ball_pos.magnitude()
+        ball_angle = GameConsumer.ball_pos.angle()
         # Check if the ball is out of bounds
-        if ball_distance > (COURT_RADIUS + BALL_RADIUS):
+        if ball_distance > (COURT_RADIUS -BALL_RADIUS):
             if angle_difference(self.player1_angle, ball_angle) < ANGLE_MARGIN:
                 await self.bounce(self.player1_angle, 'player1')
             elif angle_difference(self.player2_angle, ball_angle) < ANGLE_MARGIN:
@@ -149,8 +149,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                 'type': 'test',
                 'data': player_name
             })
-        self.ball_velocity = Vector.from_angle(player_angle + (random.random() * BOUNCE_MARGIN - BOUNCE_MARGIN / 2))
-        await self.ball_movement()
+        GameConsumer.ball_velocity = - Vector.from_angle(player_angle + (random.random() * BOUNCE_MARGIN - BOUNCE_MARGIN / 2))
+        GameConsumer.ball_pos = GameConsumer.ball_pos.normalize() * ((COURT_RADIUS - BALL_RADIUS) * 0.98)
 
     async def test(self, event):
         data = event['data']
@@ -195,12 +195,13 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
         GameConsumer.players -= 1
         if self.scope['user'].username in self.player_names:
-            self.player_names.remove(self.scope['user'].username)
+            GameConsumer.player_names.remove(self.scope['user'].username)
 
         # Cancel the frame sending coroutine if a player disconnects
         if GameConsumer.players < 2 and self.frame_task is not None:
             self.frame_task.cancel()
             self.frame_task = None
+            await self.close()
 
     async def send_every_frame(self, frame_rate=60):
         frame_duration = 1 / frame_rate

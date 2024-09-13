@@ -106,6 +106,7 @@ class NeonPong {
                 }
                 this.ball.position.x = message.ball_x;
                 this.ball.position.z = message.ball_y;
+                this.ball.position.y = (((message.ball_x * message.ball_x + message.ball_y * message.ball_y) / -60) + 3.4) * 2;
                 break;
             case "test" :
                 console.log(message.data);

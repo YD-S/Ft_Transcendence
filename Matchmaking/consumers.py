@@ -13,6 +13,15 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 		await self.accept()
 		await self.get_user_data()
 
+	async def disconnect(self, close_code):
+		await self.channel_layer.group_discard(
+			self.scope['user'].username,
+			self.channel_name
+		)
+		if self.scope['user'] in self.queue:
+			self.queue.remove(self.scope ['user'])
+		print('User removed from queue:', self.scope['user'].username)
+
 	async def add_to_game(self):
 		player1 = self.queue.pop(0)
 		player2 = self.queue.pop(0)
