@@ -1,7 +1,118 @@
+:root {
+	--bg-dark: #23272f;
+	--bg-light: #e8e8e8;
+}
 body {
-	background-color: red;
+	background-color: var(--bg-dark);
+	font-family: sans-serif;
+}
+h2 {
+	color: #ffffff80;
+}
+#login-form {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+.sign-input {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+.sign-other {
+	display: flex;
+	gap: 20px;
 }
 
-button {
-	width: 300px;
+/* BUTTON */
+.btn {
+	padding: 10px 20px;
+	text-transform: uppercase;
+	border-radius: 8px;
+	font-size: 17px;
+	font-weight: 500;
+	color: #ffffff80;
+	text-shadow: 0 0.0625em 0 #000;
+  box-shadow:
+    inset 0 0.0625em 0 0 #3a3a3a,
+    0 0.0625em 0 0 #252525,
+    0 0.125em 0 0 #202020,
+    0 0.25em 0 0 #1c1c1c,
+    0 0.3125em 0 0 #181818,
+    0 0.375em 0 0 #141414,
+    0 0.425em 0 0 #101010,
+    0 0.425em 0.5em 0 #0a0a0a;
+	background: transparent;
+	/* border: 1px solid #ffffff80; */
+	border: 0;
+	transition: 0.5s ease;
+	user-select: none;
+}
+
+.btn:hover,
+:focus {
+	color: #fff;
+	background: #008cff;
+	/* border: 1px solid #008cff; */
+	text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff;
+	box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff, 0 0 100px #008cff;
+	/* font-size: 16px; */
+	border-color: transparent;
+}
+
+.sign-input .btn:hover,
+:focus {
+	color: #fff;
+	background: #ffd43b;
+	/* border: 1px solid #ffd43b; */
+	text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff;
+	box-shadow: inset 0px 0px 10px rgba(255, 102, 0, 0.5), inset 0px 0px 10px rgba(255, 212, 59, 0.5),
+		0px 0px 100px rgba(255, 212, 59, 0.5), 0px 0px 100px rgba(255, 102, 0, 0.5);
+	/* font-size: 16px; */
+	border-color: transparent;
+}
+.btn:active {
+  translate: 0 0.225em;
+}
+/* INPUT */
+.input-container {
+	display: flex;
+	position: relative;
+	background: #fff;
+	border-radius: 1rem;
+	background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
+	box-shadow: 10px 10px 20px #0e1013, -10px -10px 40px #383e4b;
+	padding: 0.3rem;
+	gap: 0.3rem;
+}
+
+.input-container input {
+	border-radius: 0.8rem;
+	background: #23272f;
+	box-shadow: inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b, 0px 0px 100px rgba(255, 212, 59, 0),
+		0px 0px 100px rgba(255, 102, 0, 0);
+	width: 100%;
+	flex-basis: 100%;
+	padding: 1rem;
+	border: none;
+	border: 1px solid transparent;
+	color: #fff;
+	transition: all 0.2s ease-in-out;
+}
+
+.input-container input:focus {
+	border: 1px solid #ffd43b;
+	outline: none;
+	box-shadow: inset 0px 0px 10px rgba(255, 102, 0, 0.5), inset 0px 0px 10px rgba(255, 212, 59, 0.5),
+		0px 0px 100px rgba(255, 212, 59, 0.5), 0px 0px 100px rgba(255, 102, 0, 0.5);
+}
+
+@media (max-width: 500px) {
+	.input-container {
+		flex-direction: column;
+	}
+
+	.input-container input {
+		border-radius: 0.8rem;
+	}
 }
