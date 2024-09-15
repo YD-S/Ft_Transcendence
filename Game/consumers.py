@@ -78,6 +78,7 @@ def angle_difference(angle1: float, angle2: float):
 
 
 class GameConsumer(AsyncWebsocketConsumer):
+    game_finished = False
     player1_score = 0
     player2_score = 0
     players = 0
@@ -253,14 +254,16 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def send_winner_message(self, winner, looser, winner_score, looser_score):
         from users.models import User, Match
-        winner_obj = User.objects.get(username=winner)
-        looser_obj = User.objects.get(username=looser)
+        winner_obj = await User.objects.aget(username=winner)
+        looser_obj = await User.objects.aget(username=looser)
         with open('score.txt', 'a') as f:
             f.write(f'winner: {winner}\n')
             f.write(f'looser: {looser}\n')
             f.write(f'winner_score: {winner_score}\n')
             f.write(f'looser_score: {looser_score}\n')
-        Match.objects.create(winner=winner_obj, loser=looser_obj, winner_score=winner_score, loser_score=looser_score)
+        if not GameConsumer.game_finished:
+            GameConsumer.game_finished = True
+            await Match.objects.acreate(winner=winner_obj, loser=looser_obj, winner_score=winner_score, loser_score=looser_score)
         await self.channel_layer.group_send(
             self.game_id,
             {
