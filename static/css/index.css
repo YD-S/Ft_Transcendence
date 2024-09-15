@@ -1,22 +1,6 @@
-#root {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	flex: 1;
-	width: 100%;
+html {
+	height: 100%;
 }
-
-#footer {
-	background: lightgrey;
-	width: 100%;
-	text-align: center;
-}
-
-#header {
-	background: lightgrey;
-}
-
 body {
 	margin: 0;
 	padding: 0;
@@ -25,6 +9,49 @@ body {
 	flex-direction: column;
 }
 
-html {
-	height: 100%;
+#root {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex: 1;
+	width: 100%;
+	/* animation: blinkShadowsFilter 8s ease-in infinite; */
+}
+
+#footer {
+	background: lightgrey;
+	width: 100%;
+	text-align: center;
+	/* animation: blinkShadowsFilter 8s ease-in infinite; */
+}
+
+#header {
+	background: lightgrey;
+	/* animation: blinkShadowsFilter 8s ease-in infinite; */
+}
+
+/* keyframes */
+@keyframes blinkShadowsFilter {
+	0% {
+		filter: drop-shadow(46px 36px 100px rgba(255, 102, 0, 0.3411764706)) drop-shadow(-55px -40px 100px #008cff);
+	}
+
+	25% {
+		filter: drop-shadow(46px -36px 100px rgba(255, 102, 0, 0.8980392157)) drop-shadow(-55px 40px 100px #008cff);
+	}
+
+	50% {
+		filter: drop-shadow(46px 36px 100px rgba(255, 212, 59, 0.8980392157))
+			drop-shadow(-55px 40px 100px rgb(0, 140, 255, 0.2941176471));
+	}
+
+	75% {
+		filter: drop-shadow(20px -18px 100px rgba(255, 102, 0, 0.8980392157))
+			drop-shadow(-20px 20px 100px rgb(0, 140, 255, 0.2941176471));
+	}
+
+	to {
+		filter: drop-shadow(46px 36px 100px rgba(255, 102, 0, 0.3411764706)) drop-shadow(-55px -40px 100px #008cff);
+	}
 }

@@ -2,16 +2,16 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-<h2>{% translate "Sign in to Neon Pong" %}</h2>
 <div id="login-form">
+  <h2>{% translate "Sign in to Neon Pong" %}</h2>
   <div class="sign-input">
     <div class="input-container">
-      <!-- <label for="username">{% translate "Username" %}:</label> -->
-      <input class="input-container" type="text" id="username" placeholder="Username" required>
+      <input class="input-container" type="text" id="username" required>
+      <label for="username">{% translate "Username" %}</label>
     </div>
     <div class="input-container">
-      <!-- <label for="password">{% translate "Password" %}:</label> -->
-      <input class="input-container" type="password" id="password" placeholder="Password" required>
+      <input class="input-container" type="password" id="password" required>
+      <label for="password">{% translate "Password" %}</label>
     </div>
     <button class="btn" id="submit">{% translate "Sign in" %}</button>
   </div>
