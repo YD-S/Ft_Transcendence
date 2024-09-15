@@ -35,7 +35,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 					'room_id': room_id,
 					'am_i_first': True,
 					'playerId': player1.username,
-					'opponentID': player2.username,
+					'opponentId': player2.username,
 				}
 			}
 		)
@@ -47,7 +47,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 					'room_id': room_id,
 					'am_i_first': False,
 					'playerId': player2.username,
-					'opponentID': player1.username,
+					'opponentId': player1.username,
 				}
 			}
 		)
@@ -83,7 +83,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 			'type': event['type'],
 			'room_id': data['room_id'],
 			'player': data['am_i_first'],
-			'playerId': data['playerId']
+			'playerId': data['playerId'],
+			'opponentId': data['opponentId']
 		}))
 
 	async def redirect(self, event):
