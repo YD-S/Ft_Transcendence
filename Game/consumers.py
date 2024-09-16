@@ -4,6 +4,7 @@ import math
 import random
 from typing import Any
 
+from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 GAME_SIZE = 1000
@@ -118,8 +119,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         if message == 'move':
             direction = text_data_json['direction']
             await self.calculate_angle(direction, is_player_first)
-        elif message == 'initial_data':
-            await self.set_player(text_data_json)
 
     async def calculate_ball_collision(self):
         # Calculate the distance of the ball from the center of the court
@@ -134,10 +133,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             else:
                 GameConsumer.add_score()
                 self.reset_ball()
-
-    async def set_player(self, text_data_json):
-        self.player1 = text_data_json['Player1']
-        self.player2 = text_data_json['Player2']
 
     @staticmethod
     async def bounce(player_angle, player_name):
@@ -239,10 +234,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def check_winner(self):
         if GameConsumer.player1_score == 2:
-            await self.send_winner_message(self.player1, self.player2, GameConsumer.player1_score,
+            await self.send_winner_message(cache.get(f'{self.game_id}:player1'), cache.get(f'{self.game_id}:player2'), GameConsumer.player1_score,
                                            GameConsumer.player2_score)
         elif GameConsumer.player2_score == 2:
-            await self.send_winner_message(self.player2, self.player1, GameConsumer.player2_score,
+            await self.send_winner_message(cache.get(f'{self.game_id}:player2'), cache.get(f'{self.game_id}:player1'), GameConsumer.player2_score,
                                            GameConsumer.player1_score)
 
     async def winner(self, event):
@@ -252,15 +247,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             'data': data
         }))
 
-    async def send_winner_message(self, winner, looser, winner_score, looser_score):
+    async def send_winner_message(self, winner: int, looser: int, winner_score: int, looser_score: int):
         from users.models import User, Match
-        winner_obj = await User.objects.aget(username=winner)
-        looser_obj = await User.objects.aget(username=looser)
-        with open('score.txt', 'a') as f:
-            f.write(f'winner: {winner}\n')
-            f.write(f'looser: {looser}\n')
-            f.write(f'winner_score: {winner_score}\n')
-            f.write(f'looser_score: {looser_score}\n')
+        winner_obj = await User.objects.aget(id=winner)
+        looser_obj = await User.objects.aget(id=looser)
+        cache.delete(f'{self.game_id}:player1')
+        cache.delete(f'{self.game_id}:player2')
         if not GameConsumer.game_finished:
             GameConsumer.game_finished = True
             await Match.objects.acreate(winner=winner_obj, loser=looser_obj, winner_score=winner_score, loser_score=looser_score)
