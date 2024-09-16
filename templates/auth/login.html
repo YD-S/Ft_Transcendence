@@ -2,16 +2,20 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 <div id="login-form">
   <h2>{% translate "Sign in to Neon Pong" %}</h2>
   <div class="sign-input">
     <div class="input-container">
       <input class="input-container" type="text" id="username" required>
       <label for="username">{% translate "Username" %}</label>
+      <i class='bx bxs-user'></i>
     </div>
     <div class="input-container">
       <input class="input-container" type="password" id="password" required>
       <label for="password">{% translate "Password" %}</label>
+      <i class='bx bxs-lock-alt'></i>
     </div>
     <button class="btn" id="submit">{% translate "Sign in" %}</button>
   </div>

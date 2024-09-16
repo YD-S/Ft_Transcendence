@@ -5,11 +5,7 @@
 	--bg-light: #e8e8e8;
 	--font-neon: "Tilt Neon", sans-serif;
 }
-body {
-	background-color: var(--bg-dark);
-	font-family: var(--font-neon);
-	/* animation: blinkShadowsFilter 8s ease-in infinite; */
-}
+
 h2 {
 	text-align: center;
 	font-size: 24px;
@@ -70,6 +66,13 @@ h2 {
 	z-index: 1;
 }
 
+.input-container i {
+	color: #ffffff80;
+	position: absolute;
+	right: 20px;
+	top: 23px
+}
+
 .input-container input:focus {
 	border: 1px solid #ffd43b;
 	outline: none;
@@ -78,13 +81,21 @@ h2 {
 }
 .input-container input:focus ~ label,
 .input-container input:valid ~ label {
-	left: 75%;
+	left: 70%;
 	color: #ffd43b;
 	text-shadow: 0 0 5px #ffd43b, 0 0 10px #ffd43b, 0 0 15px #ffd43b, 0 0 20px #ff6600, 0 0 25px #ff6600;
 }
 
+.input-container input:focus ~ i,
+.input-container input:valid ~ i {
+	color: #ffd43b;
+	text-shadow: 0 0 5px #ffd43b, 0 0 10px #ffd43b, 0 0 15px #ffd43b, 0 0 20px #ff6600, 0 0 25px #ff6600;
+}
+
+
 /* BUTTON */
 .btn {
+	width: 100%;
 	padding: 10px 20px;
 	text-transform: uppercase;
 	border-radius: 8px;
