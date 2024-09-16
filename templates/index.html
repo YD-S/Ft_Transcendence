@@ -3,9 +3,11 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href={% static "css/index.css" %}>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>NeonPong</title>
   <script type="importmap">
   {
@@ -16,66 +18,91 @@
   }
 </script>
 </head>
+
 <body>
-<div id="header">
-  <button onclick="window.global.pageManager.load('settings')">
-    {% translate "Settings" %}
-  </button>
+  <div id="header">
+    <ul>
+      <li>
+        <button class="neon-pong button" onclick="window.global.pageManager.load('home')">
+          <i class='bx bx-home-alt'></i>
+          <span>NEON PONG</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="window.global.pageManager.load('me')">
+          <i class='bx bx-user'></i>
+          <span>{% translate "Profile" %}</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="window.global.pageManager.load('chat')">
+          <i class='bx bxs-chat'></i>
+          <span>{% translate "Chat" %}</span>
+        </button>
+      </li>
+      <li>
+        <button>
+          <i class='bx bx-world'></i>
+          <span>{% translate "Language" %}</span>
+        </button>
+      </li>
+      <li></li>
+      <li>
+        <button onclick="window.global.pageManager.load('settings')">
+          <i class='bx bx-cog'></i>
+          <span>{% translate "Settings" %}</span>
+        </button>
+      </li>
+      <li>
+        <button onclick="window.global.logout()">
+          <i class='bx bx-log-in'></i>
+          <span>{% translate "Log out" %}</span>
+        </button>
+      </li>
+    </ul>
 
-  <button class="neon-pong button" onclick="window.global.pageManager.load('home')">
-    NEON PONG
-  </button>
-
-  <button onclick="window.global.pageManager.load('chat')">
-    {% translate "Chat" %}
-  </button>
-  <button onclick="window.global.logout()">
-    {% translate "Log out" %}
-  </button>
-  <!-- Right-aligned item -->
-  <button onclick="window.global.pageManager.load('me')">
-    {% translate "Profile" %}
-  </button>
-
-  {# Combo box for languages #}
-  <label for="language">{% translate "Select language" %}</label><select id="language" onchange="window.global.changeLanguage(this.value)">
-    <option id="en-US" value="en-US">English</option>
-    <option id="es-ES" value="es-ES">Español</option>
-    <option id="pt-PT" value="pt-PT">Português</option>
-  </select>
-</div>
-
-<div id="root"></div>
-
-<div id="footer">
-  <div>
-    Test footer content
+    <!-- tesirjafkdjsal;jfdsakljfldksajfdslkfjslj;fdls -->
+    {# Combo box for languages #}
+    <label for="language">{% translate "Select language" %}</label>
+    <select id="language" onchange="window.global.changeLanguage(this.value)">
+      <option id="en-US" value="en-US">English</option>
+      <option id="es-ES" value="es-ES">Español</option>
+      <option id="pt-PT" value="pt-PT">Português</option>
+    </select>
   </div>
-  <a href="https://neon-pong.com/">NeonPong</a>
-</div>
-<script type="module">
-    import {Global} from "../static/js/global.js";
-    import {getCookie} from "../static/js/utils.js";
-    
+
+  <div id="root"></div>
+
+  <div id="footer">
+    <div>
+      Test footer content
+    </div>
+    <a href="https://neon-pong.com/">NeonPong</a>
+  </div>
+  <script type="module">
+    import { Global } from "../static/js/global.js";
+    import { getCookie } from "../static/js/utils.js";
+
     const lang = getCookie('django_language')
     if (lang) {
-    document.getElementById(lang).setAttribute('selected', 'selected')
-        }
-    
+      document.getElementById(lang).setAttribute('selected', 'selected')
+    }
+
     window.global = new Global();
     window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
-</script>
-<script src='{% static "js/page-manager.js" %}' type="module"></script>
-<script src='{% static "js/utils.js" %}' type="module"></script>
-<script src='{% static "js/game.js" %}' type="module"></script>
-<script src='{% static "js/2fa.js" %}' type="module"></script>
-<script src='{% static "js/login.js" %}' type="module"></script>
-<script src='{% static "js/register.js" %}' type="module"></script>
-<script src='{% static "js/oauth_callback.js" %}' type="module"></script>
-<script src='{% static "js/me.js" %}' type="module"></script>
-<script src='{% static "js/chat.js" %}' type="module"></script>
-<script src='{% static "js/verify_email.js" %}' type="module"></script>
-<script src='{% static "js/test.js" %}' type="module"></script>
+  </script>
+  <script src='{% static "js/page-manager.js" %}' type="module"></script>
+  <script src='{% static "js/utils.js" %}' type="module"></script>
+  <script src='{% static "js/game.js" %}' type="module"></script>
+  <script src='{% static "js/2fa.js" %}' type="module"></script>
+  <script src='{% static "js/login.js" %}' type="module"></script>
+  <script src='{% static "js/register.js" %}' type="module"></script>
+  <script src='{% static "js/oauth_callback.js" %}' type="module"></script>
+  <script src='{% static "js/me.js" %}' type="module"></script>
+  <script src='{% static "js/chat.js" %}' type="module"></script>
+  <script src='{% static "js/verify_email.js" %}' type="module"></script>
+  <script src='{% static "js/test.js" %}' type="module"></script>
 
 </body>
+
 </html>
