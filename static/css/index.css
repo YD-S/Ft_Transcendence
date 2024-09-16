@@ -1,12 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap");
+
+:root {
+	--bg-dark: #23272f;
+	--bg-light: #e8e8e8;
+	--font-neon: "Tilt Neon", sans-serif;
+}
+
 html {
 	height: 100%;
 }
 body {
+	display: flex;
+	flex-direction: column;
 	margin: 0;
 	padding: 0;
-	display: flex;
 	height: 100%;
-	flex-direction: column;
+	background-color: var(--bg-dark);
+	font-family: var(--font-neon);
 }
 
 #root {
@@ -16,22 +26,113 @@ body {
 	align-items: center;
 	flex: 1;
 	width: 100%;
-	/* animation: blinkShadowsFilter 8s ease-in infinite; */
+	animation: blinkShadowsFilter 8s ease-in infinite;
 }
 
 #footer {
+	display: none; /* test */
 	background: lightgrey;
 	width: 100%;
 	text-align: center;
 	/* animation: blinkShadowsFilter 8s ease-in infinite; */
 }
 
+
+/* HEADER */
 #header {
-	background: lightgrey;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+	line-height: 1.5;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	/* animation: blinkShadowsFilter 8s ease-in infinite; */
 }
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	margin-left: 0;
+	margin-right: 0;
+	background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
+	box-shadow: inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b, 0px 0px 100px rgba(255, 212, 59, 0),
+		0px 0px 100px rgba(255, 102, 0, 0);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 0.75rem;
+	border-radius: 10px;
+}
 
-/* keyframes */
+li:nth-child(5) {
+	margin-top: 5rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid transparent;
+}
+
+li + li {
+	margin-top: 0.75rem;
+}
+
+button {
+	background-color: transparent;
+	color: #ffffff80;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 3rem;
+	height: 3rem;
+	border: none;
+	border-radius: 8px;
+	position: relative;
+}
+
+button:hover,
+button:focus {
+	background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
+	box-shadow: 10px 10px 20px #0e1013, -10px -10px 40px #383e4b;
+	outline: 0;
+}
+
+button:hover span,
+button:focus span {
+	transform: scale(1);
+	opacity: 1;
+}
+
+button i {
+	font-size: 1.375rem;
+}
+
+button span {
+	position: absolute;
+	background-color: #14161a;
+	white-space: nowrap;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	left: calc(100% + 1.5rem);
+	transform-origin: center left;
+	transform: scale(0);
+	opacity: 0;
+	transition: 0.15s ease;
+	color: #fff;
+}
+
+button span:before {
+	content: "";
+	display: block;
+	width: 12px;
+	height: 12px;
+	position: absolute;
+	background-color: #14161a;
+	left: -5px;
+	top: 50%;
+	transform: translateY(-50%) rotate(45deg);
+	border-radius: 3px;
+}
+
+/* KEYFRAMES */
 @keyframes blinkShadowsFilter {
 	0% {
 		filter: drop-shadow(46px 36px 100px rgba(255, 102, 0, 0.3411764706)) drop-shadow(-55px -40px 100px #008cff);
