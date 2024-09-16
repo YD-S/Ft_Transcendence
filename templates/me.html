@@ -9,6 +9,9 @@
             <h1>{% translate "My Profile" %}</h1>
             <ul>
               <li id="user_id" hidden>{{ user.id }}</li>
+              <li>
+                <img style="max-width: 200px; max-height: 200px;" src="{{ user.avatar.url }}" alt="user avatar">
+              </li>
               <li>{% translate "Username" %}: {{ user.username }}</li>
               <li>{% translate "Email" %}: {{ user.email }}</li>
               {% if not user.verified_email %}

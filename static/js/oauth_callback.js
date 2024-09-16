@@ -27,7 +27,16 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
         return response.json();
     }).then(data => {
         localStorage.removeItem('oauth_state');
-        saveToken(data)
-        PageManager.getInstance().load('home', false);
+        switch (data.action) {
+            case "2fa":
+                PageManager.getInstance().load('auth/2fa', false, {args: [data.email2fa, data.user_id]})
+                break;
+            case "login":
+                saveToken(data)
+                PageManager.getInstance().load('home', false);
+                break;
+            default:
+                throw new Error("Invalid action");
+        }
     })
 })
