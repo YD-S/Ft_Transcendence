@@ -2,10 +2,10 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
-<div id="register-form">
-  <label for="username">{% translate "Username" %}</label><input id="username">
-  <label for="email">{% translate "Email" %}</label><input id="email">
-  <label for="password">{% translate "Password" %}</label><input id="password" type="password">
-  <label for="confirm-password">{% translate "Confirm password" %}</label><input id="confirm-password" type="password">
-  <button id="submit">{% translate "Register" %}</button>
+<div id="register-form" class="input-container">
+  <input id="username"><label for="username">{% translate "Username" %}</label>
+  <input id="email"><label for="email">{% translate "Email" %}</label>
+  <input id="password" type="password"><label for="password">{% translate "Password" %}</label>
+  <input id="confirm-password" type="password"><label for="confirm-password">{% translate "Confirm password" %}</label>
+  <button id="submit" class="btn">{% translate "Register" %}</button>
 </div>
