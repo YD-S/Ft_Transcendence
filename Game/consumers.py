@@ -80,6 +80,7 @@ def angle_difference(angle1: float, angle2: float):
 
 class GameConsumer(AsyncWebsocketConsumer):
     game_finished = False
+    sockets = {}
     player1_score = 0
     player2_score = 0
     players = 0
@@ -105,7 +106,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.create_group(self.game_id)
             self.player_names.append(self.scope['user'].username)
             GameConsumer.players += 1
-
+            if self.game_id not in GameConsumer.sockets:
+                GameConsumer.sockets[self.game_id] = [self]
+            else:
+                GameConsumer.sockets[self.game_id].append(self)
             if GameConsumer.players == 2 and self.frame_task is None:
                 self.frame_task = asyncio.create_task(self.send_every_frame())
         else:
@@ -186,7 +190,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         if GameConsumer.players < 2 and self.frame_task is not None:
             self.frame_task.cancel()
             self.frame_task = None
-            await self.close()
+            for socket in GameConsumer.sockets[self.game_id]:
+                await socket.close(reason='Game Finished')
+            del GameConsumer.sockets[self.game_id]
 
     async def send_every_frame(self, frame_rate=60):
         frame_duration = 1 / frame_rate
@@ -244,23 +250,27 @@ class GameConsumer(AsyncWebsocketConsumer):
         data = event['data']
         await self.send(text_data=json.dumps({
             'type': 'winner',
-            'data': data
+            **data
         }))
 
     async def send_winner_message(self, winner: int, looser: int, winner_score: int, looser_score: int):
-        from users.models import User, Match
-        winner_obj = await User.objects.aget(id=winner)
-        looser_obj = await User.objects.aget(id=looser)
-        cache.delete(f'{self.game_id}:player1')
-        cache.delete(f'{self.game_id}:player2')
+
         if not GameConsumer.game_finished:
+            from users.models import User, Match
+            winner_obj = await User.objects.aget(id=winner)
+            looser_obj = await User.objects.aget(id=looser)
+            cache.delete(f'{self.game_id}:player1')
+            cache.delete(f'{self.game_id}:player2')
             GameConsumer.game_finished = True
+            GameConsumer.player1_score = 0
+            GameConsumer.player2_score = 0
             await Match.objects.acreate(winner=winner_obj, loser=looser_obj, winner_score=winner_score, loser_score=looser_score)
-        await self.channel_layer.group_send(
-            self.game_id,
-            {
-                'type': 'winner',
-                'data': winner
-            }
-        )
-        await self.close()
+            await self.channel_layer.group_send(
+                self.game_id,
+                {
+                    'type': 'winner',
+                    'data': {
+                        'winner': winner_obj.username
+                    }
+                }
+            )

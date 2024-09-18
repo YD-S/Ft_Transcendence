@@ -111,6 +111,8 @@ class NeonPong {
                 break;
             case "winner" :
                 console.log("winner is: " + message.winner);
+                this.GameSocket.close();
+                PageManager.getInstance().load("home");
                 break;
         }
     }

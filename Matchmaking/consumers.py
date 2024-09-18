@@ -23,6 +23,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         print('User removed from queue:', self.scope['user'].id)
 
     async def add_to_game(self):
+        if len(self.queue) < 2:
+            return
         player1 = self.queue.pop(0)
         player2 = self.queue.pop(0)
         room_id = random.randint(1, 1000)
