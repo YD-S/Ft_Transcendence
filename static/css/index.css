@@ -6,6 +6,10 @@
 	--font-neon: "Tilt Neon", sans-serif;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 html {
 	height: 100%;
 }
