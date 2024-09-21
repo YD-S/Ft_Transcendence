@@ -28,7 +28,6 @@
 	border-radius: 15px;
 	overflow: hidden;
 	position: relative;
-
 }
 
 .sign-input::before {
@@ -95,7 +94,6 @@
 }
 .input-container input:focus ~ label,
 .input-container input:valid ~ label {
-
 	top: -80px;
 	color: #e300ff;
 	text-shadow: 0 0 5px #e300ff, 0 0 10px #e300ff, 0 0 15px #e300ff, 0 0 20px #ff00aa, 0 0 25px #ff00aa;

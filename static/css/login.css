@@ -122,7 +122,7 @@ h2 {
 }
 
 .sign-input .btn:hover,
-:focus {
+.sign-input .btc:focus {
 	color: #fff;
 	background: #ffd43b;
 	text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff;
