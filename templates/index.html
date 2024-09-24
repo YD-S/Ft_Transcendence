@@ -23,52 +23,62 @@
   <div id="header">
     <ul>
       <li>
-        <button class="neon-pong button" onclick="window.global.pageManager.load('home')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('home')">
           <i class='bx bx-home-alt'></i>
           <span>NEON PONG</span>
         </button>
       </li>
       <li>
-        <button onclick="window.global.pageManager.load('me')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('me')">
           <i class='bx bx-user'></i>
           <span>{% translate "Profile" %}</span>
         </button>
       </li>
       <li>
-        <button onclick="window.global.pageManager.load('chat')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('chat')">
           <i class='bx bxs-chat'></i>
           <span>{% translate "Chat" %}</span>
         </button>
       </li>
       <li>
-        <button>
+        <button class="buttonNav">
           <i class='bx bx-world'></i>
           <span>{% translate "Language" %}</span>
         </button>
       </li>
       <li></li>
       <li>
-        <button onclick="window.global.pageManager.load('settings')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('settings')">
           <i class='bx bx-cog'></i>
           <span>{% translate "Settings" %}</span>
         </button>
       </li>
       <li>
-        <button onclick="window.global.logout()">
+        <button class="buttonNav" onclick="window.global.logout()">
           <i class='bx bx-log-in'></i>
           <span>{% translate "Log out" %}</span>
         </button>
       </li>
     </ul>
 
-    <!-- tesirjafkdjsal;jfdsakljfldksajfdslkfjslj;fdls -->
     {# Combo box for languages #}
+    <div class="language" id="language">
+      <label for="en-US">English</label>
+      <input id="en-US" type="radio" name="r" value="en-US" onchange="window.global.changeLanguage(this.value)">
+      <label for="es-ES">Español</label>
+      <input id="es-ES" type="radio" name="r" value="es-ES" onchange="window.global.changeLanguage(this.value)">
+      <label for="pt-PT">Português</label>
+      <input id="pt-PT" type="radio" name="r" value="pt-PT" onchange="window.global.changeLanguage(this.value)">
+    </div>
+
+    <!-- {# Combo box for languages #}
     <label for="language">{% translate "Select language" %}</label>
     <select id="language" onchange="window.global.changeLanguage(this.value)">
       <option id="en-US" value="en-US">English</option>
       <option id="es-ES" value="es-ES">Español</option>
       <option id="pt-PT" value="pt-PT">Português</option>
-    </select>
+    </select> -->
+
   </div>
 
   <div id="root"></div>
