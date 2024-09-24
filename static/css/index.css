@@ -76,7 +76,7 @@ li + li {
 	margin-top: 0.75rem;
 }
 
-button {
+.buttonNav {
 	background-color: transparent;
 	color: #ffffff80;
 	display: flex;
@@ -89,22 +89,24 @@ button {
 	position: relative;
 }
 
-button:hover {
+.buttonNav:hover,
+.buttonNav:focus {
 	background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
 	box-shadow: 10px 10px 20px #0e1013, -10px -10px 40px #383e4b;
 	outline: 0;
 }
 
-button:hover span {
+.buttonNav:hover span,
+.buttonNav:focus span {
 	transform: scale(1);
 	opacity: 1;
 }
 
-button i {
+.buttonNav i {
 	font-size: 1.375rem;
 }
 
-button:hover span {
+.buttonNav span {
 	position: absolute;
 	background-color: #14161a;
 	white-space: nowrap;
@@ -118,7 +120,7 @@ button:hover span {
 	color: #fff;
 }
 
-button:hover span:before {
+.buttonNav span:before {
 	content: "";
 	display: block;
 	width: 12px;
