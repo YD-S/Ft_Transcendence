@@ -1,7 +1,5 @@
 export default class Paddle {
-    constructor(PaddleElement, id, maxY, minY) {
-        this.maxY = maxY;
-        this.minY = minY;
+    constructor(PaddleElement, id) {
         this.id = id;
         this.PaddleElement = PaddleElement;
         this.reset();
@@ -12,7 +10,7 @@ export default class Paddle {
     }
 
     set position(value) {
-        this.PaddleElement.style.setProperty('--pos', value);
+        this.PaddleElement.style.setProperty('--pos', Math.min(Math.max(value, 0), 90));
     }
 
     get heightPaddle() {
@@ -28,11 +26,16 @@ export default class Paddle {
     }
 
     update() {
-        if(this.position < this.minY) this.position = this.minY;
-        if(this.position > this.maxY) this.position = this.maxY;
+        const paddleHeightVH = this.heightPaddle / window.innerHeight * 100;
+
+        if (this.position < 0) {
+            this.position = 0;
+        } else if (this.position > 100 - paddleHeightVH) {
+            this.position = 100 - paddleHeightVH;
+        }
     }
 
     reset() {
-        this.position = window.innerHeight / 2;
+        this.position = 50;
     }
 }
