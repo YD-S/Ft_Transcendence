@@ -11,6 +11,7 @@ GAME_SIZE = 1000
 COURT_RADIUS = 15
 PLAYER_WIDTH = GAME_SIZE / 350
 BALL_RADIUS = GAME_SIZE / 1500
+WINNING_SCORE = 2
 
 ANGLE_MARGIN = math.asin((PLAYER_WIDTH / 2 + BALL_RADIUS) / COURT_RADIUS)
 BOUNCE_MARGIN = math.pi / 3
@@ -118,11 +119,16 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data: Any | None = None, bytes_data: bytes | None = None):
         text_data_json = json.loads(text_data)
         message = text_data_json['type']
-        is_player_first = text_data_json['amIfirst']
 
         if message == 'move':
+            is_player_first = text_data_json['amIfirst']
             direction = text_data_json['direction']
             await self.calculate_angle(direction, is_player_first)
+        if message == 'leave':
+            playerId = text_data_json['playerId']
+            with open('test', 'a') as f:
+                print(f'{playerId} left the game', file=f)
+
 
     async def calculate_ball_collision(self):
         # Calculate the distance of the ball from the center of the court
@@ -191,7 +197,10 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.frame_task.cancel()
             self.frame_task = None
             for socket in GameConsumer.sockets[self.game_id]:
-                await socket.close(reason='Game Finished')
+                try:
+                    await socket.close(reason='Game Finished')
+                except:
+                    pass
             del GameConsumer.sockets[self.game_id]
 
     async def send_every_frame(self, frame_rate=60):
@@ -242,7 +251,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         if GameConsumer.player1_score == 2:
             await self.send_winner_message(cache.get(f'{self.game_id}:player1'), cache.get(f'{self.game_id}:player2'), GameConsumer.player1_score,
                                            GameConsumer.player2_score)
-        elif GameConsumer.player2_score == 2:
+        elif GameConsumer.player2_score == WINNING_SCORE:
             await self.send_winner_message(cache.get(f'{self.game_id}:player2'), cache.get(f'{self.game_id}:player1'), GameConsumer.player2_score,
                                            GameConsumer.player1_score)
 

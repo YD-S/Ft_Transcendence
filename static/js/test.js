@@ -105,8 +105,10 @@ class NeonPong {
                 this.ball.position.z = message.ball_y;
                 this.ball.position.y = (((message.ball_x * message.ball_x + message.ball_y * message.ball_y) / -60) + 3.4) * 2;
                 console.log(message)
-                document.getElementById("score1").innerText = message.player1_score;
-                document.getElementById("score2").innerText = message.player2_score;
+                const s1 = document.getElementById("score1");
+                if (s1) s1.innerText = message.player1_score;
+                const s2 = document.getElementById("score2");
+                if (s2) s2.innerText = message.player2_score;
                 break;
             case "winner" :
                 console.log("winner is: " + message.winner);
@@ -167,11 +169,22 @@ class NeonPong {
     }
 }
 
+let game = null;
 // Ensure WebSocket is ready before starting the game
 PageManager.getInstance().setOnPageLoad("test", () => {
     const matchmaking = new Matchmaking();
     matchmaking.onGameSocketReady = () => {
-        const game = new NeonPong(matchmaking);
+        game = new NeonPong(matchmaking);
         game.render();
     };
 });
+
+PageManager.getInstance().onUnloadCallbacks["test"] = () => {
+    if (game) {
+        game.GameSocket.send(JSON.stringify({
+            type: "leave",
+            playerId: game.playerId,
+        }));
+        game.GameSocket.close();
+    }
+}
