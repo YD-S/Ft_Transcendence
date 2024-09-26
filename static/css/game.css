@@ -27,7 +27,7 @@ body {
     background-color: var(--foreground);
     width: 1vh;
     height: 10vh;
-    top: calc(var(--pos) * 1px);
+    top: calc(var(--pos) * 1vh);
     transform: translateY(-50%);
 }
 

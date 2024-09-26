@@ -6,16 +6,17 @@ import {height_aspect_ratio, makeBall, makeCamera, makePaddle, makeGrid} from '.
 const GAME_WIDTH = 1000;
 const GAME_HEIGHT = height_aspect_ratio(GAME_WIDTH);
 
-const PLAYER_COLORS = {
-    mindaro: 0xe2ef70,
-    verdigris: 0x16bac5,
-    jade: 0x00a878,
-    golden_gate: 0xeb4511,
-    pear: 0xd1d646,
-    sunset: 0xffcb77,
-    aqua: 0x42f2f7,
-    persian_blue: 0x072ac8,
-    emerald: 0x48bf84,
+const NEON_COLORS = {
+    neon_magenta: 0xff00ff,  // Bright magenta
+    electric_violet: 0x8f00ff,  // Deep electric violet
+    neon_green: 0x39ff14,  // Bright neon green
+    hot_pink: 0xff69b4,  // Vivid hot pink
+    neon_cyan: 0x00ffff,  // Cyan
+    electric_blue: 0x7df9ff,  // Light electric blue
+    neon_orange: 0xff5f1f,  // Bright orange
+    neon_yellow: 0xffff33,  // Pure neon yellow
+    laser_lemon: 0xfefe22,  // Vibrant lemon yellow
+    neon_purple: 0xbc13fe,  // Neon purple
 };
 
 const COLORS = {
@@ -34,10 +35,9 @@ class NeonPong {
         this.amIfirst = this.Matchmaking.amIfirst;
         this.playerId = this.Matchmaking.playerId;
         this.opponentId = this.Matchmaking.opponentId;
-        this.twoD = false;
         this.keys = {};
 
-        this.camera = makeCamera(this.twoD);
+        this.camera = makeCamera();
         this.scene = new THREE.Scene();
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setSize(GAME_WIDTH, GAME_HEIGHT);
@@ -54,17 +54,16 @@ class NeonPong {
         document.addEventListener('keydown', this.keydown.bind(this));
         document.addEventListener('keyup', this.keyup.bind(this));
 
-        this.paddle1 = makePaddle(PLAYER_COLORS.emerald);
+        this.paddle1 = makePaddle(NEON_COLORS.neon_magenta);
         this.paddle1.position.set(0, 0.5, 15);
         this.pivot.add(this.paddle1);
 
-        this.paddle2 = makePaddle(PLAYER_COLORS.aqua);
+        this.paddle2 = makePaddle(NEON_COLORS.laser_lemon);
         this.paddle2.position.set(this.paddle1.position.x, this.paddle1.position.y, this.paddle1.position.z);
         this.pivot2.add(this.paddle2);
 
         this.ball = makeBall(COLORS.pink);
 
-        //this.ball.position.set(0, 5, 0);
         this.ball.position.set(0, 0, 0);
 
         this.scene.add(this.ball);
@@ -129,20 +128,13 @@ class NeonPong {
     }
 
     setCameraAngle() {
-        if (this.twoD === false) {
-            console.log("3D");
-            this.camera.position.set(-20, 25, 20);
-            this.scene.rotation.y = -Math.PI / 2;
-            this.camera.lookAt(0, 0, 0);
-        } else {
-            console.log("2D");
-            this.camera.position.set(0, 25, 0);
-            this.scene.rotation.y = -Math.PI / 2;
-        }
+        this.camera.position.set(-20, 25, 20);
+        this.scene.rotation.y = -Math.PI / 2;
+        this.camera.lookAt(0, 0, 0);
     }
 
     movePaddles() {
-        const directionMap = this.twoD ? { 'w': 'left', 's': 'right' } : { 'a': 'left', 'd': 'right' };
+        const directionMap ={ 'a': 'left', 'd': 'right' };
 
         for (let key in directionMap) {
             if (this.keys[key]) {

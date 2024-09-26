@@ -15,13 +15,8 @@ export function height_aspect_ratio(width) {
     return (width / 16) * 9;
 }
 
-export function makeCamera(twoD) {
-    if (twoD === true) {
-        return new THREE.PerspectiveCamera(55, GAME_WIDTH / GAME_HEIGHT, 0.1, 1000);
-    }else
-    {
-        return new THREE.PerspectiveCamera(55, GAME_WIDTH / GAME_HEIGHT, 0.1, 1000);
-    }
+export function makeCamera() {
+    return new THREE.PerspectiveCamera(55, GAME_WIDTH / GAME_HEIGHT, 0.1, 1000);
 }
 
 export function makePaddle(color) {
@@ -42,8 +37,13 @@ export function makePaddle(color) {
             bevelEnabled: true
         };
         const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        const material = new THREE.MeshBasicMaterial({color: color});
-        return new THREE.Mesh(geometry, material);
+        const neonMaterial = new THREE.MeshPhongMaterial({
+          color: color,    // Base color (green neon)
+          emissive: color, // Emissive color (this creates the glowing effect)
+          emissiveIntensity: 1.5, // How much it emits light
+          shininess: 100, // High shininess for a glossy look
+        });
+        return new THREE.Mesh(geometry, neonMaterial);
 }
 
 export function makeBall(color) {
