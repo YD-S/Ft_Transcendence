@@ -10,7 +10,7 @@ export default class Paddle {
     }
 
     set position(value) {
-        this.PaddleElement.style.setProperty('--pos', Math.min(Math.max(value, 0), 90));
+        this.PaddleElement.style.setProperty('--pos', Math.min(Math.max(value, 0), 100));
     }
 
     get heightPaddle() {
@@ -26,10 +26,10 @@ export default class Paddle {
     }
 
     update() {
-        const paddleHeightVH = this.heightPaddle / window.innerHeight * 100;
+        const paddleHeightVH = this.heightPaddle / window.innerHeight * 500;
 
-        if (this.position < 0) {
-            this.position = 0;
+        if (this.position < 0 + paddleHeightVH) {
+            this.position = 0 + paddleHeightVH;
         } else if (this.position > 100 - paddleHeightVH) {
             this.position = 100 - paddleHeightVH;
         }

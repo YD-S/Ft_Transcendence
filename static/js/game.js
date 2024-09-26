@@ -2,6 +2,7 @@ import Ball from "./Ball.js";
 import Paddle from "./Paddle.js";
 import {PageManager} from "./page-manager.js";
 
+const  WINNING_SCORE = 5;
 export class Game {
     constructor() {
         this.paddleSpeed = 1;
@@ -35,6 +36,7 @@ export class Game {
     }
 
     update(timestamp) {
+        if (this.destroyed) return;
         const currentTimestamp = Date.now();
         const deltaTime = currentTimestamp - this.lastTimestamp;
 
@@ -46,7 +48,7 @@ export class Game {
             this.paddle1.update();
             this.paddle2.update();
 
-            if (this.isLose()) this.handleLost();
+            if (this.pointScored()) this.handleScore();
 
             this.accumulatedTime -= this.fixedTimeStep;
         }
@@ -73,20 +75,32 @@ export class Game {
         }
     }
 
-    handleLost() {
+    handleScore() {
         const rect = this.ball.rect();
         if (rect.right >= window.innerWidth) {
             this.Team1_score.textContent = parseInt(this.Team1_score.textContent) + 1;
         } else {
             this.Team2_score.textContent = parseInt(this.Team2_score.textContent) + 1;
         }
-        this.ball.reset();
-        this.paddle1.reset();
-        this.paddle2.reset();
-        this.accumulatedTime = 0;
+        // Check for winning score
+        if (parseInt(this.Team1_score.textContent) >= WINNING_SCORE) {
+            this.endGame("Player 1 Wins!");
+        } else if (parseInt(this.Team2_score.textContent) >= WINNING_SCORE) {
+            this.endGame("Player 2 Wins!");
+        } else {
+            // If no winner yet, reset the game for the next point
+            this.ball.reset();
+            this.paddle1.reset();
+            this.paddle2.reset();
+            this.accumulatedTime = 0;
+        }
     }
 
-    isLose() {
+    endGame(winnerMessage) {
+        alert(winnerMessage); // Or you can display it in the UI
+        this.destroy(); // Stop the game loop
+    }
+    pointScored() {
         const rect = this.ball.rect();
         return rect.right >= window.innerWidth || rect.left <= 0;
     }
