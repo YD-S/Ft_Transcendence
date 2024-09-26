@@ -82,13 +82,11 @@ export class Game {
         } else {
             this.Team2_score.textContent = parseInt(this.Team2_score.textContent) + 1;
         }
-        // Check for winning score
         if (parseInt(this.Team1_score.textContent) >= WINNING_SCORE) {
             this.endGame("Player 1 Wins!");
         } else if (parseInt(this.Team2_score.textContent) >= WINNING_SCORE) {
             this.endGame("Player 2 Wins!");
         } else {
-            // If no winner yet, reset the game for the next point
             this.ball.reset();
             this.paddle1.reset();
             this.paddle2.reset();
@@ -109,6 +107,14 @@ export class Game {
         document.removeEventListener('keydown', this.keydown.bind(this));
         document.removeEventListener('keyup', this.keyup.bind(this));
         this.destroyed = true;
+    }
+
+    getWinner() {
+        return parseInt(this.Team1_score.textContent) >= WINNING_SCORE ? "Player 1" : "Player 2";
+    }
+
+    isGameOver() {
+        return parseInt(this.Team1_score.textContent) >= WINNING_SCORE || parseInt(this.Team2_score.textContent) >= WINNING_SCORE;
     }
 }
 
