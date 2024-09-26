@@ -7,10 +7,6 @@ export const PAD_W = GAME_WIDTH / 350;
 const RADIUS = 15;
 const BALL_SIZE = GAME_WIDTH / 1500;
 
-export function half(value) {
-    return value / 2.0;
-}
-
 export function height_aspect_ratio(width) {
     return (width / 16) * 9;
 }
