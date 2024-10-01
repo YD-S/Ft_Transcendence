@@ -11,8 +11,7 @@
     <div class="user-email">
       <li id="user_id" hidden>{{ user.id }}</li>
       <li>
-        <i class='bx bxs-user'></i>
-        <!-- <img style="max-width: 200px; max-height: 200px;" src="{{ user.avatar.url }}" alt="user avatar"> -->
+          <img style="max-width: 150px; max-height: 150px" src="{{ user.avatar.url }}" alt="user avatar">
       </li>
       <li>{% translate "Username" %}: {{ user.username }}</li>
       <li>{% translate "Email" %}: {{ user.email }}</li>

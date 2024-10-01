@@ -2,6 +2,9 @@ import {PageManager} from "./page-manager.js";
 import Matchmaking from "./Matchmaking.js";
 import * as THREE from 'three';
 import {height_aspect_ratio, makeBall, makeCamera, makePaddle, makeGrid} from './Objects.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 const GAME_WIDTH = 1000;
 const GAME_HEIGHT = height_aspect_ratio(GAME_WIDTH);
@@ -50,9 +53,22 @@ class NeonPong {
 
         const helper = makeGrid();
         this.scene.add(helper);
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+        this.scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+        pointLight.position.set(5, 5, 5);
+        this.scene.add(pointLight);
+
+        const composer = new EffectComposer(this.renderer);
+        const renderPass = new RenderPass(this.scene, this.camera);
+        composer.addPass(renderPass);
+
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        composer.addPass(bloomPass);
 
         document.addEventListener('keydown', this.keydown.bind(this));
         document.addEventListener('keyup', this.keyup.bind(this));
+        window.addEventListener('onpagehide', this.disconnectWebSocket.bind(this));
 
         this.paddle1 = makePaddle(NEON_COLORS.neon_magenta);
         this.paddle1.position.set(0, 0.5, 15);
@@ -79,6 +95,13 @@ class NeonPong {
         this.GameSocket.onmessage = async (event) => {
             await this.handleMessage(event);
         };
+    }
+
+    disconnectWebSocket() {
+        if (this.GameSocket) {
+            this.GameSocket.close();
+            console.log('WebSocket connection closed');
+        }
     }
 
     async handleMessage(event) {
