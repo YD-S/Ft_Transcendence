@@ -44,7 +44,7 @@ export class PageManager {
 
     loadToContainer(page, container, preserve_query = true, options = {}) {
         this.setLoading(container);
-        fetch(`/page/${page}.html` + (options.query || ""))
+        return fetch(`/page/${page}.html` + (options.query || ""))
             .then(response => {
                 if (response.status !== 200) {
                     if (response.status === 401) {

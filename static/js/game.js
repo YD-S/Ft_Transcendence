@@ -5,6 +5,7 @@ import {PageManager} from "./page-manager.js";
 const  WINNING_SCORE = 5;
 export class Game {
     constructor() {
+        window.game = this;
         this.paddleSpeed = 1;
         this.keys = {};
 

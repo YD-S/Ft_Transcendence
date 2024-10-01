@@ -1,5 +1,5 @@
 import {Game} from './game.js';
-import {PageManager} from "./page-manager";
+import {PageManager} from "./page-manager.js";
 
 class Tournament {
     constructor() {
@@ -11,22 +11,16 @@ class Tournament {
         ];
         this.currentMatchIndex = 0;
         this.results = [];
-        this.WINNING_SCORE = 5;
-
-        this.startGame();
     }
 
     startGame() {
         const currentMatch = this.matches[this.currentMatchIndex];
+                console.log("Starting game...");
 
         if (currentMatch) {
-            this.game = new Game();
-            this.game.Team1_score = document.getElementById('score__p1');
-            this.game.Team2_score = document.getElementById('score__p2');
-            this.game.Team1_score.innerHTML = '0';
-            this.game.Team2_score.innerHTML = '0';
-            this.game.WINNING_SCORE = this.WINNING_SCORE;
-
+            PageManager.getInstance().loadToContainer('pong/game', document.getElementById('game-container'), false, {storeInHistory: false}).then(() => {
+                this.game = window.game;
+            });
             this.gameWatcher();
         } else {
             console.log("Tournament over! Final match has concluded.");
@@ -35,6 +29,7 @@ class Tournament {
 
     gameWatcher() {
         const interval = setInterval(() => {
+                    console.log("Game Watcher...");
             if (this.game.isGameOver()) {
                 clearInterval(interval);
 
@@ -68,8 +63,13 @@ class Tournament {
 }
 
 let game = null;
-PageManager.getInstance().setOnPageLoad('pong/tournament', () => {
+PageManager.getInstance().setOnPageLoad('tournament', () => {
     game = new Tournament();
+    document.getElementById('button').addEventListener('click', (e) => {
+        console.log("Starting tournament...");
+        game.startGame();
+        e.preventDefault();
+    });
 });
 
 PageManager.getInstance().setOnPageUnload('pong/tournament', () => {
