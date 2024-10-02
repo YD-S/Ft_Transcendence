@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
+
 class HttpError(Exception):
     def __init__(self, status: int, content: str):
         self.status = status

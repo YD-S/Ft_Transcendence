@@ -67,8 +67,7 @@ class TokenManager:
         if payload.get('user_id') in self.tokens:
             del self.tokens[payload.get('user_id')]
         else:
-            raise ValidationError(json.dumps({"message": _("Invalid token"), "type": "invalid_token"}),
-                                  content_type='application/json')
+            raise UnauthorizedError()
 
     def _test_token(self, token, check_reuse=True):
         # Check for refresh token reuse
@@ -76,22 +75,18 @@ class TokenManager:
             try:
                 payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'], options={"verify_exp": False})
             except jwt.DecodeError:
-                raise ValidationError(json.dumps({"message": _("Invalid token"), "type": "invalid_token"}),
-                                      content_type='application/json')
+                raise UnauthorizedError()
             tokens = self.refresh_token_history.get(payload.get('user_id'), [])
             if token in tokens[:-1]:  # Check all but the last token, which is the current one
                 self.revoke_token(tokens[-1])  # Revoke the current token
-                raise ValidationError(json.dumps({"message": _("Token reuse detected"), "type": "token_reuse_detected"}),
-                                      content_type='application/json')
+                raise UnauthorizedError()
 
         try:
             payload = decode_token(token)
         except jwt.ExpiredSignatureError:
-            raise ValidationError(json.dumps({"message": _("Token expired"), "type": "token_expired"}),
-                                  content_type='application/json')
+            raise UnauthorizedError()
         except jwt.InvalidTokenError:
-            raise ValidationError(json.dumps({"message": _("Invalid token"), "type": "invalid_token"}),
-                                  content_type='application/json')
+            raise UnauthorizedError()
         return payload
 
 
