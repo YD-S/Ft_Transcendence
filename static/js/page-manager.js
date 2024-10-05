@@ -94,7 +94,14 @@ export class PageManager {
         this.onUnloadCallbacks[page] = callback;
     }
 
-    setLoading(container) {
-        container.innerHTML = "<div class='loader'>Loading</div>";
-    }
+	setLoading(container) {
+		container.innerHTML = `<div class='loader'>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>`;
+	}
 }
