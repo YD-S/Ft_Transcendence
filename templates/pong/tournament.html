@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tournament.css' %}">
+<div id="game-container">
+    <form id="form">
+        <div class="textInputWrapper">
+            <label for="player1">{% translate "player1" %}</label>
+            <input  placeholder="Player 1" type="text" id="player1" name="player1" class="textInput">
+        </div>
+
+
+        <div class="textInputWrapper">
+            <label for="player2">{% translate "player2" %}</label>
+            <input  placeholder="Player 2" type="text" id="player1" name="player2" class="textInput">
+        </div>
+
+        <div class="textInputWrapper">
+            <label for="player3">{% translate "player3" %}</label>
+            <input  placeholder="Player 3" type="text" id="player3" name="player3" class="textInput">
+        </div>
+
+        <div class="textInputWrapper">
+            <label for="player4">{% translate "player4" %}</label>
+            <input  placeholder="Player 4" type="text" id="player4" name="player4" class="textInput">
+        </div>
+
+        <button class="button">{% translate "Start Tournament" %}</button>
+    </form>
+</div>

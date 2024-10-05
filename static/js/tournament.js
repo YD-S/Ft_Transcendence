@@ -90,7 +90,7 @@ class Tournament {
 }
 
 let game = null;
-PageManager.getInstance().setOnPageLoad('tournament', () => {
+PageManager.getInstance().setOnPageLoad('pong/tournament', () => {
     game = new Tournament();
     document.getElementById('button').addEventListener('click', (e) => {
         const player1 = document.getElementById('player1').value;

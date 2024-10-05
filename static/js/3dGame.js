@@ -194,7 +194,7 @@ class NeonPong {
 
 let game = null;
 // Ensure WebSocket is ready before starting the game
-PageManager.getInstance().setOnPageLoad("test", () => {
+PageManager.getInstance().setOnPageLoad("pong/3dGame", () => {
     const matchmaking = new Matchmaking();
     matchmaking.onGameSocketReady = () => {
         game = new NeonPong(matchmaking);
@@ -202,7 +202,7 @@ PageManager.getInstance().setOnPageLoad("test", () => {
     };
 });
 
-PageManager.getInstance().onUnloadCallbacks["test"] = () => {
+PageManager.getInstance().onUnloadCallbacks["pong/3dGame"] = () => {
     if (game) {
         game.GameSocket.send(JSON.stringify({
             type: "leave",

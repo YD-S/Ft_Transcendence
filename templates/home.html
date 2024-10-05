@@ -2,7 +2,14 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-<button onclick="window.global.pageManager.load('pong/game')">
-  {# Button for starting a local game (two players on the same device, on the same keyboard) #}
-  {% translate "Local Game" %}
+
+<button role="button" class="golden-button" onclick="window.global.pageManager.load('pong/game')">
+  <span class="golden-text">{% translate "Local Game" %}</span>
+</button>
+<button role="button" class="golden-button" onclick="window.global.pageManager.load('pong/3dGame')">
+  <span class="golden-text">{% translate "Remote 3D Game" %}</span>
+</button>
+
+<button role="button" class="golden-button" onclick="window.global.pageManager.load('pong/tournament')">
+  <span class="golden-text">{% translate "Tournament" %}</span>
 </button>

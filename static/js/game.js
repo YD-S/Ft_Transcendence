@@ -98,6 +98,7 @@ export class Game {
     endGame(winnerMessage) {
         alert(winnerMessage); // Or you can display it in the UI
         this.destroy(); // Stop the game loop
+        PageManager.getInstance().load('home');
     }
     pointScored() {
         const rect = this.ball.rect();
