@@ -208,6 +208,5 @@ PageManager.getInstance().onUnloadCallbacks["test"] = () => {
             type: "leave",
             playerId: game.playerId,
         }));
-        game.GameSocket.close();
     }
 }

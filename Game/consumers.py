@@ -112,6 +112,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             else:
                 GameConsumer.sockets[self.game_id].append(self)
             if GameConsumer.players == 2 and self.frame_task is None:
+                GameConsumer.game_finished = False
                 self.frame_task = asyncio.create_task(self.send_every_frame())
         else:
             await self.close(400)
@@ -204,9 +205,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             for socket in GameConsumer.sockets[self.game_id]:
                 try:
                     await socket.close(reason='Game Finished')
+                    del GameConsumer.sockets[self.game_id]
                 except:
                     pass
-            del GameConsumer.sockets[self.game_id]
 
     async def send_every_frame(self, frame_rate=60):
         frame_duration = 1 / frame_rate
@@ -253,7 +254,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             GameConsumer.player2_score += 1
 
     async def check_winner(self):
-        if GameConsumer.player1_score == 2:
+        if GameConsumer.player1_score == WINNING_SCORE:
             await self.send_winner_message(cache.get(f'{self.game_id}:player1'), cache.get(f'{self.game_id}:player2'),
                                            GameConsumer.player1_score,
                                            GameConsumer.player2_score)
@@ -280,6 +281,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             GameConsumer.game_finished = True
             GameConsumer.player1_score = 0
             GameConsumer.player2_score = 0
+            GameConsumer.player_names = []
             await Match.objects.acreate(winner=winner_obj, loser=looser_obj, winner_score=winner_score,
                                         loser_score=looser_score)
             await self.channel_layer.group_send(
