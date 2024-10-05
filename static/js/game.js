@@ -2,7 +2,7 @@ import Ball from "./Ball.js";
 import Paddle from "./Paddle.js";
 import {PageManager} from "./page-manager.js";
 
-const  WINNING_SCORE = 5;
+const  WINNING_SCORE = 1;
 export class Game {
     constructor() {
         window.game = this;

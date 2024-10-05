@@ -1,8 +1,9 @@
+import os
 import requests
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from NeonPong import settings
 from authentication.utils import hash_password
 from common.models import BaseModel
 
@@ -29,6 +30,31 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+    def save_user_avatar(self, user_data):
+        image_url = user_data.get('image', {}).get('link')
+        if not image_url:
+            return None
+
+        try:
+            response = requests.get(image_url, stream=True)
+            response.raise_for_status()  # Raises an HTTPError for bad responses
+
+            # Use Django's MEDIA_ROOT setting
+            avatars_dir = os.path.join(settings.MEDIA_ROOT, 'avatars')
+            os.makedirs(avatars_dir, exist_ok=True)
+
+            avatar_path = os.path.join(avatars_dir, f"{user_data['login']}.jpg")
+
+            with open(avatar_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+
+            # Return the relative path from MEDIA_ROOT
+            return os.path.relpath(avatar_path, settings.MEDIA_ROOT)
+        except requests.RequestException as e:
+            print(f"Error downloading image: {e}")
+            return None
+
     def get_or_create_42_user(self, data):
         access_token = data.get("access_token")
         response = requests.get('https://api.intra.42.fr/v2/me', headers={"Authorization": f"Bearer {access_token}"})
@@ -37,12 +63,14 @@ class UserManager(BaseUserManager):
         if user.exists():
             return user.first()
         else:
+            avatar_path = self.save_user_avatar(user_data)
             return self.create_user(
                 email=user_data["email"],
                 username=user_data["login"] + "@42",
                 password=hash_password(user_data["login"]),
                 is_oauth=False,
-                verified_email=True
+                verified_email=True,
+                avatar=avatar_path
             )
 
 
