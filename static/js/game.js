@@ -9,6 +9,7 @@ export class Game {
         window.game = this;
         this.paddleSpeed = 1;
         this.keys = {};
+        this.gameEndEvent = new Event('gameEnd');
 
         this.ball = new Ball(document.getElementById('ball'));
         this.paddle1 = new Paddle(document.getElementById('player1_paddle'), 1);
@@ -99,6 +100,7 @@ export class Game {
     endGame(winnerMessage) {
         alert(winnerMessage); // Or you can display it in the UI
         this.destroy(); // Stop the game loop
+        document.getElementById('game-container').dispatchEvent(this.gameEndEvent);
         if (!this.tournament) {
             PageManager.getInstance().load('home');
         }

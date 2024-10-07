@@ -18,38 +18,35 @@ class Tournament {
             });
             this.gameWatcher();
         } else {
-            PageManager.getInstance().loadToContainer('ui/matches', document.getElementById('game-container'), false, {storeInHistory: false}).then(() => {
-                document.getElementById('match1').innerText = `${this.matches[0].player1} vs ${this.matches[0].player2} Winner: ${this.results[0]}`;
-                document.getElementById('match2').innerText = `${this.matches[1].player1} vs ${this.matches[1].player2} Winner: ${this.results[1]}`;
-                document.getElementById('match3').innerText = `${this.results[0]} vs ${this.results[1]} Winner: ${this.results[2]}`;
-            });
+            this.showMatchesPage();
         }
     }
 
     gameWatcher() {
-        const interval = setInterval(() => {
-            if (this.game.isGameOver()) {
-                clearInterval(interval);
-
-                const winner = this.game.getWinner();
-                if (winner === this.matches[this.currentMatchIndex].player1) {
-                    this.results.push(this.matches[this.currentMatchIndex].player1);
-                } else {
-                    this.results.push(this.matches[this.currentMatchIndex].player2);
-                }
-                if (this.currentMatchIndex === 1) {
-                    this.matches[2] = { player1: this.results[0], player2: this.results[1] };  // Final match setup
-                }
-
-                this.currentMatchIndex++;
-                if (this.currentMatchIndex < 3) {
-                    this.startGame();
-                } else {
-                    this.endTournament();
-                }
+        const handleGameEnd = (event) => {
+            const winner = this.game.getWinner();
+            if (winner === this.matches[this.currentMatchIndex].player1) {
+                this.results.push(this.matches[this.currentMatchIndex].player1);
+            } else {
+                this.results.push(this.matches[this.currentMatchIndex].player2);
             }
-        }, 250);
-    }
+            this.currentMatchIndex++;
+
+            if (this.currentMatchIndex === 2) {
+                this.matches[2] = { player1: this.results[0], player2: this.results[1] };  // Final match setup
+            }
+
+            if (this.currentMatchIndex < 3) {
+                this.startGame();
+            } else {
+                this.endTournament();
+            }
+
+            document.getElementById('game-container').removeEventListener('gameEnd', handleGameEnd);
+    };
+
+    document.getElementById('game-container').addEventListener('gameEnd', handleGameEnd);
+}
 
     showMatchesPage() {
         const match1 = this.results[0];
@@ -71,6 +68,9 @@ class Tournament {
             if (finalMatch !== undefined) {
                 document.getElementById('match3').innerHTML = `${match1} vs ${match2} <p>Winner: ${finalMatch}</p>`;
                 document.getElementById('match3').setAttribute('id', 'finished');
+            }
+            else if (match1 !== undefined && match2 !== undefined) {
+                document.getElementById('match3').innerText = `${match1} vs ${match2}`;
             }
             else
                 document.getElementById('match3').innerText = `Waiting for results`;

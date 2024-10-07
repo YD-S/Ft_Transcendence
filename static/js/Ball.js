@@ -1,6 +1,8 @@
 let vel_global = 0.025;
 let Vel_multiplier = 0.000001;
 
+let ballAudio = new Audio('/static/audio/ballHiting.mp3');
+
 export default class Ball {
     constructor(ballElem) {
         this.ballElem = ballElem
