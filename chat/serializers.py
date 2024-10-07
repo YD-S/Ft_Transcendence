@@ -5,8 +5,15 @@ from utils.modelserializer import ModelSerializer
 class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
-        fields = '__all__'
-        read_only_fields = ('sender', 'room', 'created_at', 'updated_at')
+        fields = [
+            'content',
+            'sender',
+            'sender_id',
+            'room',
+            'created_at',
+            'updated_at'
+        ]
+        read_only_fields = ('sender', 'sender_id', 'room', 'created_at', 'updated_at')
 
     def serialize_sender(self, obj):
         return obj.username

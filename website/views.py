@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 
@@ -96,7 +98,9 @@ def chat_view(request: HttpRequest):
 def room_view(request: HttpRequest):
     current_room = Room.objects.filter(members__in=[request.user], id=request.GET.get("room", 0))
     if current_room.exists():
+        d = RoomSerializer(request.user, instance=current_room.first()).data
+        pprint(d)
         return render(request, "room.html", {
-            "current_room": RoomSerializer(request.user, instance=current_room.first()).data
+            "current_room": d
         })
     return render(request, "room.html")
