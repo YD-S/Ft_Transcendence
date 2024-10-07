@@ -14,6 +14,7 @@ class Tournament {
         if (currentMatch) {
             PageManager.getInstance().loadToContainer('pong/game', document.getElementById('game-container'), false, {storeInHistory: false}).then(() => {
                 this.game = window.game;
+                this.game.tournament = true;
             });
             this.gameWatcher();
         } else {

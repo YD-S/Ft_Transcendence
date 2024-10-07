@@ -5,6 +5,7 @@ import {PageManager} from "./page-manager.js";
 const  WINNING_SCORE = 1;
 export class Game {
     constructor() {
+        this.tournament = false;
         window.game = this;
         this.paddleSpeed = 1;
         this.keys = {};
@@ -98,7 +99,9 @@ export class Game {
     endGame(winnerMessage) {
         alert(winnerMessage); // Or you can display it in the UI
         this.destroy(); // Stop the game loop
-        PageManager.getInstance().load('home');
+        if (!this.tournament) {
+            PageManager.getInstance().load('home');
+        }
     }
     pointScored() {
         const rect = this.ball.rect();
