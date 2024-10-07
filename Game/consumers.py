@@ -106,6 +106,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game_id = self.scope["url_route"]["kwargs"]["game_id"]
             await self.create_group(self.game_id)
             self.player_names.append(self.scope['user'].username)
+            cache.set(f'{self.game_id}:player1' if GameConsumer.players == 0 else f'{self.game_id}:player2', self.scope['user'].id)
             GameConsumer.players += 1
             if self.game_id not in GameConsumer.sockets:
                 GameConsumer.sockets[self.game_id] = [self]
