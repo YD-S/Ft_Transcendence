@@ -103,7 +103,6 @@ PageManager.getInstance().setOnPageLoad('pong/tournament', () => {
             { player1: game.players[2], player2: game.players[3] },
             null
         ];
-        console.log(game.players);
         game.startGame();
         e.preventDefault();
     });
