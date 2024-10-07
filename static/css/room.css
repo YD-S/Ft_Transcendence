@@ -1,28 +1,123 @@
 
-#room-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+/*#room-container {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+
+
+/*#room-container #chat-log {*/
+/*    width: 100%;*/
+/*    overflow-y: auto;*/
+/*    padding: 5px;*/
+/*    flex: 1;*/
+/*    border: 1px solid #e9ecef;*/
+/*}*/
+
+/*#room-container #chat-input-box {*/
+/*    width: 100%;*/
+/*    display: flex;*/
+/*    margin-top: 5px;*/
+/*    flex-direction: row;*/
+/*}*/
+
+/*#room-container #chat-input {*/
+/*    width: 100%;*/
+/*    margin-right: 5px;*/
+/*}*/
+
+
+
+/* NEW SHIT */
+
+.room-container {
+  width: 100%;
+  height: 100%;
+  background-color: #343541;
+  border-radius: 8px;
+  display: flex;
+  padding: 50px;
+  flex-direction: column;
 }
 
-
-#room-container #chat-log {
-    width: 100%;
-    overflow-y: auto;
-    padding: 5px;
-    flex: 1;
-    border: 1px solid #e9ecef;
+.messages-area {
+  background-color: green;
+  width: 100%;
 }
 
-#room-container #chat-input-box {
-    width: 100%;
-    display: flex;
-    margin-top: 5px;
-    flex-direction: row;
+.sender-area {
+  background-color: #343541;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  border-radius: 8px;
 }
 
-#room-container #chat-input {
-    width: 100%;
-    margin-right: 5px;
+.message {
+  width: 100%;
+  align-content: center;
+  padding-left: 10px;
+  height: 40px;
+  color: #fdd6d6;
+}
+
+.message.one {
+  background-color: #2E2F3A;
+}
+
+.message.two {
+  background-color: #343541;
+}
+
+.send-img {
+  width: 30px;
+}
+
+.send-input {
+  outline: none;
+  display: flex;
+  border: none;
+  background: none;
+  height: 40px;
+  width: 230px;
+  border-radius: 7px;
+  background: none;
+  color: white;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-left: 5px;
+}
+
+.send-input::placeholder {
+  color: #828E9E;
+}
+
+.input-place {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+  margin-left: 10px;
+  align-items: center;
+  background-color: #40414F;
+  border-radius: 7px;
+  height: 40px;
+  width: 280px;
+  gap: 5px;
+  border: 1px solid #2E2F3A;
+}
+
+.send {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.send-icon {
+  width: 17px;
 }

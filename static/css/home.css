@@ -1,51 +1,118 @@
-/* From Uiverse.io by elijahgummer */
-.golden-button {
-  touch-action: manipulation;
-  display: inline-block;
-  outline: none;
-  font-family: inherit;
-  font-size: 1em;
-  box-sizing: border-box;
-  border: none;
-  border-radius: 0.3em;
-  height: 2.75em;
-  line-height: 2.5em;
-  text-transform: uppercase;
-  padding: 0 1em;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(110, 80, 20, 0.4),
-    inset 0 -2px 5px 1px rgba(139, 66, 8, 1),
-    inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
-  background-image: linear-gradient(
-    160deg,
-    #a54e07,
-    #b47e11,
-    #fef1a2,
-    #bc881b,
-    #a54e07
-  );
-  border: 1px solid #a55d07;
-  color: rgb(120, 50, 5);
-  text-shadow: 0 2px 2px rgba(250, 227, 133, 1);
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  background-size: 100% 100%;
-  background-position: center;
+
+
+#root {
+    --glow-color-red: rgb(255, 147, 115);
+    --glow-spread-color-red: rgb(255, 44, 44);
+    --btn-color-red: rgb(119, 0, 0);
+    --glow-color-green: rgb(115, 255, 134);
+    --glow-spread-color-green: rgb(65, 255, 44);
+    --btn-color-green: rgb(0, 119, 2);
+    --glow-color-blue: rgb(115, 148, 255);
+    --glow-spread-color-blue: rgb(44, 142, 255);
+    --btn-color-blue: rgb(0, 38, 119);
 }
 
-.golden-button:focus,
-.golden-button:hover {
-  background-size: 150% 150%;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23),
-    inset 0 -2px 5px 1px #b17d10, inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
-  border: 1px solid rgba(165, 93, 7, 0.6);
-  color: rgba(120, 50, 5, 0.8);
+
+.red-button {
+    margin-bottom: 50px;
+    margin-top: 50px;
+    width: 20%;
+    border: .25em solid var(--glow-color-red);
+    padding: 1em 3em;
+    color: var(--glow-color-red);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--btn-color-red);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em var(--glow-color-red),
+        0 0 4em 1em var(--glow-spread-color-red),
+        inset 0 0 .75em .25em var(--glow-color-red);
+    text-shadow: 0 0 .5em var(--glow-color-red);
+    position: relative;
+    transition: all 0.3s;
 }
 
-.golden-button:active {
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(110, 80, 20, 0.4),
-    inset 0 -2px 5px 1px #b17d10, inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
+.red-button:hover {
+    color: var(--btn-color-red);
+    background-color: var(--glow-color-red);
+    box-shadow: 0 0 1em .25em var(--glow-color-red),
+        0 0 4em 2em var(--glow-spread-color-red),
+        inset 0 0 .75em .25em var(--glow-color-red);
 }
 
-.golden-button:not(:last-child) {
-  margin-bottom: 20px; /* Adjust this value to increase or decrease the vertical separation */
+.red-button:active {
+    box-shadow: 0 0 0.6em .25em var(--glow-color-red),
+        0 0 2.5em 2em var(--glow-spread-color-red),
+        inset 0 0 .5em .25em var(--glow-color-red);
+}
+
+
+.green-button {
+    margin-bottom: 50px;
+    margin-top: 50px;
+    width: 20%;
+    border: .25em solid var(--glow-color-green);
+    padding: 1em 3em;
+    color: var(--glow-color-green);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--btn-color-green);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em var(--glow-color-green),
+        0 0 4em 1em var(--glow-spread-color-green),
+        inset 0 0 .75em .25em var(--glow-color-green);
+    text-shadow: 0 0 .5em var(--glow-color-green);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.green-button:hover {
+    color: var(--btn-color-green);
+    background-color: var(--glow-color-green);
+    box-shadow: 0 0 1em .25em var(--glow-color-green),
+        0 0 4em 2em var(--glow-spread-color-green),
+        inset 0 0 .75em .25em var(--glow-color-green);
+}
+
+.green-button:active {
+    box-shadow: 0 0 0.6em .25em var(--glow-color-green),
+        0 0 2.5em 2em var(--glow-spread-color-green),
+        inset 0 0 .5em .25em var(--glow-color-green);
+}
+
+
+.blue-button {
+    margin-bottom: 50px;
+    margin-top: 50px;
+    width: 20%;
+    border: .25em solid var(--glow-color-blue);
+    padding: 1em 3em;
+    color: var(--glow-color-blue);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--btn-color-blue);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em var(--glow-color-blue),
+        0 0 4em 1em var(--glow-spread-color-blue),
+        inset 0 0 .75em .25em var(--glow-color-blue);
+    text-shadow: 0 0 .5em var(--glow-color-blue);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.blue-button:hover {
+    color: var(--btn-color-blue);
+    background-color: var(--glow-color-blue);
+    box-shadow: 0 0 1em .25em var(--glow-color-blue),
+        0 0 4em 2em var(--glow-spread-color-blue),
+        inset 0 0 .75em .25em var(--glow-color-blue);
+}
+
+.blue-button:active {
+    box-shadow: 0 0 0.6em .25em var(--glow-color-blue),
+        0 0 2.5em 2em var(--glow-spread-color-blue),
+        inset 0 0 .5em .25em var(--glow-color-blue);
 }
