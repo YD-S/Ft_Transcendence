@@ -3,13 +3,13 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 
-<button role="button" class="red-neon red-neon-hover home-button" onclick="window.global.pageManager.load('pong/game')">
+<button role="button" class="btn btn1" onclick="window.global.pageManager.load('pong/game')">
   {% translate "Local Game" %}
 </button>
-<button role="button" class="green-neon green-neon-hover home-button" onclick="window.global.pageManager.load('pong/3dGame')">
+<button role="button" class="btn btn2" onclick="window.global.pageManager.load('pong/3dGame')">
   {% translate "Remote 3D Game" %}
 </button>
 
-<button role="button" class="blue-neon blue-neon-hover home-button" onclick="window.global.pageManager.load('pong/tournament')">
+<button role="button" class="btn btn1" onclick="window.global.pageManager.load('pong/tournament')">
   {% translate "Tournament" %}
 </button>
