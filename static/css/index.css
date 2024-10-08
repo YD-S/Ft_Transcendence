@@ -252,7 +252,7 @@ li + li {
     background-color: var(--btn-color-red);
     border-radius: 1em;
     outline: none;
-    box-shadow: 0 0 1em .25em var(--glow-color-red),
+    box-shadow: 0 0 1em .15em var(--glow-color-red),
         0 0 4em 1em var(--glow-spread-color-red),
         inset 0 0 .75em .25em var(--glow-color-red);
     text-shadow: 0 0 .5em var(--glow-color-red);
@@ -263,15 +263,15 @@ li + li {
 .red-neon-hover:hover {
     color: var(--btn-color-red);
     background-color: var(--glow-color-red);
-    box-shadow: 0 0 1em .25em var(--glow-color-red),
+    box-shadow: 0 0 1em .15em var(--glow-color-red),
         0 0 4em 2em var(--glow-spread-color-red),
         inset 0 0 .75em .25em var(--glow-color-red);
 }
 
 .red-neon:active {
-    box-shadow: 0 0 0.6em .25em var(--glow-color-red),
+    box-shadow: 0 0 0.6em .15em var(--glow-color-red),
         0 0 2.5em 2em var(--glow-spread-color-red),
-        inset 0 0 .5em .25em var(--glow-color-red);
+        inset 0 0 .5em .15em var(--glow-color-red);
 }
 
 
@@ -284,9 +284,9 @@ li + li {
     background-color: var(--btn-color-green);
     border-radius: 1em;
     outline: none;
-    box-shadow: 0 0 1em .25em var(--glow-color-green),
+    box-shadow: 0 0 1em .15em var(--glow-color-green),
         0 0 4em 1em var(--glow-spread-color-green),
-        inset 0 0 .75em .25em var(--glow-color-green);
+        inset 0 0 .75em .15em var(--glow-color-green);
     text-shadow: 0 0 .5em var(--glow-color-green);
     position: relative;
     transition: all 0.3s;
@@ -295,15 +295,15 @@ li + li {
 .green-neon-hover:hover {
     color: var(--btn-color-green);
     background-color: var(--glow-color-green);
-    box-shadow: 0 0 1em .25em var(--glow-color-green),
+    box-shadow: 0 0 1em .15em var(--glow-color-green),
         0 0 4em 2em var(--glow-spread-color-green),
-        inset 0 0 .75em .25em var(--glow-color-green);
+        inset 0 0 .75em .15em var(--glow-color-green);
 }
 
 .green-neon:active {
-    box-shadow: 0 0 0.6em .25em var(--glow-color-green),
+    box-shadow: 0 0 0.6em .15em var(--glow-color-green),
         0 0 2.5em 2em var(--glow-spread-color-green),
-        inset 0 0 .5em .25em var(--glow-color-green);
+        inset 0 0 .5em .15em var(--glow-color-green);
 }
 
 
@@ -316,9 +316,9 @@ li + li {
     background-color: var(--btn-color-blue);
     border-radius: 1em;
     outline: none;
-    box-shadow: 0 0 1em .25em var(--glow-color-blue),
+    box-shadow: 0 0 1em .15em var(--glow-color-blue),
         0 0 4em 1em var(--glow-spread-color-blue),
-        inset 0 0 .75em .25em var(--glow-color-blue);
+        inset 0 0 .75em .15em var(--glow-color-blue);
     text-shadow: 0 0 .5em var(--glow-color-blue);
     position: relative;
     transition: all 0.3s;
@@ -327,13 +327,13 @@ li + li {
 .blue-neon-hover:hover {
     color: var(--btn-color-blue);
     background-color: var(--glow-color-blue);
-    box-shadow: 0 0 1em .25em var(--glow-color-blue),
+    box-shadow: 0 0 1em .15em var(--glow-color-blue),
         0 0 4em 2em var(--glow-spread-color-blue),
-        inset 0 0 .75em .25em var(--glow-color-blue);
+        inset 0 0 .75em .15em var(--glow-color-blue);
 }
 
 .blue-neon:active {
-    box-shadow: 0 0 0.6em .25em var(--glow-color-blue),
+    box-shadow: 0 0 0.6em .15em var(--glow-color-blue),
         0 0 2.5em 2em var(--glow-spread-color-blue),
-        inset 0 0 .5em .25em var(--glow-color-blue);
+        inset 0 0 .5em .15em var(--glow-color-blue);
 }

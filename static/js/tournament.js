@@ -7,6 +7,7 @@ class Tournament {
         this.matches = [];
         this.currentMatchIndex = 0;
         this.results = [];
+        this.tournamentSocket = new WebSocket(`wss://${window.location.host}/ws/tournament/`);
     }
 
     startGame() {
@@ -78,9 +79,16 @@ class Tournament {
     }
 
     endTournament() {
-        const finalWinner = this.results[2];
         this.showMatchesPage();
-        console.log(`Tournament winner: ${finalWinner}`);
+        this.tournamentSocket.send(JSON.stringify({
+            'player1' : this.players[0],
+            'player2' : this.players[1],
+            'player3' : this.players[2],
+            'player4' : this.players[3],
+            'semi_winner_1' : this.results[0],
+            'semi_winner_2' : this.results[1],
+            'final_winner' : this.results[2]
+        }));
     }
 
     destroy() {

@@ -1,11 +1,15 @@
+from tkinter.font import names
+
 from django.urls import path, re_path, include
 from Game.consumers import GameConsumer
 from Matchmaking.consumers import MatchmakingConsumer
+from Tournament.consumers import TournamentConsumer
 from chat.consumers import ChatRoomConsumer
 
 websocket_urlpatterns = [
-    re_path(r'ws/chat/(?P<room_id>\w+)/$', ChatRoomConsumer.as_asgi(), name='chat'),
+    path('ws/tournament/', TournamentConsumer.as_asgi(), name='tournament'),
     path('ws/matchmaking/', MatchmakingConsumer.as_asgi(), name='matchmaking'),
+    re_path(r'ws/chat/(?P<room_id>\w+)/$', ChatRoomConsumer.as_asgi(), name='chat'),
     re_path(r'ws/game/(?P<game_id>\w+)/$', GameConsumer.as_asgi(), name='game'),
 ]
 
