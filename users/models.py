@@ -111,3 +111,14 @@ class Friendship(BaseModel):
     def __str__(self):
         return f"{self.user} - {self.friend}"
 
+
+class Tournament(BaseModel):
+    player1 = models.CharField()
+    player2 = models.CharField()
+    player3 = models.CharField()
+    player4 = models.CharField()
+    semi_winner_1 = models.CharField()
+    semi_winner_2 = models.CharField()
+    final_winner = models.CharField()
+    date = models.DateTimeField(auto_now_add=True)
+

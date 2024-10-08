@@ -6,6 +6,18 @@
 	--font-neon: "Tilt Neon", sans-serif;
 }
 
+:root {
+    --glow-color-red: rgb(255, 147, 115);
+    --glow-spread-color-red: rgb(255, 44, 44);
+    --btn-color-red: rgb(119, 0, 0);
+    --glow-color-green: rgb(115, 255, 134);
+    --glow-spread-color-green: rgb(65, 255, 44);
+    --btn-color-green: rgb(0, 119, 2);
+    --glow-color-blue: rgb(115, 148, 255);
+    --glow-spread-color-blue: rgb(44, 142, 255);
+    --btn-color-blue: rgb(0, 38, 119);
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -49,20 +61,19 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	padding: 0 !important;
 }
+
+#header:hover {
+}
+
 ul {
 	list-style: none;
 	margin: 0;
-	padding: 0;
-	margin-left: 0;
-	margin-right: 0;
-	background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
-	box-shadow: inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b, 0px 0px 100px rgba(255, 212, 59, 0),
-		0px 0px 100px rgba(255, 102, 0, 0);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	padding: 0.75rem;
+	padding: 0.75rem !important;
 	border-radius: 10px;
 }
 
@@ -229,3 +240,100 @@ li + li {
 	 transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
 	}
  }
+
+
+
+.red-neon {
+    border: .25em solid var(--glow-color-red);
+    padding: 1em 3em;
+    color: var(--glow-color-red);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--btn-color-red);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em var(--glow-color-red),
+        0 0 4em 1em var(--glow-spread-color-red),
+        inset 0 0 .75em .25em var(--glow-color-red);
+    text-shadow: 0 0 .5em var(--glow-color-red);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.red-neon-hover:hover {
+    color: var(--btn-color-red);
+    background-color: var(--glow-color-red);
+    box-shadow: 0 0 1em .25em var(--glow-color-red),
+        0 0 4em 2em var(--glow-spread-color-red),
+        inset 0 0 .75em .25em var(--glow-color-red);
+}
+
+.red-neon:active {
+    box-shadow: 0 0 0.6em .25em var(--glow-color-red),
+        0 0 2.5em 2em var(--glow-spread-color-red),
+        inset 0 0 .5em .25em var(--glow-color-red);
+}
+
+
+.green-neon {
+    border: .25em solid var(--glow-color-green);
+    padding: 1em 3em;
+    color: var(--glow-color-green);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--btn-color-green);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em var(--glow-color-green),
+        0 0 4em 1em var(--glow-spread-color-green),
+        inset 0 0 .75em .25em var(--glow-color-green);
+    text-shadow: 0 0 .5em var(--glow-color-green);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.green-neon-hover:hover {
+    color: var(--btn-color-green);
+    background-color: var(--glow-color-green);
+    box-shadow: 0 0 1em .25em var(--glow-color-green),
+        0 0 4em 2em var(--glow-spread-color-green),
+        inset 0 0 .75em .25em var(--glow-color-green);
+}
+
+.green-neon:active {
+    box-shadow: 0 0 0.6em .25em var(--glow-color-green),
+        0 0 2.5em 2em var(--glow-spread-color-green),
+        inset 0 0 .5em .25em var(--glow-color-green);
+}
+
+
+.blue-neon {
+    border: .25em solid var(--glow-color-blue);
+    padding: 1em 3em;
+    color: var(--glow-color-blue);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--btn-color-blue);
+    border-radius: 1em;
+    outline: none;
+    box-shadow: 0 0 1em .25em var(--glow-color-blue),
+        0 0 4em 1em var(--glow-spread-color-blue),
+        inset 0 0 .75em .25em var(--glow-color-blue);
+    text-shadow: 0 0 .5em var(--glow-color-blue);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.blue-neon-hover:hover {
+    color: var(--btn-color-blue);
+    background-color: var(--glow-color-blue);
+    box-shadow: 0 0 1em .25em var(--glow-color-blue),
+        0 0 4em 2em var(--glow-spread-color-blue),
+        inset 0 0 .75em .25em var(--glow-color-blue);
+}
+
+.blue-neon:active {
+    box-shadow: 0 0 0.6em .25em var(--glow-color-blue),
+        0 0 2.5em 2em var(--glow-spread-color-blue),
+        inset 0 0 .5em .25em var(--glow-color-blue);
+}

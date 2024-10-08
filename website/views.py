@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 
@@ -6,6 +8,7 @@ from chat.models import Room
 from chat.serializers import RoomSerializer
 from common.request import HttpRequest
 from users.forms import UserForm
+from users.models import User
 from utils.exception import NotFoundError, HttpError
 
 UNPROTECTED_PAGES = [
@@ -50,9 +53,16 @@ def main_view(request: HttpRequest, page: str):
 
 @require_token(login_redirect=False)
 def protected_page_view(request: HttpRequest, file: str):
+    print(file)
     match file:
         case "me.html":
             return render(request, file, {"user": request.user})
+        case "user.html":
+            print(request.GET, request.POST)
+            try:
+                return render(request, "me.html", {"user": User.objects.get(id=int(request.GET.get('id', 0)))})
+            except User.DoesNotExist:
+                return render(request, "404.html")
         case "chat.html":
             return chat_view(request)
         case "room.html":
@@ -88,7 +98,9 @@ def chat_view(request: HttpRequest):
 def room_view(request: HttpRequest):
     current_room = Room.objects.filter(members__in=[request.user], id=request.GET.get("room", 0))
     if current_room.exists():
+        d = RoomSerializer(request.user, instance=current_room.first()).data
+        pprint(d)
         return render(request, "room.html", {
-            "current_room": RoomSerializer(request.user, instance=current_room.first()).data
+            "current_room": d
         })
     return render(request, "room.html")

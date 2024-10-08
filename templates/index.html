@@ -20,22 +20,22 @@
 </head>
 
 <body>
-  <div id="header">
+  <div id="header" class="blue-neon">
     <ul>
       <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('home')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('home', false)">
           <i class='bx bx-home-alt'></i>
           <span>NEON PONG</span>
         </button>
       </li>
       <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('me')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('me', false)">
           <i class='bx bx-user'></i>
           <span>{% translate "Profile" %}</span>
         </button>
       </li>
       <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('chat')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('chat', false)">
           <i class='bx bxs-chat'></i>
           <span>{% translate "Chat" %}</span>
         </button>
@@ -48,7 +48,7 @@
       </li>
       <li></li>
       <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('settings')">
+        <button class="buttonNav" onclick="window.global.pageManager.load('settings', false)">
           <i class='bx bx-cog'></i>
           <span>{% translate "Settings" %}</span>
         </button>

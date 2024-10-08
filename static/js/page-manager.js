@@ -42,9 +42,23 @@ export class PageManager {
         this.loadToContainer(page, this.contentRoot, preserve_query, options)
     }
 
+    combineQueries(qs1, qs2) {
+        qs1 = qs1.startsWith('?') ? qs1.slice(1) : qs1;
+        qs2 = qs2.startsWith('?') ? qs2.slice(1) : qs2;
+
+        const params1 = new URLSearchParams(qs1);
+        const params2 = new URLSearchParams(qs2);
+
+        for (const [key, value] of params2) {
+            params1.set(key, value);
+        }
+
+        return `?${params1.toString()}`;
+    }
+
     loadToContainer(page, container, preserve_query = true, options = {}) {
         this.setLoading(container);
-        return fetch(`/page/${page}.html` + (options.query || ""))
+        return fetch(`/page/${page}.html` + this.combineQueries(window.location.search, (options.query || "")))
             .then(response => {
                 if (response.status !== 200) {
                     if (response.status === 401) {

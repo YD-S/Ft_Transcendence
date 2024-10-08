@@ -1,6 +1,6 @@
 import datetime
 
-from users.models import User
+from users.models import User, Tournament
 from utils.modelserializer import ModelSerializer
 
 
@@ -15,3 +15,9 @@ class UserSerializer(ModelSerializer):
             "is_active": True,
             "date_joined": datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S'),
         }
+
+
+class TournamentSerializer(ModelSerializer):
+    class Meta:
+        model = Tournament
+        fields = '__all__'

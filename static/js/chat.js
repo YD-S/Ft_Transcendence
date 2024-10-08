@@ -27,7 +27,8 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
     ws.onmessage = function (event) {
         const data = JSON.parse(event.data);
         const message = document.createElement("div");
-        message.className = "message";
+        const messages = document.getElementsByClassName("message").length
+        message.className = `message ${messages % 2 ? 'one': 'two'}`;
         message.innerHTML = createMessageHTML(data.message);
         document.getElementById("chat-log").appendChild(message);
         document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
@@ -36,7 +37,6 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
     function sendMessage(event) {
         const message = document.getElementById("chat-input").value;
         if (!message.trim()) {
-            alert("Message cannot be empty");
             return;
         }
         ws.send(JSON.stringify({
@@ -175,12 +175,12 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 ws.close();
             }
             PageManager.getInstance().loadToContainer(
-                "room",
-                document.getElementById('current-room'),
-                false,
-                {query: `?room=${roomButton.getAttribute("data-room-id")}`, storeInHistory: false}
-            )
-        })
+              "room",
+              document.getElementById('current-room'),
+              false,
+              {query: `?room=${roomButton.getAttribute("data-room-id")}`, storeInHistory: false}
+            ).then(() => {})
+         })
     }
 
 
