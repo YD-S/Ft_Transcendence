@@ -1,93 +1,101 @@
-import {Game} from './game.js';
-import {PageManager} from "./page-manager.js";
+import { Game } from './game.js';
+import { PageManager } from "./page-manager.js";
 
 class Tournament {
     constructor() {
-        this.players = [];
-        this.matches = [];
-        this.currentMatchIndex = 0;
         this.results = [];
         this.tournamentSocket = new WebSocket(`wss://${window.location.host}/ws/tournament/`);
     }
 
-    startGame() {
-        const currentMatch = this.matches[this.currentMatchIndex];
-        if (currentMatch) {
-            PageManager.getInstance().loadToContainer('pong/game', document.getElementById('game-container'), false, {storeInHistory: false}).then(() => {
-                this.game = window.game;
-                this.game.tournament = true;
-            });
-            this.gameWatcher();
-        } else {
-            this.showMatchesPage();
+    initializeTournament() {
+        this.showMatchesPage();
+    }
+
+    showMatchesPage() {
+        PageManager.getInstance().loadToContainer('ui/matches', document.getElementById('game-container'), false, { storeInHistory: false }).then(() => {
+            this.updateMatchDisplay();
+            this.addDeployMatchListeners();
+        });
+    }
+
+    updateMatchDisplay() {
+        for (let i = 0; i < 3; i++) {
+            const matchElement = document.getElementById(`match${i + 1}`);
+            const match = this.matches[i];
+
+            if (match.played) {
+                matchElement.innerHTML = `<button class="button">${match.player1} vs ${match.player2} <p>Winner: ${this.results[i]}</p> </button>`;
+                matchElement.setAttribute('id', 'finished');
+            } else if (match.player1 && match.player2) {
+                matchElement.innerHTML = `<button class="deploy-match button" data-match="${i}">${match.player1} vs ${match.player2}</button>`;
+            } else {
+                matchElement.innerHTML = `<button class="button waiting">Waiting for results</button>`;
+            }
         }
     }
 
-    gameWatcher() {
-        const handleGameEnd = (event) => {
-            const winner = this.game.getWinner();
-            if (winner === this.matches[this.currentMatchIndex].player1) {
-                this.results.push(this.matches[this.currentMatchIndex].player1);
-            } else {
-                this.results.push(this.matches[this.currentMatchIndex].player2);
-            }
-            this.currentMatchIndex++;
-
-            if (this.currentMatchIndex === 2) {
-                this.matches[2] = { player1: this.results[0], player2: this.results[1] };  // Final match setup
-            }
-
-            if (this.currentMatchIndex < 3) {
-                this.startGame();
-            } else {
-                this.endTournament();
-            }
-
-            document.getElementById('game-container').removeEventListener('gameEnd', handleGameEnd);
-    };
-
-    document.getElementById('game-container').addEventListener('gameEnd', handleGameEnd);
-}
-
-    showMatchesPage() {
-        const match1 = this.results[0];
-        const match2 = this.results[1];
-        const finalMatch = this.results[2];
-        PageManager.getInstance().loadToContainer('ui/matches', document.getElementById('game-container'), false, {storeInHistory: false}).then(() => {
-            if (match1 !== undefined) {
-                document.getElementById('match1').innerHTML = `${this.matches[0].player1} vs ${this.matches[0].player2} <p>Winner: ${match1}</p>`;
-                document.getElementById('match1').setAttribute('id', 'finished');
-            }
-            else
-                document.getElementById('match1').innerText = `${this.matches[0].player1} vs ${this.matches[0].player2}`;
-            if (match2 !== undefined) {
-                document.getElementById('match2').innerHTML = `${this.matches[1].player1} vs ${this.matches[1].player2} <p>Winner: ${match2}</p>`;
-                document.getElementById('match2').setAttribute('id', 'finished');
-            }
-            else
-                document.getElementById('match2').innerText = `${this.matches[1].player1} vs ${this.matches[1].player2}`;
-            if (finalMatch !== undefined) {
-                document.getElementById('match3').innerHTML = `${match1} vs ${match2} <p>Winner: ${finalMatch}</p>`;
-                document.getElementById('match3').setAttribute('id', 'finished');
-            }
-            else if (match1 !== undefined && match2 !== undefined) {
-                document.getElementById('match3').innerText = `${match1} vs ${match2}`;
-            }
-            else
-                document.getElementById('match3').innerText = `Waiting for results`;
+    addDeployMatchListeners() {
+        const deployLinks = document.querySelectorAll('.deploy-match');
+        deployLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const matchIndex = parseInt(e.target.getAttribute('data-match'));
+                this.startGame(matchIndex);
+            });
         });
+    }
+
+    startGame(matchIndex) {
+        const currentMatch = this.matches[matchIndex];
+        if (currentMatch && !currentMatch.played) {
+            PageManager.getInstance().loadToContainer('pong/game', document.getElementById('game-container'), false, { storeInHistory: false }).then(() => {
+                this.game = window.game;
+                this.game.tournament = true;
+                this.gameWatcher(matchIndex);
+            });
+        }
+    }
+
+    gameWatcher(matchIndex) {
+        const handleGameEnd = (event) => {
+            let winner = event.detail.winner;
+            if (winner === 'Player 1') {
+                winner = this.matches[matchIndex].player1;
+            }
+            if (winner === 'Player 2') {
+                winner = this.matches[matchIndex].player2;
+            }
+            this.results[matchIndex] = winner;
+            this.matches[matchIndex].played = true;
+
+            if (matchIndex === 0 || matchIndex === 1) {
+                if (this.matches[0].played && this.matches[1].played) {
+                    this.matches[2] = { player1: this.results[0], player2: this.results[1], played: false };
+                }
+            }
+
+            window.removeEventListener('gameEnd', handleGameEnd);
+
+            if (this.matches[2].played) {
+                this.endTournament();
+            } else {
+                this.showMatchesPage();
+            }
+        };
+
+        window.addEventListener('gameEnd', handleGameEnd);
     }
 
     endTournament() {
         this.showMatchesPage();
         this.tournamentSocket.send(JSON.stringify({
-            'player1' : this.players[0],
-            'player2' : this.players[1],
-            'player3' : this.players[2],
-            'player4' : this.players[3],
-            'semi_winner_1' : this.results[0],
-            'semi_winner_2' : this.results[1],
-            'final_winner' : this.results[2]
+            'player1': this.matches[0].player1,
+            'player2': this.matches[0].player2,
+            'player3': this.matches[1].player1,
+            'player4': this.matches[1].player2,
+            'semi_winner_1': this.results[0],
+            'semi_winner_2': this.results[1],
+            'final_winner': this.results[2]
         }));
     }
 
@@ -98,28 +106,26 @@ class Tournament {
     }
 }
 
-let game = null;
+let tournament = null;
 PageManager.getInstance().setOnPageLoad('pong/tournament', () => {
-    game = new Tournament();
     document.getElementById('button').addEventListener('click', (e) => {
         const player1 = document.getElementById('player1').value;
         const player2 = document.getElementById('player2').value;
         const player3 = document.getElementById('player3').value;
         const player4 = document.getElementById('player4').value;
-        game.players = [player1, player2, player3, player4];
-        game.matches =[
-            { player1: game.players[0], player2: game.players[1] },
-            { player1: game.players[2], player2: game.players[3] },
-            null
+        tournament = new Tournament();
+        tournament.matches = [
+            {player1: player1, player2: player2, played: false},
+            {player1: player3, player2: player4, played: false},
+            {player1: null, player2: null, played: false}
         ];
-        game.startGame();
-        e.preventDefault();
+        tournament.initializeTournament();
     });
 });
 
 PageManager.getInstance().setOnPageUnload('pong/tournament', () => {
-    if (game) {
-        game.destroy();
-        game = null;
+    if (tournament) {
+        tournament.destroy();
+        tournament = null;
     }
 });

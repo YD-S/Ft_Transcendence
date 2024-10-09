@@ -96,12 +96,11 @@
     text-transform: capitalize;
     font-size: 15px;
 }
-
 .button {
   position: relative;
   padding: 10px 20px;
   border-radius: 7px;
-	border: 1px solid #fff;
+  border: 1px solid #fff;
   font-size: 14px;
   text-transform: uppercase;
   font-weight: 600;
@@ -113,19 +112,19 @@
   -webkit-transition: all 0.2s ease-in;
   -moz-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
-	width: 100%;
+  width: 100%;
 }
 
-.button:hover {
-	border: 1px solid #ff0058;
-	background-color: #ff0058;
+.button:not(.waiting):hover {
+  border: 1px solid #ff0058;
+  background-color: #ff0058;
   box-shadow: 0 0 30px 5px #ff0058;
   -webkit-transition: all 0.2s ease-out;
   -moz-transition: all 0.2s ease-out;
   transition: all 0.2s ease-out;
 }
 
-.button:hover::before {
+.button:not(.waiting):hover::before {
   -webkit-animation: sh02 0.5s 0s linear;
   -moz-animation: sh02 0.5s 0s linear;
   animation: sh02 0.5s 0s linear;
@@ -149,9 +148,14 @@
   transform: skewX(-20deg);
 }
 
-.button:active {
+.button:not(.waiting):active {
   box-shadow: 0 0 0 0 transparent;
   -webkit-transition: box-shadow 0.2s ease-in;
   -moz-transition: box-shadow 0.2s ease-in;
   transition: box-shadow 0.2s ease-in;
+}
+
+.waiting {
+  pointer-events: none !important;
+  opacity: 0.7;
 }

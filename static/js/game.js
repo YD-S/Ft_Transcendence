@@ -9,8 +9,12 @@ export class Game {
         window.game = this;
         this.paddleSpeed = 1;
         this.keys = {};
-        this.gameEndEvent = new Event('gameEnd');
-
+        this.gameEndEvent = new CustomEvent('gameEnd', {
+            detail: { winner: null },
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+        });
         this.ball = new Ball(document.getElementById('ball'));
         this.paddle1 = new Paddle(document.getElementById('player1_paddle'), 1);
         this.paddle2 = new Paddle(document.getElementById('player2_paddle'), 2);
@@ -27,7 +31,8 @@ export class Game {
         document.addEventListener('keyup', this.keyup.bind(this));
 
         this.lastTimestamp = Date.now();
-        window.requestAnimationFrame(this.update.bind(this));
+        if (!this.destroyed)
+            window.requestAnimationFrame(this.update.bind(this));
     }
 
     keydown(event) {
@@ -103,7 +108,9 @@ export class Game {
         if (!this.tournament) {
             PageManager.getInstance().load('home');
         }else{
-            document.getElementById('game-container').dispatchEvent(this.gameEndEvent);
+           this.gameEndEvent.detail.winner = this.getWinner();
+            window.dispatchEvent(this.gameEndEvent);
+
         }
     }
     pointScored() {

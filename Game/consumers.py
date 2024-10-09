@@ -91,7 +91,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     last_collision = None
     ball_pos = Vector(0, 0)
     ball_velocity = Vector.from_angle(random.random() * 2 * math.pi)
-    ball_speed = 0.1
+    ball_speed = 0.3
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
