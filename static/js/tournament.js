@@ -86,6 +86,27 @@ class Tournament {
         window.addEventListener('gameEnd', handleGameEnd);
     }
 
+    validateForm() {
+        const player1 = document.getElementById('player1').value.trim();
+        const player2 = document.getElementById('player2').value.trim();
+        const player3 = document.getElementById('player3').value.trim();
+        const player4 = document.getElementById('player4').value.trim();
+
+        if (!player1 || !player2 || !player3 || !player4) {
+            alert("All player names are required. Please fill in all fields.");
+            return false;
+        }
+
+        const playerNames = [player1, player2, player3, player4];
+        const uniqueNames = new Set(playerNames);
+        if (uniqueNames.size !== playerNames.length) {
+            alert("Each player must have a unique name. Please ensure all names are different.");
+            return false;
+        }
+
+        return true;
+    }
+
     endTournament() {
         this.showMatchesPage();
         this.tournamentSocket.send(JSON.stringify({
@@ -109,17 +130,21 @@ class Tournament {
 let tournament = null;
 PageManager.getInstance().setOnPageLoad('pong/tournament', () => {
     document.getElementById('button').addEventListener('click', (e) => {
-        const player1 = document.getElementById('player1').value;
-        const player2 = document.getElementById('player2').value;
-        const player3 = document.getElementById('player3').value;
-        const player4 = document.getElementById('player4').value;
-        tournament = new Tournament();
-        tournament.matches = [
-            {player1: player1, player2: player2, played: false},
-            {player1: player3, player2: player4, played: false},
-            {player1: null, player2: null, played: false}
-        ];
-        tournament.initializeTournament();
+        const tournamentInstance = new Tournament();
+        if (tournamentInstance.validateForm()) {
+            const player1 = document.getElementById('player1').value.trim();
+            const player2 = document.getElementById('player2').value.trim();
+            const player3 = document.getElementById('player3').value.trim();
+            const player4 = document.getElementById('player4').value.trim();
+
+            tournament = tournamentInstance;
+            tournament.matches = [
+                {player1: player1, player2: player2, played: false},
+                {player1: player3, player2: player4, played: false},
+                {player1: null, player2: null, played: false}
+            ];
+            tournament.initializeTournament();
+        }
     });
 });
 
