@@ -103,8 +103,8 @@ export class Game {
     }
 
     endGame(winnerMessage) {
-        alert(winnerMessage); // Or you can display it in the UI
-        this.destroy(); // Stop the game loop
+        alert(winnerMessage);
+        this.destroy();
         if (!this.tournament) {
             PageManager.getInstance().load('home');
         }else{

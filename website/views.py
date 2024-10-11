@@ -58,9 +58,8 @@ def protected_page_view(request: HttpRequest, file: str):
         case "me.html":
             return render(request, file, {"user": request.user})
         case "user.html":
-            print(request.GET, request.POST)
             try:
-                return render(request, "me.html", {"user": User.objects.get(id=int(request.GET.get('id', 0)))})
+                return render(request, "users.html", {"user": User.objects.get(id=int(request.GET.get('id', 0)))})
             except User.DoesNotExist:
                 return render(request, "404.html")
         case "chat.html":
