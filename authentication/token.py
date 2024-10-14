@@ -3,6 +3,7 @@ import json
 import logging
 
 import jwt
+from django.core.cache import cache
 from django.shortcuts import redirect
 
 from NeonPong import settings
@@ -45,6 +46,7 @@ class TokenManager:
             "access_expiration": f"{access_expiration:%Y-%m-%d %H:%M:%S}",
             "refresh_expiration": f"{refresh_expiration:%Y-%m-%d %H:%M:%S}"
         }
+        cache.set(f'user:{user_id}:token', access_token, timeout=settings.ACCESS_TOKEN_EXPIRATION_MINUTES * 60)
         return access_token, refresh_token, access_expiration, refresh_expiration
 
     def refresh_token(self, refresh_token):
