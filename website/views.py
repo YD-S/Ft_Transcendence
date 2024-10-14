@@ -8,7 +8,7 @@ from chat.models import Room
 from chat.serializers import RoomSerializer
 from common.request import HttpRequest
 from users.forms import UserForm
-from users.models import User
+from users.models import User, BlockedUser, Friendship
 from utils.exception import NotFoundError, HttpError
 
 UNPROTECTED_PAGES = [
@@ -60,14 +60,23 @@ def protected_page_view(request: HttpRequest, file: str):
         case "user.html":
             try:
                 user = User.objects.get(id=int(request.GET.get('id', 0)))
-                print(user.blocked_by)
-                print(request.user.blocked_users)
-                user_is_blocked = user in request.user.blocked_users.all()
+                user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
+                user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)]
                 if user_is_blocked:
-                    block = request.user.blocked_users.get(id=user.id)
-                else :
+                    block = BlockedUser.objects.filter(user=request.user).get(blocked_user=user)
+                else:
                     block = None
-                return render(request, "users.html", {"user": user, "is_not_blocked": not user_is_blocked, "block": block})
+                if user_is_friend:
+                    friend = Friendship.objects.filter(user=request.user).get(friend=user)
+                else:
+                    friend = None
+                return render(request, "users.html", {
+                    "user": user,
+                    "is_not_blocked": not user_is_blocked,
+                    "block": block,
+                    "is_not_friend": not user_is_friend,
+                    "friend": friend
+                })
             except User.DoesNotExist:
                 return render(request, "404.html")
         case "chat.html":
