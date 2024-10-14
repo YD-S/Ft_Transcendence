@@ -1,6 +1,6 @@
 import datetime
 
-from users.models import User, Tournament, BlockedUser
+from users.models import User, Tournament, BlockedUser, Friendship
 from utils.modelserializer import ModelSerializer
 
 
@@ -20,6 +20,12 @@ class UserSerializer(ModelSerializer):
 class TournamentSerializer(ModelSerializer):
     class Meta:
         model = Tournament
+        fields = '__all__'
+
+
+class FriendshipSerializer(ModelSerializer):
+    class Meta:
+        model = Friendship
         fields = '__all__'
 
 
