@@ -59,7 +59,15 @@ def protected_page_view(request: HttpRequest, file: str):
             return render(request, file, {"user": request.user})
         case "user.html":
             try:
-                return render(request, "users.html", {"user": User.objects.get(id=int(request.GET.get('id', 0)))})
+                user = User.objects.get(id=int(request.GET.get('id', 0)))
+                print(user.blocked_by)
+                print(request.user.blocked_users)
+                user_is_blocked = user in request.user.blocked_users.all()
+                if user_is_blocked:
+                    block = request.user.blocked_users.get(id=user.id)
+                else :
+                    block = None
+                return render(request, "users.html", {"user": user, "is_not_blocked": not user_is_blocked, "block": block})
             except User.DoesNotExist:
                 return render(request, "404.html")
         case "chat.html":

@@ -95,3 +95,23 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': event['type'],
         }))
+
+class GameInviteConsumer(AsyncWebsocketConsumer) :
+    async def connect(self):
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        pass
+
+    @staticmethod
+    def generate_game_socket():
+        return random.randint(1, 1000)
+
+    async def receive(self, text_data):
+        await self.channel_layer.group_send(
+            str(self.scope['user'].id),
+            {
+                'type': 'game_invite',
+                'gameSocket': self.generate_game_socket(),
+            }
+        )
