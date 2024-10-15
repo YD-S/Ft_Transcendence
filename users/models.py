@@ -119,6 +119,7 @@ class BlockedUser(BaseModel):
     def __str__(self):
         return f"{self.user} - {self.blocked_user}"
 
+
 class Tournament(BaseModel):
     player1 = models.CharField()
     player2 = models.CharField()
@@ -128,4 +129,3 @@ class Tournament(BaseModel):
     semi_winner_2 = models.CharField()
     final_winner = models.CharField()
     date = models.DateTimeField(auto_now_add=True)
-

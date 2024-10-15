@@ -1,16 +1,14 @@
 import datetime
-import json
-import logging
 
 import jwt
+from django.core.cache import cache
 from django.shortcuts import redirect
 
 from NeonPong import settings
 from common.request import HttpRequest
 
 from users.models import User
-from utils.exception import ValidationError, HttpError, UnauthorizedError
-from django.utils.translation import gettext as _
+from utils.exception import HttpError, UnauthorizedError
 
 
 class TokenManager:
@@ -26,8 +24,8 @@ class TokenManager:
         if self.__initialized:
             return
         self.__initialized = True
-        self.tokens = {}
         self.refresh_token_history = {}
+        self.sentinel = object()
 
     def create_token_pair(self, user_id, refresh_expiration=None):
         access_expiration = datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRATION_MINUTES)
@@ -39,33 +37,29 @@ class TokenManager:
                                    algorithm='HS256')
         self.refresh_token_history[user_id] = self.refresh_token_history.get(user_id, [])[:-settings.REFRESH_TOKEN_HISTORY_SIZE]
         self.refresh_token_history[user_id].append(refresh_token)
-        self.tokens[user_id] = {
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "access_expiration": f"{access_expiration:%Y-%m-%d %H:%M:%S}",
-            "refresh_expiration": f"{refresh_expiration:%Y-%m-%d %H:%M:%S}"
-        }
+        cache.set(f'user:{user_id}:token', access_token, timeout=settings.ACCESS_TOKEN_EXPIRATION_MINUTES * 60)
         return access_token, refresh_token, access_expiration, refresh_expiration
 
     def refresh_token(self, refresh_token):
         payload = self._test_token(refresh_token)
         exp = datetime.datetime.fromtimestamp(payload.get('exp'), datetime.UTC)
-        if payload.get('user_id') not in self.tokens:
+        if cache.get(f'user:{payload.get("user_id")}:token', self.sentinel) is self.sentinel:
             raise UnauthorizedError()
         return self.create_token_pair(payload.get('user_id'), exp)
 
     def validate_token(self, token):
         payload = self._test_token(token)
-        if payload.get('user_id') not in self.tokens:
+
+        if cache.get(f'user:{payload.get("user_id")}:token', self.sentinel) is self.sentinel:
             raise UnauthorizedError()
-        if self.tokens.get(payload.get('user_id')).get('access_token') != token:
+        if cache.get(f'user:{payload.get("user_id")}:token') != token:
             raise UnauthorizedError()
         return True
 
     def revoke_token(self, token):
         payload = self._test_token(token)
-        if payload.get('user_id') in self.tokens:
-            del self.tokens[payload.get('user_id')]
+        if cache.get(f'user:{payload.get("user_id")}:token', self.sentinel) is not self.sentinel:
+            cache.delete(f'user:{payload.get("user_id")}:token')
         else:
             raise UnauthorizedError()
 
