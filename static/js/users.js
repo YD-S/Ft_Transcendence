@@ -17,7 +17,10 @@ PageManager.getInstance().setOnPageLoad("user", function() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({user: data.id, blocked_user: +document.getElementById("user_id").innerHTML})
+                body: JSON.stringify({
+                    user: data.id,
+                    blocked_user: +document.getElementById("user_id").innerHTML
+                })
             });
         }).then(response => {
             if (response.ok) {
@@ -45,7 +48,7 @@ PageManager.getInstance().setOnPageLoad("user", function() {
 
 
     const friend_button = document.getElementById('friend-user')
-      if (friend_button) block_button.addEventListener('click', function() {
+      if (friend_button) friend_button.addEventListener('click', function() {
         fetch("/api/auth/me/", {
             method: "GET"
         }).then(response => {
@@ -59,7 +62,10 @@ PageManager.getInstance().setOnPageLoad("user", function() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({user: data.id, blocked_user: +document.getElementById("user_id").innerHTML})
+                body: JSON.stringify({
+                    user: data.id,
+                    friend: +document.getElementById("user_id").innerHTML
+                })
             });
         }).then(response => {
             if (response.ok) {
@@ -72,7 +78,7 @@ PageManager.getInstance().setOnPageLoad("user", function() {
     })
 
     const unfriend_button = document.getElementById('unfriend-user')
-    if (unfriend_button) unblock_button.addEventListener('click', function() {
+    if (unfriend_button) unfriend_button.addEventListener('click', function() {
         fetch(`/api/user/friendship/${document.getElementById("friendship_id").innerHTML}`, {
             method: "DELETE"
         }).then(response => {

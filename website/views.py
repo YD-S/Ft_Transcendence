@@ -56,7 +56,14 @@ def protected_page_view(request: HttpRequest, file: str):
     print(file)
     match file:
         case "me.html":
-            return render(request, file, {"user": request.user})
+            friends = Friendship.objects.filter(user=request.user)
+            print(friends)
+            return render(request, file, {"user": request.user, "friends": [
+                {
+                    "friend": friendship.friend,
+                    "frienship_id": friendship.id
+                } for friendship in friends
+            ]})
         case "user.html":
             try:
                 user = User.objects.get(id=int(request.GET.get('id', 0)))
