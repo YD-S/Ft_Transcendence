@@ -35,4 +35,16 @@
     </button>
     </div>
   </ul>
+  <ul>
+    {% for friend in friends %}
+    <li>
+      <img style="max-width: 50px; max-height: 50px" src="{{ friend.avatar.url }}" alt="friend avatar">
+      <a href="/users?id={{ friend.id }}">{{ friend.id }}</a>
+      <span id="friendship_id" hidden>{{ friendship_id }}</span>
+      <button class="button" id="unfriend-user">
+        {% translate "Remove friend" %}
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
 </div>
