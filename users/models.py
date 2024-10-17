@@ -116,6 +116,14 @@ class BlockedUser(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blocked_users")
     blocked_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blocked_by")
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        option1 = Friendship.objects.filter(user=self.user, friend=self.blocked_user)
+        option2 = Friendship.objects.filter(user=self.blocked_user, friend=self.user)
+        if option1.exists() or option2.exists():
+            option1.delete()
+            option2.delete()
+
     def __str__(self):
         return f"{self.user} - {self.blocked_user}"
 

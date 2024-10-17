@@ -10,7 +10,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
     const state = query.get('state');
     if (!state || !code || state !== original_state) {
         alert('Invalid OAuth callback');
-        PageManager.getInstance().load('auth/login');
+        PageManager.getInstance().load('auth/login', false);
         return;
     }
 
@@ -23,7 +23,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
     }).then(response => {
         if (response.status >= 400) {
             alert('Invalid OAuth code');
-            PageManager.getInstance().load('auth/login');
+            PageManager.getInstance().load('auth/login', false);
         }
         return response.json();
     }).then(data => {

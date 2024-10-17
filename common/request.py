@@ -51,12 +51,6 @@ class HttpRequest(ASGIRequest):
         except:
             return super().__getattribute__(item)
 
-    def __getattribute__(self, item):
-        try:
-            return getattr(self.__request, item)
-        except:
-            return super().__getattribute__(item)
-
     def json(self):
         if self.content_type != 'application/json':
             raise ValueError('Request content type is not application/json')
