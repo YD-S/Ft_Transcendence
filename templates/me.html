@@ -21,15 +21,10 @@
       <li>{% translate "Email not verified" %}</li>
       <button class="button" id="resend-verification">{% translate "Resend verification email" %}</button>
       {% endif %}
-      {% if user.is_oauth %}
-      <li>{% translate "Two-Factor Authentication" %}: {% translate "OAuth users don't need two-factor auth." %}</li>
-      {% else %}
-
       <li>{% translate "Two-Factor Authentication" %}: {{ user.has_2fa|yesno:_("enabled,disabled") }}</li>
       <button class="button" id="toggle-2fa" {% if not user.verified_email %} disabled {% endif %}>
         {# Used for toggling the 2FA option #}{% translate "Toggle" %}
       </button>
-      {% endif %}
     <button class="button" id="edit-profile" onclick="window.global.pageManager.load('edit-profile')">
         {% translate "Edit Profile" %}
     </button>

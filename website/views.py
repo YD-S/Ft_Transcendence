@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 
@@ -55,7 +56,17 @@ def main_view(request: HttpRequest, page: str):
 def protected_page_view(request: HttpRequest, file: str):
     match file:
         case "friendlist.html":
-            friends = [friendship.friend for friendship in Friendship.objects.filter(user_id=request.GET.get('user', request.user.id))]
+            friends = [
+                friendship.friend
+                for friendship in Friendship.objects.filter(
+                    Q(user_id=request.GET.get('user', request.user.id))
+                )
+            ] + [
+                friendship.user
+                for friendship in Friendship.objects.filter(
+                    Q(friend_id=request.GET.get('user', request.user.id))
+                )
+            ]
             return render(request, file, {"friends": friends})
         case "me.html":
             return render(request, file, {"user": request.user})

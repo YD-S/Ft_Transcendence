@@ -10,12 +10,12 @@ from chat.consumers import ChatRoomConsumer
 websocket_urlpatterns = [
     path('ws/tournament/', TournamentConsumer.as_asgi(), name='tournament'),
     path('ws/matchmaking/', MatchmakingConsumer.as_asgi(), name='matchmaking'),
-    path('ws/invite/', GameInviteConsumer.as_asgi(), name='game_invite'),
     re_path(r'ws/chat/(?P<room_id>\w+)/$', ChatRoomConsumer.as_asgi(), name='chat'),
     re_path(r'ws/game/(?P<game_id>\w+)/$', GameConsumer.as_asgi(), name='game'),
 ]
 
 apiurls = [
+    path('invite/', MatchmakingConsumer.game_invite, name='game_invite'),
     path('user/', include(("users.urls", "users"), namespace="users")),
     path('auth/', include(("authentication.urls", "authentication"), namespace="authentication")),
     path("chat/", include(("chat.urls", "chat"), namespace="chat")),

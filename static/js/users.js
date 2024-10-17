@@ -90,4 +90,24 @@ PageManager.getInstance().setOnPageLoad("user", function() {
             }
         });
     });
+
+    const invite_button = document.getElementById('game-invite')
+    invite_button.addEventListener('click', function() {
+        fetch('api/invite/', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                user: +document.getElementById("user_id").innerHTML
+            })
+        }).then(response => {
+            if (response.ok) {
+                alert("Invitation sent!");
+                PageManager.getInstance().load("pong/3dGame", false)
+            } else {
+                alert("Failed to send invitation!");
+            }
+        })
+    });
 });
