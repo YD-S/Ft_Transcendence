@@ -22,7 +22,8 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
         body: JSON.stringify({code: code})
     }).then(response => {
         if (response.status >= 400) {
-            throw new Error("Invalid OAuth code");
+            alert('Invalid OAuth code');
+            PageManager.getInstance().load('auth/login');
         }
         return response.json();
     }).then(data => {
