@@ -33,6 +33,8 @@ export class Game {
         this.lastTimestamp = Date.now();
         if (!this.destroyed)
             window.requestAnimationFrame(this.update.bind(this));
+
+        document.getElementById('header').style.visibility = 'hidden';
     }
 
     keydown(event) {
@@ -121,6 +123,7 @@ export class Game {
     destroy() {
         document.removeEventListener('keydown', this.keydown.bind(this));
         document.removeEventListener('keyup', this.keyup.bind(this));
+        document.getElementById('header').style.visibility = 'visible';
         this.destroyed = true;
     }
 
