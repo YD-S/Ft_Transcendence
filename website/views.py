@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 
@@ -53,20 +54,28 @@ def main_view(request: HttpRequest, page: str):
 
 @require_token(login_redirect=False)
 def protected_page_view(request: HttpRequest, file: str):
-    print(file)
     match file:
+        case "friendlist.html":
+            friends = [
+                friendship.friend
+                for friendship in Friendship.objects.filter(
+                    Q(user_id=request.GET.get('user', request.user.id))
+                )
+            ] + [
+                friendship.user
+                for friendship in Friendship.objects.filter(
+                    Q(friend_id=request.GET.get('user', request.user.id))
+                )
+            ]
+            return render(request, file, {"friends": friends})
         case "me.html":
-            friends = Friendship.objects.filter(user=request.user)
-            print(friends)
-            return render(request, file, {"user": request.user, "friends": [
-                {
-                    "friend": friendship.friend,
-                    "frienship_id": friendship.id
-                } for friendship in friends
-            ]})
+            return render(request, file, {"user": request.user})
         case "user.html":
             try:
                 user = User.objects.get(id=int(request.GET.get('id', 0)))
+                is_self_blocked = user in [blocked_user.user for blocked_user in BlockedUser.objects.filter(blocked_user=request.user)]
+                if is_self_blocked:
+                    return render(request, "404.html")
                 user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
                 user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)]
                 if user_is_blocked:

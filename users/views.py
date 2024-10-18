@@ -22,3 +22,4 @@ class FriendshipViewSet(ModelViewSet):
 class BlockedUserViewSet(ModelViewSet):
     model = BlockedUser
     serializer = BlockedUserSerializer
+

@@ -3,10 +3,13 @@ import random
 
 from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.http import HttpResponse
 
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     queue = []
+    private_queue = {}
+    sentinel = object()
 
     async def connect(self):
         await self.create_group(str(self.scope['user'].id))
@@ -22,12 +25,16 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             self.queue.remove(self.scope['user'])
         print('User removed from queue:', self.scope['user'].id)
 
-    async def add_to_game(self):
-        if len(self.queue) < 2:
+    async def add_to_game(self, private=False, private_room_id=None):
+        if (len(self.queue) < 2 and not private) or (private and len(MatchmakingConsumer.private_queue[private_room_id]) < 2):
             return
-        player1 = self.queue.pop(0)
-        player2 = self.queue.pop(0)
-        room_id = random.randint(1, 1000)
+        player1 = self.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0)
+        player2 = self.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0)
+        cache.delete(f'invite:{player1.id}')
+        cache.delete(f'invite:{player2.id}')
+        if private:
+            del MatchmakingConsumer.private_queue[private_room_id]
+        room_id = private_room_id or random.randint(1000, 10000)
         print('Creating game with room_id:', room_id)
         await self.channel_layer.group_send(
             str(player1.id),
@@ -76,10 +83,14 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
     async def get_user_data(self):
         user_data = self.scope['user']
-        self.queue.append(user_data)
-        print('User added to queue:', user_data.username)
-        if len(self.queue) >= 2:
-            await self.add_to_game()
+        if (private_room_id := cache.get(f'invite:{user_data.id}', self.sentinel)) is not self.sentinel:
+            MatchmakingConsumer.private_queue[private_room_id] = MatchmakingConsumer.private_queue.get(private_room_id, [])
+            MatchmakingConsumer.private_queue[private_room_id].append(self.scope['user'])
+            await self.add_to_game(True, private_room_id)
+        else:
+            self.queue.append(user_data)
+            if len(self.queue) >= 2:
+                await self.add_to_game()
 
     async def game_start(self, event):
         data = event['data']
@@ -96,22 +107,30 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             'type': event['type'],
         }))
 
-class GameInviteConsumer(AsyncWebsocketConsumer) :
+    @classmethod
+    def game_invite(cls, request, *args, **kwargs):
+        from users.models import User
+        body = json.loads(request.body)
+        private_room_id = random.randint(100, 1000)
+        user = User.objects.get(id=body['user'])
+        cache.set(f'invite:{user.id}', private_room_id)
+        cache.set(f'invite:{request.user.id}', private_room_id)
+        MatchmakingConsumer.private_queue[private_room_id] = []
+        return HttpResponse('')
+
+
+class GameInviteConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
 
     async def disconnect(self, close_code):
         pass
 
-    @staticmethod
-    def generate_game_socket():
-        return random.randint(1, 1000)
-
-    async def receive(self, text_data):
+    async def receive(self, text_data=None, bytes_data=None):
         await self.channel_layer.group_send(
             str(self.scope['user'].id),
             {
                 'type': 'game_invite',
-                'gameSocket': self.generate_game_socket(),
+                'gameSocket': 0,
             }
         )

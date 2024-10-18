@@ -62,7 +62,7 @@ export class PageManager {
             .then(response => {
                 if (response.status !== 200) {
                     if (response.status === 401) {
-                        this.load('auth/login')
+                        this.load('auth/login', false)
                     } else {
                         this.load('home')
                     }
@@ -75,7 +75,9 @@ export class PageManager {
                     return
                 }
                 if (options.storeInHistory !== false) {
-                    history.pushState({data: data}, "", '/' + page + (preserve_query ? window.location.search : ""));
+                    const url = '/' + page + (preserve_query ? window.location.search : "")
+                    history.pushState({data: data}, "", url);
+                    console.log(url)
                 }
                 container.innerHTML = data;
                 if (this.onUnloadCallbacks[this.previousPage]) {
