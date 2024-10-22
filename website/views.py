@@ -57,12 +57,18 @@ def protected_page_view(request: HttpRequest, file: str):
     match file:
         case "friendlist.html":
             friends = [
-                friendship.friend
+                {
+                    'id': friendship.id,
+                    'friend': friendship.friend
+                }
                 for friendship in Friendship.objects.filter(
                     Q(user_id=request.GET.get('user', request.user.id))
                 )
             ] + [
-                friendship.user
+                {
+                    'id': friendship.id,
+                    'friend': friendship.user
+                }
                 for friendship in Friendship.objects.filter(
                     Q(friend_id=request.GET.get('user', request.user.id))
                 )
