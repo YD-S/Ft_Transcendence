@@ -59,7 +59,7 @@ def protected_page_view(request: HttpRequest, file: str):
             friends = [
                 {
                     'id': friendship.id,
-                    'friend': friendship.friend
+                    'user': friendship.friend
                 }
                 for friendship in Friendship.objects.filter(
                     Q(user_id=request.GET.get('user', request.user.id))
@@ -67,7 +67,7 @@ def protected_page_view(request: HttpRequest, file: str):
             ] + [
                 {
                     'id': friendship.id,
-                    'friend': friendship.user
+                    'user': friendship.user
                 }
                 for friendship in Friendship.objects.filter(
                     Q(friend_id=request.GET.get('user', request.user.id))
