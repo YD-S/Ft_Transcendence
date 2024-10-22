@@ -3,7 +3,6 @@ from tkinter.font import names
 from django.urls import path, re_path, include
 from Game.consumers import GameConsumer
 from Matchmaking.consumers import MatchmakingConsumer
-from Matchmaking.consumers import GameInviteConsumer
 from Tournament.consumers import TournamentConsumer
 from chat.consumers import ChatRoomConsumer
 
