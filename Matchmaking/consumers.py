@@ -12,6 +12,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     sentinel = object()
 
     async def connect(self):
+        if self.scope['user'] in self.queue:
+            self.queue.remove(self.scope['user'])
         await self.create_group(str(self.scope['user'].id))
         await self.accept()
         await self.get_user_data()

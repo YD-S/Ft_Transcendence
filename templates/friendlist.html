@@ -1,10 +1,14 @@
 {% load i18n %}
 {% load static %}
-<ul>
+<link rel="stylesheet" type="text/css" href="{% static 'css/friendlist.css' %}">
+
+<ul class="list">
   {% for friend in friends %}
-  <li>
+  <li class="friendlist">
+    <div class="wrapper">
     <img style="max-width: 50px; max-height: 50px" src="{{ friend.user.avatar.url }}" alt="friend avatar">
     <a href="/user?id={{ friend.user.id }}">{{ friend.user.username }}</a>
+    </div>
     <button class="button btn" id="{{ friend.id }}">
       {% translate "Remove friend" %}
     </button>

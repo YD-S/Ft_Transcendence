@@ -1,0 +1,29 @@
+
+.list{
+    min-width: 250px;
+    max-width: 500px;
+    width: 25%;
+}
+
+.friendlist{
+    margin: 5px;
+    list-style-type: none;
+    overflow: hidden;
+    border-bottom: solid 1px #ffffff80;
+    margin-bottom: 15px;
+    padding-top: 10px;
+}
+
+.friendlist button{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin: 0 auto;
+}
