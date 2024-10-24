@@ -95,9 +95,9 @@ export class Game {
             this.Team2_score.textContent = parseInt(this.Team2_score.textContent) + 1;
         }
         if (parseInt(this.Team1_score.textContent) >= WINNING_SCORE) {
-            this.endGame(t("GAME.D2.PLAYER1_WINS"));
+            this.endGame("GAME.D2.PLAYER1_WINS");
         } else if (parseInt(this.Team2_score.textContent) >= WINNING_SCORE) {
-            this.endGame(t("GAME.D2.PLAYER2_WINS"));
+            this.endGame("GAME.D2.PLAYER2_WINS");
         } else {
             this.ball.reset();
             this.paddle1.reset();
