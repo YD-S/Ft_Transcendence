@@ -75,7 +75,7 @@ export class PageManager {
                     return
                 }
                 if (options.storeInHistory !== false) {
-                    const url = '/' + page + (preserve_query ? window.location.search : "")
+                    const url = '/' + page + (preserve_query ? this.combineQueries(window.location.search, (options.query || "")) : "")
                     history.pushState({data: data}, "", url);
                     console.log(url)
                 }

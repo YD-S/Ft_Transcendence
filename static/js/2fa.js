@@ -33,7 +33,7 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
                     PageManager.getInstance().load('home');
                 })
                 .catch((error) => {
-                    Notification.error(error);
+                    Notification.error(error.message);
                 });
         })
 
@@ -60,7 +60,7 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
                     Notification.success('Nuevo código enviado')
                 })
                 .catch((error) => {
-                    Notification.error(error);
+                    Notification.error(error.message);
                 });
         })
 })

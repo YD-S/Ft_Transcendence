@@ -108,7 +108,7 @@ export function inviteUser() {
             })
         }).then(response => {
             if (response.ok) {
-                Notification.success("Invitation sent!");
+                Notification.success('USER.ACTIONS.INVITE.SENT');
                 PageManager.getInstance().load("pong/3dGame", false)
             } else {
                 Notification.error("Failed to send invitation!");
@@ -123,7 +123,7 @@ PageManager.getInstance().setOnPageLoad("user", function () {
     friendUser();
     const unfriend_button = document.getElementById('unfriend-user')
     if (unfriend_button) unfriend_button.addEventListener('click', function () {
-        unfriendUser(document.getElementById("friendship_id").innerHTML, "user");
+        unfriendUser(document.getElementById("friendship_id").innerHTML, "user", true);
     });
     inviteUser();
 });

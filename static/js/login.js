@@ -18,7 +18,7 @@ export function login() {
 	})
 		.then((response) => {
 			if (response.status >= 400) {
-				throw new Error("Invalid username or password");
+				throw new Error("AUTH.ERROR.INVALID_CREDENTIALS");
 			}
 			return response.json();
 		})
@@ -31,7 +31,7 @@ export function login() {
 			}
 		})
 		.catch((error) => {
-			Notification.error(error);
+			Notification.error(error.message);
 		});
 }
 
@@ -39,7 +39,7 @@ function oauth() {
 	fetch("/api/auth/oauth/")
 		.then((response) => {
 			if (response.status >= 400) {
-				throw new Error("There was an error with the OAuth request. Please try again.");
+				throw new Error("AUTH.ERROR.FAILED_OAUTH");
 			}
 			return response.json();
 		})
@@ -48,7 +48,7 @@ function oauth() {
 			window.location.href = data.url;
 		})
 		.catch((error) => {
-			Notification.error(error);
+			Notification.error(error.message);
 		});
 }
 

@@ -119,11 +119,12 @@
     import {getCookie, setCookie} from "../static/js/utils.js";
 
     const lang = getCookie('django_language')
+    console.log(lang)
     if (lang) {
         document.getElementById(lang).checked = true;
     } else {
         document.getElementById('en-US').checked = true;
-        setCookie('django_language', 'en-US', 365);
+        setCookie('django_language', 'en-US', { path: "/", Domain: window.location.hostname });
     }
     
 

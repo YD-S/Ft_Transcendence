@@ -1,3 +1,4 @@
+import {t} from "./translation.js";
 
 export class Notification {
     constructor(message, color, time) {
@@ -45,15 +46,15 @@ export class Notification {
     }
 
     static success(message, time = 3000) {
-        new Notification(message, NotificationType.Succes, time);
+        new Notification(t(message), NotificationType.Succes, time);
     }
 
     static warning(message, time = 3000) {
-        new Notification(message, NotificationType.Warning, time);
+        new Notification(t(message), NotificationType.Warning, time);
     }
 
     static error(message, time = 3000) {
-        new Notification(message, NotificationType.Danger, time);
+        new Notification(t(message), NotificationType.Danger, time);
     }
 }
 
