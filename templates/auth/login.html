@@ -1,7 +1,8 @@
 {% load i18n %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/input.css' %}">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 
 <div class="row h-100">
   <div class="col-3"></div>
@@ -19,9 +20,9 @@
         <label for="password">{% translate "Password" %}</label>
         <i class='bx bxs-lock-alt'></i>
       </div>
-      <button class="neon-button neon-button1 col-12 mb-3" id="submit">{% translate "Sign in" %}</button>
-      <button class="neon-button neon-button1 col-6" id="oauth">{% translate "Sign in with 42" %}</button>
-      <button class="neon-button neon-button2 col-6" onclick="window.global.pageManager.load('auth/register')">{% translate "Create a new account" %}</button>
+      <button class="neon-button neon-button1 col-12 mb-4" id="submit">{% translate "Sign in" %}</button>
+      <button class="neon-button neon-button1 col-12 mb-4" id="oauth">{% translate "Sign in with 42" %}</button>
+      <button class="neon-button neon-button2 col-12" onclick="window.global.pageManager.load('auth/register')">{% translate "Create a new account" %}</button>
     </div>
   </div>
 

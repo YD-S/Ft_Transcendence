@@ -131,14 +131,6 @@ h1 {
 	padding: 0;
 }
 
-.verification{
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 15px;
-}
-
 /* ------------------------------------------------------------------- BUTTON */
 .button {
   position: relative;
@@ -227,6 +219,6 @@ h1 {
 }
 
 .profile-picture {
-	max-width: 300px;
-	max-height: 300px;
+	max-width: 250px;
+	max-height: 250px;
 }

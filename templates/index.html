@@ -25,7 +25,7 @@
 <div class="container-fluid h-100">
   <div class="row flex-nowrap bg-dark h-100">
     <div class="col-auto col-md-1 align-content-center">
-      <button class="btn col-12 mb-2"
+      <button class="neon-button neon-button1 btn col-12 mb-3"
               onclick="window.global.pageManager.load('home', false)"
               data-toggle="tooltip"
               data-placement="right"
@@ -33,7 +33,7 @@
       >
         <i class='bx bx-home-alt'></i>
       </button>
-      <button class="btn col-12 mb-2"
+      <button class="neon-button neon-button1 btn col-12 mb-3"
               onclick="window.global.pageManager.load('me', false)"
               data-toggle="tooltip"
               data-placement="right"
@@ -41,7 +41,7 @@
       >
         <i class='bx bx-user'></i>
       </button>
-      <button class="btn col-12 mb-2"
+      <button class="neon-button neon-button1 btn col-12 mb-3"
               onclick="window.global.pageManager.load('chat', false)"
               data-toggle="tooltip"
               data-placement="right"
@@ -54,7 +54,7 @@
            data-placement="right"
            title="{% translate "Language" %}"
       >
-        <button class="btn col-12 mb-2 dropdown-toggle"
+        <button class="neon-button neon-button1 btn col-12 mb-3 dropdown-toggle"
                 type="button"
                 data-toggle="dropdown"
                 aria-expanded="false"
@@ -65,26 +65,26 @@
         <ul class="dropdown-menu bg-dark">
           <li>
             <div class="dropdown-item">
-              <label for="en-US">English</label>
               <input id="en-US" type="radio" value="en-US" name="language" onclick="window.global.changeLanguage(this.value)">
+              <label class="text-light" for="en-US">English</label>
             </div>
           </li>
           <li>
             <div class="dropdown-item">
-              <label for="es-ES">Español</label>
               <input id="es-ES" type="radio" value="es-ES" name="language" onclick="window.global.changeLanguage(this.value)">
+              <label class="text-light" for="es-ES">Español</label>
             </div>
           </li>
           <li>
             <div class="dropdown-item">
-              <label for="pt-PT">Português</label>
               <input id="pt-PT" type="radio" value="pt-PT" name="language" onclick="window.global.changeLanguage(this.value)">
+              <label class="text-light" for="pt-PT">Português</label>
             </div>
           </li>
         </ul>
 
       </div>
-      <button class="btn col-12 mb-2 mt-3"
+      <button class="neon-button neon-button2 btn col-12 mt-3"
               onclick="window.global.logout()"
               data-toggle="tooltip"
               data-placement="right"

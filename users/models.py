@@ -90,7 +90,7 @@ class User(AbstractUser, BaseModel):
     is_oauth = models.BooleanField(default=False)
     verified_email = models.BooleanField(default=False)
 
-    avatar = models.ImageField(upload_to="avatars/", null=True, default='svg/profile_icon.svg')
+    avatar = models.ImageField(upload_to="avatars/", null=True, default='png/profile_default.png')
 
     objects = UserManager()
 

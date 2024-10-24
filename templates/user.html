@@ -2,39 +2,47 @@
 {% load i18n %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/user.css' %}">
-<h1>{% translate "Profile" %}</h1>
-<div id="profile-page" class="box">
-  <span></span>
-  <div class="content">
-    <ul>
-      <li id="user_id" hidden>{{ user.id }}</li>
-      <li id="block_id" hidden>{{ block.id }}</li>
-      <li id="friendship_id" hidden>{{ friend.id }}</li>
-      <li>
-        {% if online %}
-          <div class="profile-picture">
-            <div class="green-dot">
+
+<span id="user_id" hidden>{{ user.id }}</span>
+<span id="block_id" hidden>{{ block.id }}</span>
+<span id="friendship_id" hidden>{{ friend.id }}</span>
+
+<div class="row h-100">
+  <div class="col-3"></div>
+  <div class="col-6 align-content-center">
+    <h1>{% translate "Profile" %}</h1>
+    <div id="profile-page" class="box">
+      <div class="content">
+        <div class="col-6">
+          <div class="col-12">
+            {% if online %}
+              <div class="profile-picture">
+                <div class="green-dot">
+                  <img class="profile-picture" src="{{ user.avatar.url }}" alt="user avatar">
+                </div>
+              </div>
+            {% else %}
               <img class="profile-picture" src="{{ user.avatar.url }}" alt="user avatar">
-            </div>
+            {% endif %}
           </div>
-        {% else %}
-          <img style="max-width: 150px; max-height: 150px" src="{{ user.avatar.url }}" alt="user avatar">
-        {% endif %}
-      </li>
-      <li><h3>{{ user.username }}</h3></li>
-    </ul>
-    <div class="verification">
-      {% if is_not_friend %}
-        <button class="button" id="friend-user">{% translate "Add friend" %}</button>
-      {% else %}
-        <button class="button" id="unfriend-user">{% translate "Remove friend" %}</button>
-      {% endif %}
-      {% if is_not_blocked %}
-        <button class="button" id="block-user">{% translate "Block User" %}</button>
-      {% else %}
-        <button class="button" id="unblock-user">{% translate "Unblock User" %}</button>
-      {% endif %}
-      <button class="button" id="game-invite">{% translate "Invite to game" %}</button>
+          <h3 class="col-12">{{ user.username }}</h3>
+        </div>
+        <div class="col-6">
+          {% if is_not_friend %}
+            <button class="button col-12 mb-2" id="friend-user">{% translate "Add friend" %}</button>
+          {% else %}
+            <button class="button col-12 mb-2" id="unfriend-user">{% translate "Remove friend" %}</button>
+          {% endif %}
+          {% if is_not_blocked %}
+            <button class="button col-12 mb-2" id="block-user">{% translate "Block User" %}</button>
+          {% else %}
+            <button class="button col-12 mb-2" id="unblock-user">{% translate "Unblock User" %}</button>
+          {% endif %}
+          <button class="button col-12" id="game-invite">{% translate "Invite to game" %}</button>
+        </div>
+      </div>
     </div>
   </div>
+  <div class="col-3"></div>
 </div>
+
