@@ -35,7 +35,7 @@ export class Game {
         if (!this.destroyed)
             window.requestAnimationFrame(this.update.bind(this));
 
-        document.getElementById('header').style.visibility = 'hidden';
+        document.getElementById('navbar').style.display = 'none';
     }
 
     keydown(event) {
@@ -124,7 +124,7 @@ export class Game {
     destroy() {
         document.removeEventListener('keydown', this.keydown.bind(this));
         document.removeEventListener('keyup', this.keyup.bind(this));
-        document.getElementById('header').style.visibility = 'visible';
+        document.getElementById('navbar').style.display = 'block';
         this.destroyed = true;
     }
 
