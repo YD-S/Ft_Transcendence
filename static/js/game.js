@@ -2,6 +2,7 @@ import Ball from "./Ball.js";
 import Paddle from "./Paddle.js";
 import {PageManager} from "./page-manager.js";
 import {Notification} from "./notification.js";
+import {t} from "./translation.js";
 
 const  WINNING_SCORE = 1;
 export class Game {
@@ -94,9 +95,9 @@ export class Game {
             this.Team2_score.textContent = parseInt(this.Team2_score.textContent) + 1;
         }
         if (parseInt(this.Team1_score.textContent) >= WINNING_SCORE) {
-            this.endGame("Player 1 Wins!");
+            this.endGame(t("GAME.D2.PLAYER1_WINS"));
         } else if (parseInt(this.Team2_score.textContent) >= WINNING_SCORE) {
-            this.endGame("Player 2 Wins!");
+            this.endGame(t("GAME.D2.PLAYER2_WINS"));
         } else {
             this.ball.reset();
             this.paddle1.reset();
@@ -129,7 +130,7 @@ export class Game {
     }
 
     getWinner() {
-        return parseInt(this.Team1_score.textContent) >= WINNING_SCORE ? "Player 1" : "Player 2";
+        return parseInt(this.Team1_score.textContent) >= WINNING_SCORE ? t("GAME.D2.PLAYER1") : t("GAME.D2.PLAYER2");
     }
 
     isGameOver() {

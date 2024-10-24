@@ -11,7 +11,7 @@ export function logout() {
 	fetch("/api/auth/logout/", { method: "POST" })
 		.then((response) => {
 			if (response.status !== 200) {
-				throw new Error("Logout failed");
+				throw new Error("AUTH.ERROR.LOGOUT_FAILED");
 			}
 			deleteCookie("Authorization");
 			sessionStorage.removeItem("refresh_token");
@@ -51,7 +51,7 @@ function refreshToken() {
 	})
 		.then((response) => {
 			if (response.status !== 200) {
-				throw new Error("Refresh failed");
+				throw new Error("AUTH.ERROR.REFRESH_FAILED");
 			}
 			return response.json();
 		})

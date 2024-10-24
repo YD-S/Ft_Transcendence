@@ -9,7 +9,7 @@ export function blockUser() {
             method: "GET"
         }).then(response => {
             if (!response.ok) {
-                throw new Error("Failed to fetch user data!");
+                throw new Error("COMMON.ERROR.FETCH.USER_DATA");
             }
             return response.json();
         }).then(data => {
@@ -25,10 +25,10 @@ export function blockUser() {
             });
         }).then(response => {
             if (response.ok) {
-                Notification.success("Blocked User!");
+                Notification.success("USER.ACTIONS.BLOCK.SUCCESS");
                 PageManager.getInstance().load("user", true)
             } else {
-                Notification.error("Failed to block User!");
+                Notification.error("USER.ACTIONS.BLOCK.FAILED");
             }
         });
     });
@@ -41,10 +41,10 @@ export function unblockUser() {
             method: "DELETE"
         }).then(response => {
             if (response.ok) {
-                Notification.success("Unblocked User!");
+                Notification.success("USER.ACTIONS.UNBLOCK.SUCCESS");
                 PageManager.getInstance().load("user", true)
             } else {
-                Notification.error("Failed to unblock User!");
+                Notification.error("USER.ACTIONS.UNBLOCK.FAILED");
             }
         });
     });
@@ -57,7 +57,7 @@ export function friendUser() {
             method: "GET"
         }).then(response => {
             if (!response.ok) {
-                throw new Error("Failed to fetch user data!");
+                throw new Error("COMMON.ERROR.FETCH.USER_DATA");
             }
             return response.json();
         }).then(data => {
@@ -73,12 +73,14 @@ export function friendUser() {
             });
         }).then(response => {
             if (response.ok) {
-                Notification.success("Added user to friend list!");
+                Notification.success("USER.ACTIONS.FRIEND.SUCCESS");
                 PageManager.getInstance().load("user", true)
             } else {
-                Notification.error("Failed to add user to friend list!");
+                Notification.error("USER.ACTIONS.FRIEND.FAILED");
             }
-        });
+        }).catch(error => {
+            Notification.error(error.message);
+        })
     })
 }
 
@@ -87,10 +89,10 @@ export function unfriendUser(userId, page) {
         method: "DELETE"
     }).then(response => {
         if (response.ok) {
-            Notification.success("Removed user from friend list!");
-            PageManager.getInstance().load(page, false);
+            Notification.success("USER.ACTIONS.UNFRIEND.SUCCESS");
+            PageManager.getInstance().load(page, true);
         } else {
-            Notification.error("Failed to remove user from friend list!");
+            Notification.error("USER.ACTIONS.UNFRIEND.FAILED");
         }
     });
 }
@@ -108,10 +110,10 @@ export function inviteUser() {
             })
         }).then(response => {
             if (response.ok) {
-                Notification.success('USER.ACTIONS.INVITE.SENT');
+                Notification.success('USER.ACTIONS.INVITE.SUCCESS');
                 PageManager.getInstance().load("pong/3dGame", false)
             } else {
-                Notification.error("Failed to send invitation!");
+                Notification.error("USER.ACTIONS.INVITE.FAILED");
             }
         })
     });

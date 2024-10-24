@@ -9,7 +9,7 @@ PageManager.getInstance().setOnPageLoad("auth/register", () => {
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirm-password").value;
         if (password !== confirmPassword) {
-            Notification.warning("Passwords do not match!");
+            Notification.warning("USER.REGISTER.PASSWORD_MISMATCH");
             return;
         }
         fetch("/api/auth/register/", {
@@ -20,10 +20,10 @@ PageManager.getInstance().setOnPageLoad("auth/register", () => {
             body: JSON.stringify({username, email, password})
         }).then(response => {
             if (response.ok) {
-                Notification.success("Registration successful!");
+                Notification.success("USER.REGISTER.SUCCESS");
                 PageManager.getInstance().load('auth/login');
             } else {
-                Notification.error("Registration failed!");
+                Notification.error("USER.REGISTER.FAILED");
             }
         });
     });

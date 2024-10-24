@@ -10,7 +10,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
     const code = query.get('code');
     const state = query.get('state');
     if (!state || !code || state !== original_state) {
-        Notification.error('Invalid OAuth callback');
+        Notification.error('AUTH.ERROR.INVALID_OAUTH_CALLBACK');
         PageManager.getInstance().load('auth/login', false);
         return;
     }
@@ -23,7 +23,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
         body: JSON.stringify({code: code})
     }).then(response => {
         if (response.status >= 400) {
-            Notification.error('Invalid OAuth code');
+            Notification.error('AUTH.ERROR.INVALID_OAUTH_CODE');
             PageManager.getInstance().load('auth/login', false);
         }
         return response.json();
@@ -38,7 +38,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
                 PageManager.getInstance().load('home', false);
                 break;
             default:
-                throw new Error("Invalid action");
+                throw new Error("COMMON.ERROR.INVALID_ACTION");
         }
     })
 })
