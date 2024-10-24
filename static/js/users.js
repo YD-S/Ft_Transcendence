@@ -90,7 +90,7 @@ export function unfriendUser(userId, page) {
     }).then(response => {
         if (response.ok) {
             Notification.success("USER.ACTIONS.UNFRIEND.SUCCESS");
-            PageManager.getInstance().load(page, false);
+            PageManager.getInstance().load(page, true);
         } else {
             Notification.error("USER.ACTIONS.UNFRIEND.FAILED");
         }
