@@ -18,6 +18,10 @@
     --btn-color-blue: rgb(0, 38, 119);
 }
 
+.cursor-pointer {
+	cursor: pointer;
+}
+
 * {
 	box-sizing: border-box;
 }
