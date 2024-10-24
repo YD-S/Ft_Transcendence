@@ -16,7 +16,7 @@ COPY nginx/server.conf /etc/nginx/sites-enabled/server.conf
 COPY nginx/certs /etc/nginx/ssl
 
 # Install dependencies
-RUN pip install --break-system-packages --root-user-action -r /app/requirements.txt
+RUN pip install -r --break-system-packages --root-user-action /app/requirements.txt
 
 
 # Expose the port
