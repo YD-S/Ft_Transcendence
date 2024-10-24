@@ -2,6 +2,7 @@ import { PageManager } from "./page-manager.js";
 
 export function changeLanguage(language) {
 	setCookie("django_language", language, { path: "/", Domain: window.location.hostname });
+	document.getElementById(language).checked = true;
 	location.reload();
 }
 

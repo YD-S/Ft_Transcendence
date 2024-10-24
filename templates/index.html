@@ -7,120 +7,142 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href={% static "css/index.css" %}>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>NeonPong</title>
   <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@v0.163.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.163.0/examples/jsm/"
-    }
-  }
-</script>
+    {
+	  "imports": {
+		"three": "https://cdn.jsdelivr.net/npm/three@v0.163.0/build/three.module.js",
+		"three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.163.0/examples/jsm/"
+	  }
+	}
+  </script>
 </head>
 
 <body>
-  <div id="header">
-    <ul>
-      <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('home', false)">
-          <i class='bx bx-home-alt'></i>
-          <span>NEON PONG</span>
+<div class="container-fluid h-100">
+  <div class="row flex-nowrap bg-dark h-100">
+    <div class="col-auto col-md-1 align-content-center">
+      <button class="btn col-12 mb-2"
+              onclick="window.global.pageManager.load('home', false)"
+              data-toggle="tooltip"
+              data-placement="right"
+              title="{% translate "Home" %}"
+      >
+        <i class='bx bx-home-alt'></i>
+      </button>
+      <button class="btn col-12 mb-2"
+              onclick="window.global.pageManager.load('me', false)"
+              data-toggle="tooltip"
+              data-placement="right"
+              title="{% translate "Profile" %}"
+      >
+        <i class='bx bx-user'></i>
+      </button>
+      <button class="btn col-12 mb-2"
+              onclick="window.global.pageManager.load('chat', false)"
+              data-toggle="tooltip"
+              data-placement="right"
+              title="{% translate "Chat" %}"
+      >
+        <i class='bx bxs-chat'></i>
+      </button>
+      <div class="dropdown"
+           data-toggle="tooltip"
+           data-placement="right"
+           title="{% translate "Language" %}"
+      >
+        <button class="btn col-12 mb-2 dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-expanded="false"
+        >
+          <i class='bx bx-world'
+          ></i>
         </button>
-      </li>
-      <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('me', false)">
-          <i class='bx bx-user'></i>
-          <span>{% translate "Profile" %}</span>
-        </button>
-      </li>
-      <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('chat', false)">
-          <i class='bx bxs-chat'></i>
-          <span>{% translate "Chat" %}</span>
-        </button>
-      </li>
-      <li>
-        <button class="buttonNav">
-          <i class='bx bx-world'></i>
-          <span>{% translate "Language" %}</span>
-        </button>
-      </li>
-      <li></li>
-      <li>
-        <button class="buttonNav" onclick="window.global.pageManager.load('settings', false)">
-          <i class='bx bx-cog'></i>
-          <span>{% translate "Settings" %}</span>
-        </button>
-      </li>
-      <li>
-        <button class="buttonNav" onclick="window.global.logout()">
-          <i class='bx bx-log-in'></i>
-          <span>{% translate "Log out" %}</span>
-        </button>
-      </li>
-    </ul>
+        <ul class="dropdown-menu bg-dark">
+          <li>
+            <div class="dropdown-item">
+              <label for="en-US">English</label>
+              <input id="en-US" type="radio" value="en-US" name="language" onclick="window.global.changeLanguage(this.value)">
+            </div>
+          </li>
+          <li>
+            <div class="dropdown-item">
+              <label for="es-ES">Español</label>
+              <input id="es-ES" type="radio" value="es-ES" name="language" onclick="window.global.changeLanguage(this.value)">
+            </div>
+          </li>
+          <li>
+            <div class="dropdown-item">
+              <label for="pt-PT">Português</label>
+              <input id="pt-PT" type="radio" value="pt-PT" name="language" onclick="window.global.changeLanguage(this.value)">
+            </div>
+          </li>
+        </ul>
 
-    {# Combo box for languages #}
-    <div class="language" id="language">
-      <label for="en-US">English</label>
-      <input id="en-US" type="radio" name="r" value="en-US" onchange="window.global.changeLanguage(this.value)">
-      <label for="es-ES">Español</label>
-      <input id="es-ES" type="radio" name="r" value="es-ES" onchange="window.global.changeLanguage(this.value)">
-      <label for="pt-PT">Português</label>
-      <input id="pt-PT" type="radio" name="r" value="pt-PT" onchange="window.global.changeLanguage(this.value)">
+      </div>
+      <button class="btn col-12 mb-2 mt-3"
+              onclick="window.global.logout()"
+              data-toggle="tooltip"
+              data-placement="right"
+              title="{% translate "Log out" %}"
+      >
+        <i class='bx bx-log-out'></i>
+      </button>
     </div>
 
-    <!-- {# Combo box for languages #}
-    <label for="language">{% translate "Select language" %}</label>
-    <select id="language" onchange="window.global.changeLanguage(this.value)">
-      <option id="en-US" value="en-US">English</option>
-      <option id="es-ES" value="es-ES">Español</option>
-      <option id="pt-PT" value="pt-PT">Português</option>
-    </select> -->
-
+    <div id="root" class="col py-3 h-100"></div>
   </div>
-
-  <div id="root"></div>
-
-  <div id="footer">
-    <div>
-      Test footer content
-    </div>
-    <a href="https://neon-pong.com/">NeonPong</a>
+</div>
+<div id="footer">
+  <div>
+    Test footer content
   </div>
-  <script type="module">
-    import { Global } from "../static/js/global.js";
-    import { getCookie } from "../static/js/utils.js";
+  <a href="https://neon-pong.com/">NeonPong</a>
+</div>
 
-    const lang = getCookie('django_language')
-    if (lang) {
-      document.getElementById(lang).setAttribute('selected', 'selected')
-    }
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    window.global = new Global();
-    window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
-  </script>
-  <script src='{% static "js/page-manager.js" %}' type="module"></script>
-  <script src='{% static "js/utils.js" %}' type="module"></script>
-  <script src='{% static "js/game.js" %}' type="module"></script>
-  <script src='{% static "js/2fa.js" %}' type="module"></script>
-  <script src='{% static "js/login.js" %}' type="module"></script>
-  <script src='{% static "js/register.js" %}' type="module"></script>
-  <script src='{% static "js/oauth_callback.js" %}' type="module"></script>
-  <script src='{% static "js/me.js" %}' type="module"></script>
-  <script src='{% static "js/chat.js" %}' type="module"></script>
-  <script src='{% static "js/verify_email.js" %}' type="module"></script>
-  <script src='{% static "js/3dGame.js" %}' type="module"></script>
-  <script src='{% static "js/tournament.js" %}' type="module"></script>
-  <script src='{% static "js/users.js" %}' type="module"></script>
-  <script src='{% static "js/friendlist.js" %}' type="module"></script>
 
-  <!-- Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="module">
+  import {Global} from "../static/js/global.js";
+  import {getCookie} from "../static/js/utils.js";
+
+  const lang = getCookie('django_language')
+  if (lang) {
+    document.getElementById(lang).checked = true;
+  }
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
+  window.global = new Global();
+  window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
+</script>
+<script src='{% static "js/page-manager.js" %}' type="module"></script>
+<script src='{% static "js/utils.js" %}' type="module"></script>
+<script src='{% static "js/game.js" %}' type="module"></script>
+<script src='{% static "js/2fa.js" %}' type="module"></script>
+<script src='{% static "js/login.js" %}' type="module"></script>
+<script src='{% static "js/register.js" %}' type="module"></script>
+<script src='{% static "js/oauth_callback.js" %}' type="module"></script>
+<script src='{% static "js/me.js" %}' type="module"></script>
+<script src='{% static "js/chat.js" %}' type="module"></script>
+<script src='{% static "js/verify_email.js" %}' type="module"></script>
+<script src='{% static "js/3dGame.js" %}' type="module"></script>
+<script src='{% static "js/tournament.js" %}' type="module"></script>
+<script src='{% static "js/users.js" %}' type="module"></script>
+<script src='{% static "js/friendlist.js" %}' type="module"></script>
+
 </body>
 
 </html>

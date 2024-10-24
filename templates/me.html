@@ -2,35 +2,42 @@
 {% load i18n %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/me.css' %}">
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-<h1>{% translate "My Profile" %}</h1>
-<div id="profile-page" class="box">
-  <span></span>
-  <ul class="content">
-    <div class="user-email">
-      <li id="user_id" hidden>{{ user.id }}</li>
-      <li>
-          <img class="profile-picture" src="{{ user.avatar.url }}" alt="user avatar">
-      </li>
-      <li>{% translate "Username" %}: {{ user.username }}</li>
-      <li>{% translate "Email" %}: {{ user.email }}</li>
+<span id="user_id" hidden>{{ user.id }}</span>
+<div class="row h-100">
+  <div class="col-3"></div>
+  <div class="col-6 align-content-center">
+    <h1>{% translate "My Profile" %}</h1>
+    <div id="profile-page" class="box">
+      <div class="content">
+        <div class="row col-6">
+          <img class="profile-picture col-12" src="{{ user.avatar.url }}" alt="user avatar">
+          <h3 class="col-12">{{ user.username }}</h3>
+          <p class="col-12">{{ user.email }}</p>
+        </div>
+        <div class="col-6">
+          {% if not user.verified_email %}
+          <li>{% translate "Email not verified" %}</li>
+          <button class="button mb-2" id="resend-verification">{% translate "Resend verification email" %}</button>
+          {% endif %}
+          {% if user.has_2fa %}
+          <button class="button mb-2" id="toggle-2fa" {% if not user.verified_email %} disabled {% endif %}>
+            {% translate "Disable Two-Factor Authentication" %}
+          </button>
+          {% else %}
+          <button class="button mb-2" id="toggle-2fa" {% if not user.verified_email %} disabled {% endif %}>
+            {% translate "Enable Two-Factor Authentication" %}
+          </button>
+          {% endif %}
+          <button class="button mb-2" id="edit-profile" onclick="window.global.pageManager.load('edit-profile')">
+              {% translate "Edit Profile" %}
+          </button>
+          <button class="button mb-2" id="friendlist" onclick="window.global.pageManager.load('friendlist')">
+              {% translate "Friendlist" %}
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="verification">
-      {% if not user.verified_email %}
-      <li>{% translate "Email not verified" %}</li>
-      <button class="button" id="resend-verification">{% translate "Resend verification email" %}</button>
-      {% endif %}
-      <li>{% translate "Two-Factor Authentication" %}: {{ user.has_2fa|yesno:_("enabled,disabled") }}</li>
-      <button class="button" id="toggle-2fa" {% if not user.verified_email %} disabled {% endif %}>
-        {# Used for toggling the 2FA option #}{% translate "Toggle" %}
-      </button>
-    <button class="button" id="edit-profile" onclick="window.global.pageManager.load('edit-profile')">
-        {% translate "Edit Profile" %}
-    </button>
-    <button class="button" id="friendlist" onclick="window.global.pageManager.load('friendlist')">
-        {% translate "Friendlist" %}
-    </button>
-    </div>
-  </ul>
+  </div>
+  <div class="col-3"></div>
 </div>
