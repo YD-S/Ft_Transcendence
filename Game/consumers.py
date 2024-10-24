@@ -2,7 +2,8 @@ import asyncio
 import json
 import math
 import random
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Dict
 
 from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -78,19 +79,22 @@ def angle_difference(angle1: float, angle2: float):
         abs(angle1 - angle2 - 2 * math.pi),
     ])
 
+@dataclass
+class GameState:
+    player1_angle: float = 0
+    player2_angle: float = math.pi
+    player1_score: int = 0
+    player2_score: int = 0
+    ball_pos: Vector = Vector(0, 0)
+    ball_velocity: Vector = Vector(0, 0)
+    last_collision: str = None
+    game_finished: bool = False
 
 class GameConsumer(AsyncWebsocketConsumer):
-    game_finished = False
     sockets = {}
-    player1_score = 0
-    player2_score = 0
-    players = 0
+    games: Dict[int, GameState] = {}
+    players : Dict[int, int] = {}
     player_names = []
-    player1_angle = 0
-    player2_angle = math.pi
-    last_collision = None
-    ball_pos = Vector(0, 0)
-    ball_velocity = Vector.from_angle(random.random() * 2 * math.pi)
     ball_speed = 0.18
 
     def __init__(self, *args, **kwargs):
@@ -101,22 +105,22 @@ class GameConsumer(AsyncWebsocketConsumer):
         self.frame_task = None  # Task to manage the frame sending coroutine
 
     async def connect(self):
-        if GameConsumer.players < 2:
-            await self.accept()
-            self.game_id = self.scope["url_route"]["kwargs"]["game_id"]
+        await self.accept()
+        self.game_id = self.scope["url_route"]["kwargs"]["game_id"]
+        if GameConsumer.players.get(self.game_id, 0) < 2:
+            GameConsumer.players[self.game_id] = GameConsumer.players.get(self.game_id, 0) + 1
             await self.create_group(self.game_id)
             self.player_names.append(self.scope['user'].username)
-            cache.set(f'{self.game_id}:player1' if GameConsumer.players == 0 else f'{self.game_id}:player2', self.scope['user'].id)
-            GameConsumer.players += 1
+            cache.set(f'{self.game_id}:player1' if GameConsumer.players[self.game_id] == 0 else f'{self.game_id}:player2', self.scope['user'].id)
             if self.game_id not in GameConsumer.sockets:
                 GameConsumer.sockets[self.game_id] = [self]
             else:
                 GameConsumer.sockets[self.game_id].append(self)
-            if GameConsumer.players == 2 and self.frame_task is None:
-                GameConsumer.game_finished = False
+            if GameConsumer.players[self.game_id] == 2 and self.frame_task is None:
+                GameConsumer.games[self.game_id] = GameState()
                 self.frame_task = asyncio.create_task(self.send_every_frame())
         else:
-            await self.close(400)
+            await self.close(reason='Game is full')
 
     async def receive(self, text_data: Any | None = None, bytes_data: bytes | None = None):
         text_data_json = json.loads(text_data)
@@ -139,35 +143,33 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def calculate_ball_collision(self):
         # Calculate the distance of the ball from the center of the court
-        ball_distance = GameConsumer.ball_pos.magnitude()
-        ball_angle = GameConsumer.ball_pos.angle()
+        ball_distance = GameConsumer.games[self.game_id].ball_pos.magnitude()
+        ball_angle = GameConsumer.games[self.game_id].ball_pos.angle()
         # Check if the ball is out of bounds
         if ball_distance > (COURT_RADIUS - BALL_RADIUS):
-            if angle_difference(self.player1_angle, ball_angle) < ANGLE_MARGIN:
-                await self.bounce(self.player1_angle, 'player1')
-            elif angle_difference(self.player2_angle, ball_angle) < ANGLE_MARGIN:
-                await self.bounce(self.player2_angle, 'player2')
+            if angle_difference(GameConsumer.games[self.game_id].player1_angle, ball_angle) < ANGLE_MARGIN:
+                await self.bounce(GameConsumer.games[self.game_id].player1_angle, 'player1')
+            elif angle_difference(GameConsumer.games[self.game_id].player2_angle, ball_angle) < ANGLE_MARGIN:
+                await self.bounce(GameConsumer.games[self.game_id].player2_angle, 'player2')
             else:
-                GameConsumer.add_score()
+                self.add_score()
                 self.reset_ball()
 
-    @staticmethod
-    async def bounce(player_angle, player_name):
-        GameConsumer.last_collision = player_name
-        GameConsumer.ball_velocity = - Vector.from_angle(
+    async def bounce(self, player_angle, player_name):
+        GameConsumer.games[self.game_id].last_collision = player_name
+        GameConsumer.games[self.game_id].ball_velocity = - Vector.from_angle(
             player_angle + (random.random() * BOUNCE_MARGIN - BOUNCE_MARGIN / 2))
-        GameConsumer.ball_pos = GameConsumer.ball_pos.normalize() * ((COURT_RADIUS - BALL_RADIUS) * 0.98)
+        GameConsumer.games[self.game_id].ball_pos = GameConsumer.games[self.game_id].ball_pos.normalize() * ((COURT_RADIUS - BALL_RADIUS) * 0.98)
 
-    @staticmethod
-    async def calculate_angle(direction, is_player_first):
-        a = GameConsumer.player1_angle if is_player_first else GameConsumer.player2_angle
+    async def calculate_angle(self, direction, is_player_first):
+        a = GameConsumer.games[self.game_id].player1_angle if is_player_first else GameConsumer.games[self.game_id].player2_angle
         increment = 0.01 if 'left' in direction else -0.01
         a += increment
         a = a % (2 * math.pi)
         if is_player_first:
-            GameConsumer.player1_angle = a
+            GameConsumer.games[self.game_id].player1_angle = a
         else:
-            GameConsumer.player2_angle = a
+            GameConsumer.games[self.game_id].player2_angle = a
 
     async def create_group(self, group_name):
         await self.channel_layer.group_add(
@@ -183,9 +185,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             'player2_y': data['player2_y'],
             'ball_x': data['ball_x'],
             'ball_y': data['ball_y'],
-            'player1_score': GameConsumer.player1_score,
-            'player2_score': GameConsumer.player2_score,
-            'last_collision': GameConsumer.last_collision
+            'player1_score': GameConsumer.games[self.game_id].player1_score,
+            'player2_score': GameConsumer.games[self.game_id].player2_score,
+            'last_collision': GameConsumer.games[self.game_id].last_collision
         }))
 
     async def disconnect(self, close_code):
@@ -195,12 +197,12 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game_id,
             self.channel_name
         )
-        GameConsumer.players -= 1
+        GameConsumer.players[self.game_id] -= 1
         if self.scope['user'].username in self.player_names:
             GameConsumer.player_names.remove(self.scope['user'].username)
 
         # Cancel the frame sending coroutine if a player disconnects
-        if GameConsumer.players < 2 and self.frame_task is not None:
+        if GameConsumer.players[self.game_id] < 2 and self.frame_task is not None:
             self.frame_task.cancel()
             self.frame_task = None
             for socket in GameConsumer.sockets[self.game_id]:
@@ -212,8 +214,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def send_every_frame(self, frame_rate=60):
         frame_duration = 1 / frame_rate
-        GameConsumer.player1_angle = 0
-        GameConsumer.player2_angle = math.pi
+        GameConsumer.games[self.game_id].player1_angle = 0
+        GameConsumer.games[self.game_id].player2_angle = math.pi
         self.reset_ball()
         try:
             while True:
@@ -224,10 +226,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                     {
                         'type': 'move',
                         'data': {
-                            'player1_y': GameConsumer.player1_angle,
-                            'player2_y': GameConsumer.player2_angle,
-                            'ball_x': GameConsumer.ball_pos.x,
-                            'ball_y': GameConsumer.ball_pos.y,
+                            'player1_y': GameConsumer.games[self.game_id].player1_angle,
+                            'player2_y': GameConsumer.games[self.game_id].player2_angle,
+                            'ball_x': GameConsumer.games[self.game_id].ball_pos.x,
+                            'ball_y': GameConsumer.games[self.game_id].ball_pos.y,
                         }
                     }
                 )
@@ -236,33 +238,32 @@ class GameConsumer(AsyncWebsocketConsumer):
             pass
 
     async def ball_movement(self):
-        GameConsumer.ball_pos += GameConsumer.ball_velocity * GameConsumer.ball_speed
+        GameConsumer.games[self.game_id].ball_pos += GameConsumer.games[self.game_id].ball_velocity * GameConsumer.ball_speed
         await self.calculate_ball_collision()
 
-    @staticmethod
-    def reset_ball():
-        GameConsumer.last_collision = None
-        GameConsumer.ball_pos = Vector(0, 0)
-        GameConsumer.ball_velocity = Vector.from_angle(math.pi / 4 * 3)
-        GameConsumer.player1_angle = 0
-        GameConsumer.player2_angle = math.pi
+    def reset_ball(self):
+        GameConsumer.games[self.game_id].last_collision = None
+        GameConsumer.games[self.game_id].ball_pos = Vector(0, 0)
+        GameConsumer.games[self.game_id].ball_velocity = Vector.from_angle(math.pi / 4 * 3)
+        GameConsumer.games[self.game_id].player1_angle = 0
+        GameConsumer.games[self.game_id].player2_angle = math.pi
 
-    @staticmethod
-    def add_score():
-        if GameConsumer.last_collision == 'player1':
-            GameConsumer.player1_score += 1
-        elif GameConsumer.last_collision == 'player2':
-            GameConsumer.player2_score += 1
+
+    def add_score(self):
+        if GameConsumer.games[self.game_id].last_collision == 'player1':
+            GameConsumer.games[self.game_id].player1_score += 1
+        elif GameConsumer.games[self.game_id].last_collision == 'player2':
+            GameConsumer.games[self.game_id].player2_score += 1
 
     async def check_winner(self):
-        if GameConsumer.player1_score == WINNING_SCORE:
+        if GameConsumer.games[self.game_id].player1_score == WINNING_SCORE:
             await self.send_winner_message(cache.get(f'{self.game_id}:player1'), cache.get(f'{self.game_id}:player2'),
-                                           GameConsumer.player1_score,
-                                           GameConsumer.player2_score)
-        elif GameConsumer.player2_score == WINNING_SCORE:
+                                           GameConsumer.games[self.game_id].player1_score,
+                                           GameConsumer.games[self.game_id].player2_score)
+        elif GameConsumer.games[self.game_id].player2_score == WINNING_SCORE:
             await self.send_winner_message(cache.get(f'{self.game_id}:player2'), cache.get(f'{self.game_id}:player1'),
-                                           GameConsumer.player2_score,
-                                           GameConsumer.player1_score)
+                                           GameConsumer.games[self.game_id].player2_score,
+                                           GameConsumer.games[self.game_id].player1_score)
 
     async def winner(self, event):
         data = event['data']
@@ -273,16 +274,16 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def send_winner_message(self, winner: int, looser: int, winner_score: int, looser_score: int):
 
-        if not GameConsumer.game_finished:
+        if not GameConsumer.games[self.game_id].game_finished:
             from users.models import User, Match
             winner_obj = await User.objects.aget(id=winner)
             looser_obj = await User.objects.aget(id=looser)
             cache.delete(f'{self.game_id}:player1')
             cache.delete(f'{self.game_id}:player2')
-            GameConsumer.game_finished = True
-            GameConsumer.player1_score = 0
-            GameConsumer.player2_score = 0
-            GameConsumer.player_names = []
+            GameConsumer.games[self.game_id].game_finished = True
+            GameConsumer.games[self.game_id].player1_score = 0
+            GameConsumer.games[self.game_id].player2_score = 0
+            GameConsumer.games[self.game_id].player_names = []
             await Match.objects.acreate(winner=winner_obj, loser=looser_obj, winner_score=winner_score,
                                         loser_score=looser_score)
             await self.channel_layer.group_send(

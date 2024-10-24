@@ -23,6 +23,13 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             str(self.scope['user'].id),
             self.channel_name
         )
+        if self.scope['user'] in sum(self.private_queue.values(), []):
+            for key, value in self.private_queue.items():
+                if self.scope['user'] in value:
+                    value.remove(self.scope['user'])
+                    if not value:
+                        del self.private_queue[key]
+                    break
         if self.scope['user'] in self.queue:
             self.queue.remove(self.scope['user'])
         print('User removed from queue:', self.scope['user'].id)
