@@ -3,7 +3,7 @@ import {PageManager} from "./page-manager.js";
 
 export function blockUser() {
     const block_button = document.getElementById('block-user')
-      if (block_button) block_button.addEventListener('click', function() {
+    if (block_button) block_button.addEventListener('click', function () {
         fetch("/api/auth/me/", {
             method: "GET"
         }).then(response => {
@@ -35,7 +35,7 @@ export function blockUser() {
 
 export function unblockUser() {
     const unblock_button = document.getElementById('unblock-user')
-    if (unblock_button) unblock_button.addEventListener('click', function() {
+    if (unblock_button) unblock_button.addEventListener('click', function () {
         fetch(`/api/user/blocked/${document.getElementById("block_id").innerHTML}`, {
             method: "DELETE"
         }).then(response => {
@@ -49,9 +49,9 @@ export function unblockUser() {
     });
 }
 
-export function friendUser(){
+export function friendUser() {
     const friend_button = document.getElementById('friend-user')
-      if (friend_button) friend_button.addEventListener('click', function() {
+    if (friend_button) friend_button.addEventListener('click', function () {
         fetch("/api/auth/me/", {
             method: "GET"
         }).then(response => {
@@ -81,22 +81,22 @@ export function friendUser(){
     })
 }
 
-export function unfriendUser(userId, page){
-        fetch(`/api/user/friendship/${userId}`, {
-            method: "DELETE"
-        }).then(response => {
-            if (response.ok) {
-                alert("Removed user from friend list!");
-                PageManager.getInstance().load(page, false);
-            } else {
-                alert("Failed to remove user from friend list!");
-            }
-        });
+export function unfriendUser(userId, page) {
+    fetch(`/api/user/friendship/${userId}`, {
+        method: "DELETE"
+    }).then(response => {
+        if (response.ok) {
+            alert("Removed user from friend list!");
+            PageManager.getInstance().load(page, false);
+        } else {
+            alert("Failed to remove user from friend list!");
+        }
+    });
 }
 
-export function inviteUser(){
+export function inviteUser() {
     const invite_button = document.getElementById('game-invite')
-    invite_button.addEventListener('click', function() {
+    invite_button.addEventListener('click', function () {
         fetch('api/invite/', {
             method: "POST",
             headers: {
@@ -116,12 +116,12 @@ export function inviteUser(){
     });
 }
 
-PageManager.getInstance().setOnPageLoad("user", function() {
+PageManager.getInstance().setOnPageLoad("user", function () {
     blockUser();
     unblockUser();
     friendUser();
     const unfriend_button = document.getElementById('unfriend-user')
-    if (unfriend_button) unfriend_button.addEventListener('click', function() {
+    if (unfriend_button) unfriend_button.addEventListener('click', function () {
         unfriendUser(document.getElementById("friendship_id").innerHTML, "user");
     });
     inviteUser();
