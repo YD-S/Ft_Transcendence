@@ -30,7 +30,8 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def save_user_avatar(self, user_data):
+    @staticmethod
+    def save_user_avatar(user_data):
         image_url = user_data.get('image', {}).get('link')
         if not image_url:
             return None
