@@ -7,11 +7,11 @@ PageManager.getInstance().setOnPageLoad("auth/verify_email", () => {
     const code = urlParams.get("code");
     const user = urlParams.get("user");
     if (!code) {
-        Notification.error("No verification code provided!");
+        Notification.error("AUTH.ERROR.NO_2FA_CODE");
         return;
     }
     if (!user) {
-        Notification.error("No user provided!");
+        Notification.error("AUTH.ERROR.NO_2FA_USER");
         return;
     }
 
@@ -23,9 +23,9 @@ PageManager.getInstance().setOnPageLoad("auth/verify_email", () => {
         body: JSON.stringify({code: code, user: user})
     }).then(response => {
         if (response.ok) {
-            Notification.success("Email verificado");
+            Notification.success("AUTH.TFA.EMAIL_VERIFIED");
         } else {
-            Notification.error("El código de verificación no es válido o ha expirado.");
+            Notification.error("AUTH.ERROR.INVALID_2FA_CODE");
         }
         PageManager.getInstance().load("auth/login", false);
     })

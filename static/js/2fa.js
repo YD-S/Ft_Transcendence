@@ -1,12 +1,13 @@
 import {PageManager} from "./page-manager.js";
 import {Notification} from "./notification.js";
+import {t} from "./translation.js";
 
 
 PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
     if (!email2fa) {
         window.global.pageManager.load('auth/login')
     }
-    document.getElementById('email-message').innerText = `Se ha enviado un correo con el código de verificación a su cuenta de correo`;
+    document.getElementById('email-message').innerText = t(`AUTH.TFA.EMAIL_SENT_MESSAGE`);
 
     document.getElementById('submit')
         .addEventListener('click', (event) => {
@@ -24,7 +25,7 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
             })
                 .then(response => {
                     if (response.status >= 400) {
-                        throw new Error("Invalid code");
+                        throw new Error("AUTH.ERROR.INVALID_2FA_CODE");
                     }
                     return response.json();
                 })
@@ -52,12 +53,12 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
             })
                 .then(response => {
                     if (response.status >= 400) {
-                        throw new Error("There was an error resending the email");
+                        throw new Error("AUTH.ERROR.RESEND_2FA_CODE");
                     }
                     return response.json();
                 })
                 .then(data => {
-                    Notification.success('Nuevo código enviado')
+                    Notification.success('AUTH.TFA.EMAIL_RESENT_MESSAGE');
                 })
                 .catch((error) => {
                     Notification.error(error.message);

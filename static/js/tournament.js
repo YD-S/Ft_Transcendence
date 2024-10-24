@@ -1,6 +1,7 @@
 import { Game } from './game.js';
 import { PageManager } from "./page-manager.js";
 import {Notification} from "./notification.js";
+import {t} from "./translation.js";
 
 class Tournament {
     constructor() {
@@ -25,12 +26,12 @@ class Tournament {
             const match = this.matches[i];
 
             if (match.played) {
-                matchElement.innerHTML = `<button class="button">${match.player1} vs ${match.player2} <p>Winner: ${this.results[i]}</p> </button>`;
+                matchElement.innerHTML = `<button class="button">${match.player1} vs ${match.player2} <p>${t('GAME.WINNER')}: ${this.results[i]}</p> </button>`;
                 matchElement.setAttribute('id', 'finished');
             } else if (match.player1 && match.player2) {
                 matchElement.innerHTML = `<button class="deploy-match button" data-match="${i}">${match.player1} vs ${match.player2}</button>`;
             } else {
-                matchElement.innerHTML = `<button class="button waiting">Waiting for results</button>`;
+                matchElement.innerHTML = `<button class="button waiting">${t('GAME.TOURNAMENT.WAITING_FOR_RESULTS')}</button>`;
             }
         }
     }
@@ -94,14 +95,14 @@ class Tournament {
         const player4 = document.getElementById('player4').value.trim();
 
         if (!player1 || !player2 || !player3 || !player4) {
-            Notification.warning("All player names are required. Please fill in all fields.");
+            Notification.warning("GAME.TOURNAMENT.ERROR.PLAYER_EMPTY");
             return false;
         }
 
         const playerNames = [player1, player2, player3, player4];
         const uniqueNames = new Set(playerNames);
         if (uniqueNames.size !== playerNames.length) {
-            Notification.warning("Each player must have a unique name. Please ensure all names are different.");
+            Notification.warning("GAME.TOURNAMENT.ERROR.PLAYER_REPEAT");
             return false;
         }
 

@@ -68,7 +68,7 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    throw new Error("Failed to leave room");
+                    throw new Error("CHAT.ERROR.LEAVE_ROOM_FAILED");
                 }
             })
             .then(data => {
@@ -85,7 +85,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
         .addEventListener("click", function (event) {
             const roomName = document.getElementById("new-room-name").value;
             if (!roomName.trim()) {
-                Notification.warning("Room name cannot be empty");
+                Notification.warning("CHAT.ERROR.EMPTY_ROOM_NAME");
                 return;
             }
             fetch("/api/chat/room/", {
@@ -102,7 +102,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     if (response.ok) {
                         return response.json();
                     } else {
-                        throw new Error("Failed to create room");
+                        throw new Error("CHAT.ERROR.CREATE_ROOM_FAILED");
                     }
                 })
                 .then(data => {
@@ -130,7 +130,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     if (response.ok) {
                         return response.json();
                     } else {
-                        throw new Error("Failed to join room");
+                        throw new Error("CHAT.ERROR.JOIN_ROOM_FAILED");
                     }
                 })
                 .then(data => {
@@ -145,7 +145,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
         .addEventListener("click", function (event) {
             const username = document.getElementById("direct-room-username").value;
             if (!username.trim()) {
-                Notification.warning("Username cannot be empty");
+                Notification.warning("CHAT.ERROR.EMPTY_USERNAME");
                 return;
             }
             fetch(`/api/chat/room/direct/${username.trim()}`, {
@@ -158,7 +158,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     if (response.ok) {
                         return response.json();
                     } else {
-                        throw new Error("Failed to join room");
+                        throw new Error("CHAT.ERROR.DIRECT_ROOM_FAILED");
                     }
                 })
                 .then(data => {

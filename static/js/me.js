@@ -9,7 +9,7 @@ PageManager.getInstance().setOnPageLoad("me", () => {
             method: "GET"
         }).then(response => {
             if (!response.ok) {
-                throw new Error("Failed to fetch user data!");
+                throw new Error("COMMON.ERROR.FETCH.USER_DATA");
             }
             return response.json();
         }).then(data => {
@@ -22,10 +22,10 @@ PageManager.getInstance().setOnPageLoad("me", () => {
             });
         }).then(response => {
             if (response.ok) {
-                Notification.success("2FA status updated!");
+                Notification.success("AUTH.TFA.UPDATE_SUCCESS");
                 PageManager.getInstance().load("me")
             } else {
-                Notification.error("Failed to update 2FA status!");
+                Notification.error("AUTH.ERROR.UPDATE_2FA");
             }
         });
     })
@@ -40,9 +40,9 @@ PageManager.getInstance().setOnPageLoad("me", () => {
             body: JSON.stringify({user_id: document.getElementById("user_id").innerHTML})
         }).then(response => {
             if (response.ok) {
-                Notification.success("Verification email sent!");
+                Notification.success("AUTH.TFA.EMAIL_SENT_MESSAGE");
             } else {
-                Notification.error("Failed to send verification email!");
+                Notification.error("AUTH.ERROR.SEND_EMAIL");
             }
         })
     }) : null;
