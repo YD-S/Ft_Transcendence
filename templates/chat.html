@@ -3,40 +3,48 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
 <div id="chat-page">
-  <div id="room-list-sidebar">
+  <div class="col-auto col-md-3">
     <div id="room-list">
       <h2>{% translate "Chats" %}</h2>
-      <ul>
-        {% for room in rooms %}
-          <li class="room">
-            <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
-          </li>
-        {% endfor %}
-      </ul>
+      {% for room in rooms %}
+        <div class="row room">
+          <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
+        </div>
+      {% endfor %}
     </div>
-    <div id="room-inputs">
-      <div id="create-room">
+    <div class="row">
+      <div id="col-sm">
         <label>
           <span>{% translate "Create a room" %}:</span>
           <input type="text" id="new-room-name" placeholder="{% translate 'Room name' %}">
         </label>
+      </div>
+      <div class="col-sm">
         <button id="submit-create-room">{% translate "Create" %}</button>
       </div>
-      <div id="join-room">
+    </div>
+    <div class="row">
+      <div id="col-sm">
         <label>
           <span>{% translate "Join a room" %}:</span>
           <input type="text" id="join-room-code" placeholder="{% translate 'Room code' %}">
         </label>
+      </div>
+      <div>
         <button id="submit-join-room">{% translate "Join" %}</button>
       </div>
-      <div id="direct-room">
+    </div>
+    <div class="row">
+      <div id="col-sm">
         <label>
           <span>{% translate "Direct message" %}:</span>
           <input type="text" id="direct-room-username" placeholder="{% translate 'Username' %}">
         </label>
+      </div>
+      <div id="col-sm">
         <button id="submit-direct-room">{% translate "Join" %}</button>
       </div>
     </div>
   </div>
-  <div id="current-room"></div>
+  <div class="col py-3" id="current-room"></div>
 </div>

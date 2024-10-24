@@ -1,6 +1,7 @@
 import Ball from "./Ball.js";
 import Paddle from "./Paddle.js";
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 const  WINNING_SCORE = 1;
 export class Game {
@@ -105,7 +106,7 @@ export class Game {
     }
 
     endGame(winnerMessage) {
-        alert(winnerMessage);
+        Notification.success(winnerMessage);
         this.destroy();
         if (!this.tournament) {
             PageManager.getInstance().load('home');

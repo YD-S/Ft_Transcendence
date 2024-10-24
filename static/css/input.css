@@ -1,0 +1,74 @@
+
+
+/* INPUT */
+.input-container {
+	display: flex;
+	position: relative;
+	border-radius: 1rem;
+	background: linear-gradient(173deg, #23272f 0%, #14161a 100%);
+	box-shadow: 10px 10px 20px #0e1013, -10px -10px 40px #383e4b;
+	padding: 0.3rem;
+	gap: 0.3rem;
+}
+
+.input-container input {
+	border-radius: 0.8rem;
+	background: #23272f;
+	box-shadow: inset 5px 5px 10px #0e1013, inset -5px -5px 10px #383e4b, 0px 0px 100px rgba(255, 212, 59, 0),
+		0 0 100px rgba(255, 102, 0, 0);
+	width: 100%;
+	flex-basis: 100%;
+	padding: 1rem;
+	border: 1px solid transparent;
+	color: #fff;
+	transition: all 0.2s ease-in-out;
+}
+
+.input-container label {
+	position: absolute;
+	top: 23px;
+	left: 25px;
+	color: #ffffff80;
+	font-size: 12px;
+	transition: all 0.3s ease;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.input-container i {
+	color: #ffffff80;
+	position: absolute;
+	right: 20px;
+	top: 23px;
+}
+
+.input-container input:focus {
+	border: 1px solid #ffd43b;
+	outline: none;
+	box-shadow: inset 0px 0px 10px rgba(255, 102, 0, 0.5), inset 0px 0px 10px rgba(255, 212, 59, 0.5),
+		0px 0px 100px rgba(255, 212, 59, 0.5), 0px 0px 100px rgba(255, 102, 0, 0.5);
+}
+.input-container input:focus ~ label,
+.input-container input:valid ~ label {
+	left: 70%;
+	color: #ffd43b;
+	text-shadow: 0 0 5px #ffd43b, 0 0 10px #ffd43b, 0 0 15px #ffd43b, 0 0 20px #ff6600, 0 0 25px #ff6600;
+}
+
+.input-container input:focus ~ i,
+.input-container input:valid ~ i {
+	color: #ffd43b;
+	text-shadow: 0 0 5px #ffd43b, 0 0 10px #ffd43b, 0 0 15px #ffd43b, 0 0 20px #ff6600, 0 0 25px #ff6600;
+}
+
+
+/* media query */
+@media (max-width: 500px) {
+	.input-container {
+		flex-direction: column;
+	}
+
+	.input-container input {
+		border-radius: 0.8rem;
+	}
+}

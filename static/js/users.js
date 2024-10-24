@@ -1,9 +1,10 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 
 export function blockUser() {
     const block_button = document.getElementById('block-user')
-      if (block_button) block_button.addEventListener('click', function() {
+    if (block_button) block_button.addEventListener('click', function () {
         fetch("/api/auth/me/", {
             method: "GET"
         }).then(response => {
@@ -24,10 +25,10 @@ export function blockUser() {
             });
         }).then(response => {
             if (response.ok) {
-                alert("Blocked User!");
+                Notification.success("Blocked User!");
                 PageManager.getInstance().load("user", true)
             } else {
-                alert("Failed to block User!");
+                Notification.error("Failed to block User!");
             }
         });
     });
@@ -35,23 +36,23 @@ export function blockUser() {
 
 export function unblockUser() {
     const unblock_button = document.getElementById('unblock-user')
-    if (unblock_button) unblock_button.addEventListener('click', function() {
+    if (unblock_button) unblock_button.addEventListener('click', function () {
         fetch(`/api/user/blocked/${document.getElementById("block_id").innerHTML}`, {
             method: "DELETE"
         }).then(response => {
             if (response.ok) {
-                alert("Unblocked User!");
+                Notification.success("Unblocked User!");
                 PageManager.getInstance().load("user", true)
             } else {
-                alert("Failed to unblock User!");
+                Notification.error("Failed to unblock User!");
             }
         });
     });
 }
 
-export function friendUser(){
+export function friendUser() {
     const friend_button = document.getElementById('friend-user')
-      if (friend_button) friend_button.addEventListener('click', function() {
+    if (friend_button) friend_button.addEventListener('click', function () {
         fetch("/api/auth/me/", {
             method: "GET"
         }).then(response => {
@@ -72,31 +73,31 @@ export function friendUser(){
             });
         }).then(response => {
             if (response.ok) {
-                alert("Added user to friend list!");
+                Notification.success("Added user to friend list!");
                 PageManager.getInstance().load("user", true)
             } else {
-                alert("Failed to add user to friend list!");
+                Notification.error("Failed to add user to friend list!");
             }
         });
     })
 }
 
-export function unfriendUser(userId, page){
-        fetch(`/api/user/friendship/${userId}`, {
-            method: "DELETE"
-        }).then(response => {
-            if (response.ok) {
-                alert("Removed user from friend list!");
-                PageManager.getInstance().load(page, false);
-            } else {
-                alert("Failed to remove user from friend list!");
-            }
-        });
+export function unfriendUser(userId, page) {
+    fetch(`/api/user/friendship/${userId}`, {
+        method: "DELETE"
+    }).then(response => {
+        if (response.ok) {
+            Notification.success("Removed user from friend list!");
+            PageManager.getInstance().load(page, false);
+        } else {
+            Notification.error("Failed to remove user from friend list!");
+        }
+    });
 }
 
-export function inviteUser(){
+export function inviteUser() {
     const invite_button = document.getElementById('game-invite')
-    invite_button.addEventListener('click', function() {
+    invite_button.addEventListener('click', function () {
         fetch('api/invite/', {
             method: "POST",
             headers: {
@@ -107,22 +108,22 @@ export function inviteUser(){
             })
         }).then(response => {
             if (response.ok) {
-                alert("Invitation sent!");
+                Notification.success('USER.ACTIONS.INVITE.SENT');
                 PageManager.getInstance().load("pong/3dGame", false)
             } else {
-                alert("Failed to send invitation!");
+                Notification.error("Failed to send invitation!");
             }
         })
     });
 }
 
-PageManager.getInstance().setOnPageLoad("user", function() {
+PageManager.getInstance().setOnPageLoad("user", function () {
     blockUser();
     unblockUser();
     friendUser();
     const unfriend_button = document.getElementById('unfriend-user')
-    if (unfriend_button) unfriend_button.addEventListener('click', function() {
-        unfriendUser(document.getElementById("friendship_id").innerHTML, "user");
+    if (unfriend_button) unfriend_button.addEventListener('click', function () {
+        unfriendUser(document.getElementById("friendship_id").innerHTML, "user", true);
     });
     inviteUser();
 });

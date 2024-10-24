@@ -1,28 +1,30 @@
 {% load i18n %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="{% static 'css/input.css' %}">
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 
-<div id="login-form">
-  <h2>{% translate "Sign in to Neon Pong" %}</h2>
-  <div class="sign-input">
-    <div class="input-container">
-      <input class="input-container" type="text" id="username" required>
-      <label for="username">{% translate "Username" %}</label>
-      <i class='bx bxs-user'></i>
+<div class="row h-100">
+  <div class="col-3"></div>
+
+  <div class="col-6 align-content-center">
+    <h2 class="col-12 mb-5">{% translate "Sign in to Neon Pong" %}</h2>
+    <div class="col-12">
+      <div class="input-container col-12 mb-5">
+        <input class="input-container" type="text" id="username" required>
+        <label for="username">{% translate "Username" %}</label>
+        <i class='bx bxs-user'></i>
+      </div>
+      <div class="input-container col-12 mb-5">
+        <input class="input-container" type="password" id="password" required>
+        <label for="password">{% translate "Password" %}</label>
+        <i class='bx bxs-lock-alt'></i>
+      </div>
+      <button class="neon-button neon-button1 btn col-12 mb-4" id="submit">{% translate "Sign in" %}</button>
+      <button class="neon-button neon-button1 btn col-12 mb-4" id="oauth">{% translate "Sign in with 42" %}</button>
+      <button class="neon-button neon-button2 btn col-12" onclick="window.global.pageManager.load('auth/register')">{% translate "Create a new account" %}</button>
     </div>
-    <div class="input-container">
-      <input class="input-container" type="password" id="password" required>
-      <label for="password">{% translate "Password" %}</label>
-      <i class='bx bxs-lock-alt'></i>
-    </div>
-    <button class="btn" id="submit">{% translate "Sign in" %}</button>
   </div>
 
-  <div class="sign-other">
-    <button class="btn" id="oauth">{% translate "Sign in with 42" %}</button>
-    <button class="btn" onclick="window.global.pageManager.load('auth/register')">{% translate "Create a new account" %}</button>
-  </div>
-
+  <div class="col-3"></div>
 </div>

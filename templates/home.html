@@ -1,15 +1,18 @@
 {% load i18n %}
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
-
-<button role="button" class="btn btn1" onclick="window.global.pageManager.load('pong/game')">
-  {% translate "Local Game" %}
-</button>
-<button role="button" class="btn btn2" onclick="window.global.pageManager.load('pong/3dGame')">
-  {% translate "Remote 3D Game" %}
-</button>
-
-<button role="button" class="btn btn1" onclick="window.global.pageManager.load('pong/tournament')">
-  {% translate "Tournament" %}
-</button>
+<div class="row h-100">
+  <div class="col-4"></div>
+  <div class="col-4 align-content-center">
+    <button class="col-12 my-20 neon-button neon-button1 btn mb-5" onclick="window.global.pageManager.load('pong/game')">
+      {% translate "Local Game" %}
+    </button>
+    <button class="col-12 my-20 neon-button neon-button2 btn mb-5" onclick="window.global.pageManager.load('pong/3dGame')">
+      {% translate "Remote 3D Game" %}
+    </button>
+    <button class="col-12 my-20 neon-button neon-button1 btn" onclick="window.global.pageManager.load('pong/tournament')">
+      {% translate "Tournament" %}
+    </button>
+  </div>
+  <div class="col-4"></div>
+</div>

@@ -1,23 +1,31 @@
 {% load i18n %}
 {% load static %}
 
+<link rel="stylesheet" href="{% static 'css/input.css' %}">
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
-<div id="register-form" class="sign-input">
-  <div class="input-container">
-    <input class="input-container" type="text" id="username" required>
-    <label for="username">{% translate "Username" %}</label>
+<div class="row h-100">
+  <div class="col-3"></div>
+  <div class="col-6 align-content-center">
+    <h2 class="col-12 mb-5">{% translate "Create a new account" %}</h2>
+    <div id="register-form">
+      <div class="input-container col-12 mb-5">
+        <input class="input-container" type="text" id="username" required>
+        <label for="username">{% translate "Username" %}</label>
+      </div>
+      <div class="input-container col-12 mb-5">
+        <input class="input-container" type="email" id="email" required>
+        <label for="email">{% translate "Email" %}</label>
+      </div>
+      <div class="input-container col-12 mb-5">
+        <input class="input-container" type="password" id="password" required>
+        <label for="password">{% translate "Password" %}</label>
+      </div>
+      <div class="input-container col-12 mb-5">
+        <input class="input-container" type="password" id="confirm-password" required>
+        <label for="confirm-password">{% translate "Confirm password" %}</label>
+      </div>
+      <button id="submit" class="neon-button neon-button1 btn col-12">{% translate "Register" %}</button>
+    </div>
   </div>
-  <div class="input-container">
-    <input class="input-container" type="email" id="email" required>
-    <label for="email">{% translate "Email" %}</label>
-  </div>
-  <div class="input-container">
-    <input class="input-container" type="password" id="password" required>
-    <label for="password">{% translate "Password" %}</label>
-  </div>
-  <div class="input-container">
-    <input class="input-container" type="password" id="confirm-password" required>
-    <label for="confirm-password">{% translate "Confirm password" %}</label>
-  </div>
-  <button id="submit" class="btn">{% translate "Register" %}</button>
+  <div class="col-3"></div>
 </div>

@@ -1,7 +1,9 @@
 import { PageManager } from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 export function changeLanguage(language) {
 	setCookie("django_language", language, { path: "/", Domain: window.location.hostname });
+	document.getElementById(language).checked = true;
 	location.reload();
 }
 
@@ -16,7 +18,7 @@ export function logout() {
 			sessionStorage.removeItem("access_token");
 		})
 		.catch((error) => {
-			alert(error);
+			Notification.error(error.message);
 		});
 	PageManager.getInstance().load("auth/login");
 }
@@ -57,7 +59,7 @@ function refreshToken() {
 			saveToken(data);
 		})
 		.catch((error) => {
-			alert(error);
+			Notification.error(error.message);
 		});
 }
 

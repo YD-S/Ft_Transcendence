@@ -127,14 +127,13 @@ CHANNEL_LAYERS = {
     }
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache"
-        if ENABLE_CACHE else
-        "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": f"redis://{REDIS_HOST}:6379",
+if ENABLE_CACHE:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"redis://{REDIS_HOST}:6379",
+        }
     }
-}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

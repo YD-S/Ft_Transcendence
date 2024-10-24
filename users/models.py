@@ -30,7 +30,8 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def save_user_avatar(self, user_data):
+    @staticmethod
+    def save_user_avatar(user_data):
         image_url = user_data.get('image', {}).get('link')
         if not image_url:
             return None
@@ -61,7 +62,11 @@ class UserManager(BaseUserManager):
         user_data = response.json()
         user = self.model.objects.filter(username=user_data["login"] + "@42")
         if user.exists():
-            return user.first()
+            u = user.first()
+            if not u.avatar or not os.path.exists(u.avatar.path) or u.avatar.name == 'png/profile_default.png':
+                u.avatar = self.save_user_avatar(user_data)
+                u.save()
+            return u
         else:
             avatar_path = self.save_user_avatar(user_data)
             return self.create_user(
@@ -85,7 +90,7 @@ class User(AbstractUser, BaseModel):
     is_oauth = models.BooleanField(default=False)
     verified_email = models.BooleanField(default=False)
 
-    avatar = models.ImageField(upload_to="avatars/", null=True, default='svg/profile_icon.svg')
+    avatar = models.ImageField(upload_to="avatars/", null=True, default='png/profile_default.png')
 
     objects = UserManager()
 

@@ -18,14 +18,12 @@ const Listen = (doc) => {
     }
 };
 
-function handler(e){
-    unfriendUser(e.target.id, "friendlist");
-}
-
 let listener = null;
 
 PageManager.getInstance().setOnPageLoad("friendlist", function() {
-    listener = Listen(document).on('click', '.btn', handler);
+    listener = Listen(document).on('click', '.unfriend-user', (e) => {
+        unfriendUser(e.target.id, "friendlist");
+    });
 });
 
 PageManager.getInstance().setOnPageUnload("friendlist", function() {

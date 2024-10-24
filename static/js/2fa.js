@@ -1,4 +1,5 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 
 PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
@@ -32,7 +33,7 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
                     PageManager.getInstance().load('home');
                 })
                 .catch((error) => {
-                    alert(error);
+                    Notification.error(error.message);
                 });
         })
 
@@ -56,10 +57,10 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
                     return response.json();
                 })
                 .then(data => {
-                    alert('Nuevo código enviado')
+                    Notification.success('Nuevo código enviado')
                 })
                 .catch((error) => {
-                    alert(error);
+                    Notification.error(error.message);
                 });
         })
 })
