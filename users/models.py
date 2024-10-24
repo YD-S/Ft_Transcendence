@@ -63,7 +63,7 @@ class UserManager(BaseUserManager):
         user = self.model.objects.filter(username=user_data["login"] + "@42")
         if user.exists():
             u = user.first()
-            if not u.avatar or not os.path.exists(os.path.join(settings.MEDIA_ROOT, u.avatar.path)) or u.avatar.path == 'png/profile_default.png':
+            if not u.avatar or not os.path.exists(u.avatar.path) or u.avatar.name == 'png/profile_default.png':
                 u.avatar = self.save_user_avatar(user_data)
                 u.save()
             return u
