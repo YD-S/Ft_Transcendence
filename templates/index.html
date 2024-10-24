@@ -122,19 +122,23 @@
 
 
 <script type="module">
-  import {Global} from "../static/js/global.js";
-  import {getCookie} from "../static/js/utils.js";
+    import {Global} from "../static/js/global.js";
+    import {getCookie} from "../static/js/utils.js";
+    import {setCookie} from "../static/js/utils";
 
-  const lang = getCookie('django_language')
-  if (lang) {
-    document.getElementById(lang).checked = true;
-  }
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
+    const lang = getCookie('django_language')
+    if (lang) {
+        document.getElementById(lang).checked = true;
+    } else {
+        document.getElementById('en-US').checked = true;
+        setCookie('django_language', 'en-US', 365);
+    }
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
-  window.global = new Global();
-  window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
+    window.global = new Global();
+    window.onload = () => window.global.pageManager.load("{{ page }}" || "home");
 </script>
 <script src='{% static "js/page-manager.js" %}' type="module"></script>
 <script src='{% static "js/utils.js" %}' type="module"></script>
