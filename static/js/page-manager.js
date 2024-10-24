@@ -111,13 +111,21 @@ export class PageManager {
     }
 
 	setLoading(container) {
-		container.innerHTML = `<div class='loader'>
+		container.innerHTML = `
+<div class="row h-100">
+    <div class="col-5"></div>
+    <div class="col-2 align-content-center text-center">
+        <div class='loader'>
             <div></div>
             <div></div>
             <div></div>
             <div></div>
             <div></div>
             <div></div>
-        </div>`;
+        </div>
+    </div>
+    <div class="col-5"></div>
+</div>
+`;
 	}
 }
