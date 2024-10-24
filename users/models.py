@@ -61,7 +61,11 @@ class UserManager(BaseUserManager):
         user_data = response.json()
         user = self.model.objects.filter(username=user_data["login"] + "@42")
         if user.exists():
-            return user.first()
+            u = user.first()
+            if not u.avatar:
+                u.avatar = self.save_user_avatar(user_data)
+                u.save()
+            return u
         else:
             avatar_path = self.save_user_avatar(user_data)
             return self.create_user(

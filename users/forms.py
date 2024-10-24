@@ -5,4 +5,8 @@ from django import forms
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["avatar"]
+        fields = [
+            "avatar",
+            "email",
+            "password",
+        ]

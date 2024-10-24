@@ -215,6 +215,17 @@ h1 {
   transition: box-shadow 0.2s ease-in;
 }
 
+.green-dot {
+	width: 20px;
+	height: 20px;
+	background: #00FF00;
+	border-radius: 50%;
+
+	z-index: 1;
+	float: left;
+	position: relative;
+}
+
 .profile-picture {
 	max-width: 300px;
 	max-height: 300px;

@@ -1,20 +1,28 @@
 {% load static %}
 {% load i18n %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/me.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/user.css' %}">
 <h1>{% translate "Profile" %}</h1>
 <div id="profile-page" class="box">
   <span></span>
-  <ul class="content">
-    <div class="user-email">
+  <div class="content">
+    <ul>
       <li id="user_id" hidden>{{ user.id }}</li>
       <li id="block_id" hidden>{{ block.id }}</li>
       <li id="friendship_id" hidden>{{ friend.id }}</li>
       <li>
-        <img style="max-width: 150px; max-height: 150px" src="{{ user.avatar.url }}" alt="user avatar">
+        {% if online %}
+          <div class="profile-picture">
+            <div class="green-dot">
+              <img class="profile-picture" src="{{ user.avatar.url }}" alt="user avatar">
+            </div>
+          </div>
+        {% else %}
+          <img style="max-width: 150px; max-height: 150px" src="{{ user.avatar.url }}" alt="user avatar">
+        {% endif %}
       </li>
-      <li>{% translate "Username" %}: {{ user.username }}</li>
-    </div>
+      <li><h3>{{ user.username }}</h3></li>
+    </ul>
     <div class="verification">
       {% if is_not_friend %}
         <button class="button" id="friend-user">{% translate "Add friend" %}</button>
@@ -28,5 +36,5 @@
       {% endif %}
       <button class="button" id="game-invite">{% translate "Invite to game" %}</button>
     </div>
-  </ul>
+  </div>
 </div>

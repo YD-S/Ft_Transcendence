@@ -320,7 +320,6 @@ def oauth_login(request: HttpRequest):
         "redirect_uri": f"{settings.BASE_URL}/auth/oauth_callback"
     })
     response = requests.post(f"https://api.intra.42.fr/oauth/token?{querystring}")
-    print(response.status_code)
     if response.status_code != 200:
         return HttpResponse(
             json.dumps({"message": _("Invalid code"), "type": "oauth_login_fail"}),

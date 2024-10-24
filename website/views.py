@@ -1,5 +1,6 @@
 from pprint import pprint
 
+from django.core.cache import cache
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
@@ -92,8 +93,10 @@ def protected_page_view(request: HttpRequest, file: str):
                     friend = Friendship.objects.filter(user=request.user).get(friend=user)
                 else:
                     friend = None
-                return render(request, "users.html", {
+                sentinel = object()
+                return render(request, "user.html", {
                     "user": user,
+                    "online": cache.get(f"user:{user.id}:token", sentinel) is not sentinel,
                     "is_not_blocked": not user_is_blocked,
                     "block": block,
                     "is_not_friend": not user_is_friend,
