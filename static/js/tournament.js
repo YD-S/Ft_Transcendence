@@ -88,7 +88,7 @@ class Tournament {
         window.addEventListener('gameEnd', handleGameEnd);
     }
 
-    validateForm() {
+    static validateForm() {
         const player1 = document.getElementById('player1').value.trim();
         const player2 = document.getElementById('player2').value.trim();
         const player3 = document.getElementById('player3').value.trim();
@@ -131,15 +131,14 @@ class Tournament {
 
 let tournament = null;
 PageManager.getInstance().setOnPageLoad('pong/tournament', () => {
-    document.getElementById('button').addEventListener('click', (e) => {
-        const tournamentInstance = new Tournament();
-        if (tournamentInstance.validateForm()) {
+    document.getElementById('start-button').addEventListener('click', (e) => {
+        if (Tournament.validateForm()) {
             const player1 = document.getElementById('player1').value.trim();
             const player2 = document.getElementById('player2').value.trim();
             const player3 = document.getElementById('player3').value.trim();
             const player4 = document.getElementById('player4').value.trim();
 
-            tournament = tournamentInstance;
+            tournament = new Tournament();
             tournament.matches = [
                 {player1: player1, player2: player2, played: false},
                 {player1: player3, player2: player4, played: false},
