@@ -1,4 +1,5 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 
 PageManager.getInstance().setOnPageLoad("auth/verify_email", () => {
@@ -6,11 +7,11 @@ PageManager.getInstance().setOnPageLoad("auth/verify_email", () => {
     const code = urlParams.get("code");
     const user = urlParams.get("user");
     if (!code) {
-        alert("No verification code provided!");
+        Notification.error("No verification code provided!");
         return;
     }
     if (!user) {
-        alert("No user provided!");
+        Notification.error("No user provided!");
         return;
     }
 
@@ -22,9 +23,9 @@ PageManager.getInstance().setOnPageLoad("auth/verify_email", () => {
         body: JSON.stringify({code: code, user: user})
     }).then(response => {
         if (response.ok) {
-            alert("Email verificado");
+            Notification.success("Email verificado");
         } else {
-            alert("El código de verificación no es válido o ha expirado.");
+            Notification.error("El código de verificación no es válido o ha expirado.");
         }
         PageManager.getInstance().load("auth/login", false);
     })

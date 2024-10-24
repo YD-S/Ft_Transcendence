@@ -1,5 +1,6 @@
 import { Game } from './game.js';
 import { PageManager } from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 class Tournament {
     constructor() {
@@ -93,14 +94,14 @@ class Tournament {
         const player4 = document.getElementById('player4').value.trim();
 
         if (!player1 || !player2 || !player3 || !player4) {
-            alert("All player names are required. Please fill in all fields.");
+            Notification.warning("All player names are required. Please fill in all fields.");
             return false;
         }
 
         const playerNames = [player1, player2, player3, player4];
         const uniqueNames = new Set(playerNames);
         if (uniqueNames.size !== playerNames.length) {
-            alert("Each player must have a unique name. Please ensure all names are different.");
+            Notification.warning("Each player must have a unique name. Please ensure all names are different.");
             return false;
         }
 

@@ -1,4 +1,5 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 
 PageManager.getInstance().setOnPageLoad("me", () => {
@@ -21,10 +22,10 @@ PageManager.getInstance().setOnPageLoad("me", () => {
             });
         }).then(response => {
             if (response.ok) {
-                alert("2FA status updated!");
+                Notification.success("2FA status updated!");
                 PageManager.getInstance().load("me")
             } else {
-                alert("Failed to update 2FA status!");
+                Notification.error("Failed to update 2FA status!");
             }
         });
     })
@@ -39,9 +40,9 @@ PageManager.getInstance().setOnPageLoad("me", () => {
             body: JSON.stringify({user_id: document.getElementById("user_id").innerHTML})
         }).then(response => {
             if (response.ok) {
-                alert("Verification email sent!");
+                Notification.success("Verification email sent!");
             } else {
-                alert("Failed to send verification email!");
+                Notification.error("Failed to send verification email!");
             }
         })
     }) : null;

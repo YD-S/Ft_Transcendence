@@ -1,4 +1,5 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 
 export function blockUser() {
@@ -24,10 +25,10 @@ export function blockUser() {
             });
         }).then(response => {
             if (response.ok) {
-                alert("Blocked User!");
+                Notification.success("Blocked User!");
                 PageManager.getInstance().load("user", true)
             } else {
-                alert("Failed to block User!");
+                Notification.error("Failed to block User!");
             }
         });
     });
@@ -40,10 +41,10 @@ export function unblockUser() {
             method: "DELETE"
         }).then(response => {
             if (response.ok) {
-                alert("Unblocked User!");
+                Notification.success("Unblocked User!");
                 PageManager.getInstance().load("user", true)
             } else {
-                alert("Failed to unblock User!");
+                Notification.error("Failed to unblock User!");
             }
         });
     });
@@ -72,10 +73,10 @@ export function friendUser() {
             });
         }).then(response => {
             if (response.ok) {
-                alert("Added user to friend list!");
+                Notification.success("Added user to friend list!");
                 PageManager.getInstance().load("user", true)
             } else {
-                alert("Failed to add user to friend list!");
+                Notification.error("Failed to add user to friend list!");
             }
         });
     })
@@ -86,10 +87,10 @@ export function unfriendUser(userId, page) {
         method: "DELETE"
     }).then(response => {
         if (response.ok) {
-            alert("Removed user from friend list!");
+            Notification.success("Removed user from friend list!");
             PageManager.getInstance().load(page, false);
         } else {
-            alert("Failed to remove user from friend list!");
+            Notification.error("Failed to remove user from friend list!");
         }
     });
 }
@@ -107,10 +108,10 @@ export function inviteUser() {
             })
         }).then(response => {
             if (response.ok) {
-                alert("Invitation sent!");
+                Notification.success("Invitation sent!");
                 PageManager.getInstance().load("pong/3dGame", false)
             } else {
-                alert("Failed to send invitation!");
+                Notification.error("Failed to send invitation!");
             }
         })
     });

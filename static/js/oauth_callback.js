@@ -1,5 +1,6 @@
 import {PageManager} from "./page-manager.js";
 import {saveToken} from "./utils.js";
+import {Notification} from "./notification.js";
 
 
 PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
@@ -9,7 +10,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
     const code = query.get('code');
     const state = query.get('state');
     if (!state || !code || state !== original_state) {
-        alert('Invalid OAuth callback');
+        Notification.error('Invalid OAuth callback');
         PageManager.getInstance().load('auth/login', false);
         return;
     }
@@ -22,7 +23,7 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
         body: JSON.stringify({code: code})
     }).then(response => {
         if (response.status >= 400) {
-            alert('Invalid OAuth code');
+            Notification.error('Invalid OAuth code');
             PageManager.getInstance().load('auth/login', false);
         }
         return response.json();

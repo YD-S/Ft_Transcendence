@@ -1,5 +1,6 @@
 import { PageManager } from "./page-manager.js";
 import { saveToken } from "./utils.js";
+import {Notification} from "./notification.js";
 
 export function login() {
 	let username = document.getElementById("username").value.trim();
@@ -30,7 +31,7 @@ export function login() {
 			}
 		})
 		.catch((error) => {
-			alert(error);
+			Notification.error(error);
 		});
 }
 
@@ -47,7 +48,7 @@ function oauth() {
 			window.location.href = data.url;
 		})
 		.catch((error) => {
-			alert(error);
+			Notification.error(error);
 		});
 }
 

@@ -1,4 +1,5 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 PageManager.getInstance().setOnPageLoad("auth/register", () => {
     document.getElementById("submit").addEventListener("click", (event) => {
@@ -8,7 +9,7 @@ PageManager.getInstance().setOnPageLoad("auth/register", () => {
         const password = document.getElementById("password").value;
         const confirmPassword = document.getElementById("confirm-password").value;
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            Notification.warning("Passwords do not match!");
             return;
         }
         fetch("/api/auth/register/", {
@@ -19,10 +20,10 @@ PageManager.getInstance().setOnPageLoad("auth/register", () => {
             body: JSON.stringify({username, email, password})
         }).then(response => {
             if (response.ok) {
-                alert("Registration successful!");
+                Notification.success("Registration successful!");
                 PageManager.getInstance().load('auth/login');
             } else {
-                alert("Registration failed!");
+                Notification.error("Registration failed!");
             }
         });
     });

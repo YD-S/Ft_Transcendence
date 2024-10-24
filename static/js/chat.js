@@ -1,4 +1,5 @@
 import {PageManager} from "./page-manager.js";
+import {Notification} from "./notification.js";
 
 function createMessageHTML(message) {
     if (!message.sender) {
@@ -74,7 +75,7 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
                 PageManager.getInstance().load("chat")
             })
             .catch(error => {
-                alert(error.message);
+                Notification.error(error.message);
             })
     })
 })
@@ -84,7 +85,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
         .addEventListener("click", function (event) {
             const roomName = document.getElementById("new-room-name").value;
             if (!roomName.trim()) {
-                alert("Room name cannot be empty");
+                Notification.warning("Room name cannot be empty");
                 return;
             }
             fetch("/api/chat/room/", {
@@ -108,7 +109,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     PageManager.getInstance().load("chat", false, {query: `?room=${data.id}`})
                 })
                 .catch(error => {
-                    alert(error.message);
+                    Notification.error(error.message);
                 })
         })
 
@@ -116,7 +117,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
         .addEventListener("click", function (event) {
             const roomCode = document.getElementById("join-room-code").value;
             if (!roomCode.trim()) {
-                alert("Room code cannot be empty");
+                Notification.warning("Room code cannot be empty");
                 return;
             }
             fetch(`/api/chat/room/join/${roomCode.trim()}`, {
@@ -136,7 +137,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     PageManager.getInstance().load("chat")
                 })
                 .catch(error => {
-                    alert(error.message);
+                    Notification.error(error.message);
                 })
         })
 
@@ -144,7 +145,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
         .addEventListener("click", function (event) {
             const username = document.getElementById("direct-room-username").value;
             if (!username.trim()) {
-                alert("Username cannot be empty");
+                Notification.warning("Username cannot be empty");
                 return;
             }
             fetch(`/api/chat/room/direct/${username.trim()}`, {
@@ -164,7 +165,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                     PageManager.getInstance().load("chat", false, {query: `?room=${data.id}`})
                 })
                 .catch(error => {
-                    alert(error.message);
+                    Notification.error(error.message);
                 })
         })
 
