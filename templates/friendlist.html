@@ -10,7 +10,7 @@
       {% for friend in friends %}
       <div class="col-4 text-center text-nowrap mb-4">
         <img class="cursor-pointer profile-picture col-12" src="{{ friend.user.avatar.url }}" alt="friend avatar" onclick="window.global.pageManager.load('user', true, { query: 'id={{ friend.user.id }}' })">
-        <h3 class="cursor-pointer col-12" onclick="window.global.pageManager.load(`user?id={{ friend.user.id }}`, true, { query: 'id={{ friend.user.id }}' })">{{ friend.user.username }}</h3>
+        <h3 class="cursor-pointer col-12" onclick="window.global.pageManager.load('user', true, { query: 'id={{ friend.user.id }}' })">{{ friend.user.username }}</h3>
         <button class="neon-button neon-button1 btn unfriend-user col-12" id="{{ friend.id }}">
           {% translate "Remove friend" %}
         </button>
