@@ -97,6 +97,9 @@ class User(AbstractUser, BaseModel):
     def __str__(self):
         return f"{self.username}({self.id}) - {self.email}"
 
+    def __eq__(self, other):
+        return self.id == other.id
+
 
 class Match(BaseModel):
     winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="won_matches")

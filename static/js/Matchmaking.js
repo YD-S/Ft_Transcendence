@@ -15,18 +15,21 @@ export default class Matchmaking {
                 this.opponentId = data.opponentId;
                 console.log(this.playerId, this.opponentId, this.amIfirst)
             } else if (data.type === "redirect") {
-                this.Matchmakingsocket.close();
+                this.Matchmakingsocket.close(4242);
             }
         };
 
         this.Matchmakingsocket.onclose = (event) => {
-            console.log("Matchmaking socket closed");
-            this.initializeGameSocket().then((gameSocket) => {
-                this.GameSocket = gameSocket;
-                this.onGameSocketReady();
-            }).catch((error) => {
-                console.error("Failed to initialize game socket: ", error);
-            });
+            console.log(event.code);
+            if (event.code === 4242) {
+                console.log("Matchmaking socket closed");
+                this.initializeGameSocket().then((gameSocket) => {
+                    this.GameSocket = gameSocket;
+                    this.onGameSocketReady();
+                }).catch((error) => {
+                    console.error("Failed to initialize game socket: ", error);
+                });
+            }
         };
     }
 

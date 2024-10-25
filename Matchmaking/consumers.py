@@ -1,5 +1,6 @@
 import json
 import random
+from pyexpat.errors import messages
 
 from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -12,8 +13,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     sentinel = object()
 
     async def connect(self):
-        if self.scope['user'] in self.queue:
-            self.queue.remove(self.scope['user'])
+        if self.scope['user'] in MatchmakingConsumer.queue:
+            return
         await self.create_group(str(self.scope['user'].id))
         await self.accept()
         await self.get_user_data()
@@ -23,22 +24,22 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             str(self.scope['user'].id),
             self.channel_name
         )
-        if self.scope['user'] in sum(self.private_queue.values(), []):
-            for key, value in self.private_queue.items():
+        if self.scope['user'] in sum(MatchmakingConsumer.private_queue.values(), []):
+            for key, value in MatchmakingConsumer.private_queue.items():
                 if self.scope['user'] in value:
                     value.remove(self.scope['user'])
                     if not value:
-                        del self.private_queue[key]
+                        del MatchmakingConsumer.private_queue[key]
                     break
-        if self.scope['user'] in self.queue:
-            self.queue.remove(self.scope['user'])
+        elif self.scope['user'] in MatchmakingConsumer.queue:
+            MatchmakingConsumer.queue.remove(self.scope['user'])
         print('User removed from queue:', self.scope['user'].id)
 
     async def add_to_game(self, private=False, private_room_id=None):
-        if (len(self.queue) < 2 and not private) or (private and len(MatchmakingConsumer.private_queue[private_room_id]) < 2):
+        if (len(MatchmakingConsumer.queue) < 2 and not private) or (private and len(MatchmakingConsumer.private_queue[private_room_id]) < 2):
             return
-        player1 = self.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0)
-        player2 = self.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0)
+        player1 = MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0)
+        player2 = MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0)
         cache.delete(f'invite:{player1.id}')
         cache.delete(f'invite:{player2.id}')
         if private:
@@ -97,8 +98,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             MatchmakingConsumer.private_queue[private_room_id].append(self.scope['user'])
             await self.add_to_game(True, private_room_id)
         else:
-            self.queue.append(user_data)
-            if len(self.queue) >= 2:
+            MatchmakingConsumer.queue.append(user_data)
+            if len(MatchmakingConsumer.queue) >= 2:
+                with open('game_data.json', 'a') as f:
+                    f.write(f'{[str(u) for u in MatchmakingConsumer.queue]}\n')
                 await self.add_to_game()
 
     async def game_start(self, event):

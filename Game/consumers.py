@@ -2,8 +2,8 @@ import asyncio
 import json
 import math
 import random
-from dataclasses import dataclass
-from typing import Any, Dict
+from dataclasses import dataclass, field
+from typing import Any, Dict, List
 
 from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -89,12 +89,12 @@ class GameState:
     ball_velocity: Vector = Vector(0, 0)
     last_collision: str = None
     game_finished: bool = False
+    player_names : List[str] = field(default_factory=list)
 
 class GameConsumer(AsyncWebsocketConsumer):
     sockets = {}
     games: Dict[int, GameState] = {}
     players : Dict[int, int] = {}
-    player_names = []
     ball_speed = 0.18
 
     def __init__(self, *args, **kwargs):
@@ -110,14 +110,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         if GameConsumer.players.get(self.game_id, 0) < 2:
             GameConsumer.players[self.game_id] = GameConsumer.players.get(self.game_id, 0) + 1
             await self.create_group(self.game_id)
-            self.player_names.append(self.scope['user'].username)
+            GameConsumer.games[self.game_id] = GameState()
+            GameConsumer.games[self.game_id].player_names.append(self.scope['user'].username)
             cache.set(f'{self.game_id}:player1' if GameConsumer.players[self.game_id] == 0 else f'{self.game_id}:player2', self.scope['user'].id)
             if self.game_id not in GameConsumer.sockets:
                 GameConsumer.sockets[self.game_id] = [self]
             else:
                 GameConsumer.sockets[self.game_id].append(self)
             if GameConsumer.players[self.game_id] == 2 and self.frame_task is None:
-                GameConsumer.games[self.game_id] = GameState()
                 self.frame_task = asyncio.create_task(self.send_every_frame())
         else:
             await self.close(reason='Game is full')
@@ -137,9 +137,9 @@ class GameConsumer(AsyncWebsocketConsumer):
             p2 = cache.get(f'{self.game_id}:player2')
             p1_obj, p2_obj = await User.objects.aget(id=p1), await User.objects.aget(id=p2)
             if player_id == p1_obj.username:
-                GameConsumer.player2_score = WINNING_SCORE
+                GameConsumer.games[self.game_id].player2_score = WINNING_SCORE
             elif player_id == p2_obj.username:
-                GameConsumer.player1_score = WINNING_SCORE
+                GameConsumer.games[self.game_id].player1_score = WINNING_SCORE
 
     async def calculate_ball_collision(self):
         # Calculate the distance of the ball from the center of the court
@@ -197,12 +197,8 @@ class GameConsumer(AsyncWebsocketConsumer):
             self.game_id,
             self.channel_name
         )
-        GameConsumer.players[self.game_id] -= 1
-        if self.scope['user'].username in self.player_names:
-            GameConsumer.player_names.remove(self.scope['user'].username)
-
         # Cancel the frame sending coroutine if a player disconnects
-        if GameConsumer.players[self.game_id] < 2 and self.frame_task is not None:
+        if self.frame_task is not None:
             self.frame_task.cancel()
             self.frame_task = None
             for socket in GameConsumer.sockets[self.game_id]:
