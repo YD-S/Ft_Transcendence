@@ -100,8 +100,6 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         else:
             MatchmakingConsumer.queue.append(user_data)
             if len(MatchmakingConsumer.queue) >= 2:
-                with open('game_data.json', 'a') as f:
-                    f.write(f'{[str(u) for u in MatchmakingConsumer.queue]}\n')
                 await self.add_to_game()
 
     async def game_start(self, event):

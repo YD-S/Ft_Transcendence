@@ -30,7 +30,11 @@
         </div>
         <div class="col-6">
           {% if is_not_friend %}
-            <button class="button col-12 mb-2" id="friend-user">{% translate "Add friend" %}</button>
+              {% if is_not_blocked %}
+                <button class="button col-12 mb-2" id="friend-user">{% translate "Add friend" %}</button>
+                {% else %}
+                    <button class="button col-12 mb-2 " id="friend-user" disabled><del>{% translate "Add friend" %}</del></button>
+              {% endif %}
           {% else %}
             <button class="button col-12 mb-2" id="unfriend-user">{% translate "Remove friend" %}</button>
           {% endif %}
