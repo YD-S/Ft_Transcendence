@@ -107,9 +107,9 @@ export class Game {
     }
 
     endGame(winnerMessage) {
-        Notification.success(winnerMessage);
         this.destroy();
         if (!this.tournament) {
+            Notification.success(winnerMessage);
             PageManager.getInstance().load('home');
         }else{
            this.gameEndEvent.detail.winner = this.getWinner();

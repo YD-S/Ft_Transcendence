@@ -77,6 +77,7 @@ export const locale = {
             PLAYER2_WINS: 'Player 2 wins!',
             PLAYER1: 'Player 1',
             PLAYER2: 'Player 2',
+            WINS: 'wins!',
         },
         D3: {
         },

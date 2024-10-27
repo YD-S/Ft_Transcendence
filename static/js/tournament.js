@@ -24,9 +24,10 @@ class Tournament {
         for (let i = 0; i < 3; i++) {
             const matchElement = document.getElementById(`match${i + 1}`);
             const match = this.matches[i];
-
+            const message = "Player " + this.results[i] + " is the winner!";
             if (match.played) {
-                matchElement.innerHTML = `<button class="button">${match.player1} vs ${match.player2} <p>${t('GAME.WINNER')}: ${this.results[i]}</p> </button>`;
+                Notification.success(message);
+                matchElement.innerHTML = `<button class="button waiting">${match.player1} vs ${match.player2} <p>${t('GAME.WINNER')}: ${this.results[i]}</p> </button>`;
                 matchElement.setAttribute('id', 'finished');
             } else if (match.player1 && match.player2) {
                 matchElement.innerHTML = `<button class="deploy-match button" data-match="${i}">${match.player1} vs ${match.player2}</button>`;
