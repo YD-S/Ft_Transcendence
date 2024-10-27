@@ -42,8 +42,8 @@
 }
 
 .messages-area {
-  background-color: green;
   width: 100%;
+  overflow-y: scroll;
 }
 
 .sender-area {

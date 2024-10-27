@@ -8,43 +8,45 @@
       <h2>{% translate "Chats" %}</h2>
       {% for room in rooms %}
         <div class="row room">
-          <button class="room-button" data-room-id="{{ room.id }}">{{ room.name }}</button>
+          <button class="room-button neon-button neon-button1" data-room-id="{{ room.id }}">{{ room.name }}</button>
         </div>
       {% endfor %}
     </div>
-    <div class="row">
-      <div id="col-sm">
-        <label>
-          <span>{% translate "Create a room" %}:</span>
-          <input type="text" id="new-room-name" placeholder="{% translate 'Room name' %}">
-        </label>
+    <div class="position-absolute put-bottom">
+        <div class="row" style="padding-right:25px; margin-bottom: 25px;">
+          <div id="col-sm" class="w-100">
+            <label class="w-100 text-color">
+              <span>{% translate "Create a room" %}:</span>
+              <input type="text" id="new-room-name" class="w-100 input-class" placeholder="{% translate 'Room name' %}">
+            </label>
+          </div>
+          <div class="col-sm p-0">
+            <button id="submit-create-room" class="w-100 pl-0 neon-button neon-button1 btn">{% translate "Create" %}</button>
+          </div>
+        </div>
+        <div class="row" style="padding-right:25px; margin-bottom: 25px;">
+          <div id="col-sm" class="w-100">
+            <label class="w-100 text-color">
+              <span>{% translate "Join a room" %}:</span>
+              <input type="text" id="join-room-code" class="w-100 input-class" placeholder="{% translate 'Room code' %}">
+            </label>
+          </div>
+          <div class="w-100">
+            <button id="submit-join-room" class="w-100 pl-0 neon-button neon-button1 btn" style="padding-right: 25px;">{% translate "Join" %}</button>
+          </div>
+        </div>
+        <div class="row" style="padding-right:25px; margin-bottom: 25px;">
+          <div id="col-sm" class="w-100">
+            <label class="w-100 text-color">
+              <span>{% translate "Direct message" %}:</span>
+              <input type="text" id="direct-room-username" class="w-100 input-class" placeholder="{% translate 'Username' %}">
+            </label>
+          </div>
+          <div id="col-sm" class="w-100">
+            <button id="submit-direct-room" class="w-100 pl-0 neon-button neon-button1 btn" style="padding-right: 25px;">{% translate "Join" %}</button>
+          </div>
+        </div>
       </div>
-      <div class="col-sm">
-        <button id="submit-create-room">{% translate "Create" %}</button>
-      </div>
-    </div>
-    <div class="row">
-      <div id="col-sm">
-        <label>
-          <span>{% translate "Join a room" %}:</span>
-          <input type="text" id="join-room-code" placeholder="{% translate 'Room code' %}">
-        </label>
-      </div>
-      <div>
-        <button id="submit-join-room">{% translate "Join" %}</button>
-      </div>
-    </div>
-    <div class="row">
-      <div id="col-sm">
-        <label>
-          <span>{% translate "Direct message" %}:</span>
-          <input type="text" id="direct-room-username" placeholder="{% translate 'Username' %}">
-        </label>
-      </div>
-      <div id="col-sm">
-        <button id="submit-direct-room">{% translate "Join" %}</button>
-      </div>
-    </div>
   </div>
-  <div class="col py-3" id="current-room"></div>
+    <div class="col py-3" id="current-room"></div>
 </div>
