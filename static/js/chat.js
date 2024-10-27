@@ -129,7 +129,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 .then(response => {
                     if (response.ok) {
                         return response.json();
-                    } else {
+                    }else {
                         throw new Error("CHAT.ERROR.JOIN_ROOM_FAILED");
                     }
                 })
@@ -155,10 +155,17 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 }
             })
                 .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("CHAT.ERROR.DIRECT_ROOM_FAILED");
+                    switch (response.status) {
+                        case 400:
+                            throw new Error("CHAT.ERROR.DM_WITH_SELF");
+                        case 401:
+                            throw new Error("CHAT.ERROR.BLOCKED_BY_USER");
+                        case 402:
+                            throw new Error("CHAT.ERROR.BLOCKED_USER");
+                        case 403:
+                            throw new Error("CHAT.ERROR.NOT_FRIENDS");
+                        default:
+                            throw new Error("CHAT.ERROR.DIRECT_ROOM_FAILED");
                     }
                 })
                 .then(data => {

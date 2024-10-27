@@ -80,7 +80,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser, BaseModel):
-    username = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=25, unique=True)
     email = models.EmailField()
     password = models.CharField(max_length=255)
 

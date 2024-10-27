@@ -93,6 +93,8 @@ def protected_page_view(request: HttpRequest, file: str):
                     friend = Friendship.objects.filter(user=request.user).get(friend=user)
                 else:
                     friend = None
+                if user == request.user:
+                    return render(request, "me.html", {"user": request.user})
                 sentinel = object()
                 return render(request, "user.html", {
                     "user": user,

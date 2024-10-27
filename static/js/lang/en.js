@@ -68,6 +68,10 @@ export const locale = {
             LEAVE_ROOM_FAILED: 'Failed to leave room!',
             EMPTY_USERNAME: 'Username cannot be empty!',
             EMPTY_ROOM_NAME: 'Room name cannot be empty!',
+            DM_WITH_SELF: 'Can\'t initiate a direct message to yourself!',
+            BLOCKED_BY_USER: 'You have been blocked by this user!',
+            BLOCKED_USER: 'You have blocked this user!',
+            NOT_FRIENDS: 'You must be friends to send a direct message!',
         },
     },
     GAME: {
