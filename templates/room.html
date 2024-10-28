@@ -18,11 +18,7 @@
         {% for message in current_room.messages %}
           <div class="message {% if forloop.counter|divisibleby:2 %} one {% else %} two {% endif %}">
             <span class="timestamp">{{ message.created_at }}</span>
-            {% if not current_room.is_direct %}
-              <a class="username" href="/user?id={{ message.sender_id }}">{{ message.sender }}:</a>
-            {% else %}
-              <span class="username">{{ message.sender }}:</span>
-            {% endif %}
+            <a class="username" href="/user?id={{ message.sender_id }}">{{ message.sender }}:</a>
             <span class="content">{{ message.content }}</span>
           </div>
         {% endfor %}
