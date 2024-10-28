@@ -3,6 +3,11 @@ from django import forms
 
 
 class UserForm(forms.ModelForm):
+
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
+    email = forms.EmailField(required=False)
+    avatar = forms.ImageField(required=False)
+
     class Meta:
         model = User
         fields = [
@@ -10,3 +15,4 @@ class UserForm(forms.ModelForm):
             "email",
             "password",
         ]
+

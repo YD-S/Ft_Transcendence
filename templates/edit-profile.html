@@ -3,8 +3,12 @@
 
 
 <form method="post" action="edit-profile" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="avatar">{% translate "Avatar" %}</label>
-    <input type="file" name="avatar" id="avatar">
-    <button type="submit">{% translate "Save" %}</button>
+  {% csrf_token %}
+  <label for="avatar">{% translate "Avatar" %}</label>
+  <input type="file" name="avatar" id="avatar">
+  <label for="email">{% translate "Email" %}</label>
+  <input type="text" name="email" id="email">
+  <label for="password">{% translate "Password" %}</label>
+  <input type="password" name="password" id="password">
+  <button type="submit">{% translate "Save" %}</button>
 </form>

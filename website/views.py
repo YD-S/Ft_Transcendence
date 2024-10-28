@@ -26,18 +26,22 @@ UNPROTECTED_PAGES = [
 def handle_post(request: HttpRequest, page: str):
     match page:
         case 'edit-profile':
+            if request.user.is_anonymous:
+                return redirect("/auth/login")
             form = UserForm(data=request.POST, files=request.FILES, instance=request.user)
-
+            print(form)
+            print(form.errors)
             if form.is_valid():
                 form.save()
                 return redirect("/me")
+            else:
+                return redirect("/edit-profile")
 
     raise NotFoundError()
 
 
 @require_token()
 def protected_main_view(request: HttpRequest, page: str):
-    print("r:", request.method, request.FILES)
     if request.method == 'POST':
         return handle_post(request, page)
     if request.method == 'GET':
