@@ -68,7 +68,7 @@ class RoomViewSet(ModelViewSet):
         user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
         if user_is_blocked:
             return JsonResponse({"error": _("You have blocked this user")}, status=402)
-        user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)]
+        user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)] + [friendship.user for friendship in Friendship.objects.filter(friend=request.user)]
         if user_is_friend is False:
             return JsonResponse({"error": _("You are not friends with this user")}, status=403)
         room = Room.objects.create(name=f"{request.user.username} - {user.username}", is_direct=True)
