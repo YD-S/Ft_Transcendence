@@ -20,6 +20,8 @@ from users.serializers import UserSerializer
 from utils.exception import ValidationError
 from django.core.cache import cache
 
+from django.core.exceptions import ValidationError as DjangoValidationError
+
 from django.utils.translation import gettext as _
 
 
@@ -224,6 +226,8 @@ def register(request: HttpRequest):
         )
     except ValidationError as e:
         return e.as_http_response()
+    except DjangoValidationError as e:
+        return ValidationError(json.dumps({"errors": e.messages}), content_type='application/json').as_http_response()
     return HttpResponse(
         json.dumps({"message": _("User registered successfully")}),
         content_type='application/json',

@@ -157,31 +157,31 @@ class ModelSerializer:
         if self._has(field, "maxlength") and len(value) > field.maxlength:
             raise ValidationError(json.dumps(
                 {"message": f"Field '{field.name}' must have at most {field.maxlength} characters", "type": "max_length", "field": field.name}),
-                                  content_type='application/json')
+                content_type='application/json')
 
         # Check min length
         if self._has(field, "minlength") and len(value) < field.minlength:
             raise ValidationError(json.dumps(
                 {"message": f"Field '{field.name}' must have at least {field.minlength} characters", "type": "min_length", "field": field.name}),
-                                  content_type='application/json')
+                content_type='application/json')
 
         # Check max value
         if self._has(field, "maxvalue") and value > field.maxvalue:
             raise ValidationError(json.dumps(
                 {"message": f"Field '{field.name}' must have at most {field.maxvalue}", "type": "max_value", "field": field.name}),
-                                  content_type='application/json')
+                content_type='application/json')
 
         # Check min value
         if self._has(field, "minvalue") and value < field.minvalue:
             raise ValidationError(json.dumps(
                 {"message": f"Field '{field.name}' must have at least {field.minvalue}", "type": "min_value", "field": field.name}),
-                                  content_type='application/json')
+                content_type='application/json')
 
         # Check choices
         if self._has(field, "choices") and value not in field.choices:
             raise ValidationError(json.dumps(
                 {"message": f"Field '{field.name}' must be one of {field.choices}", "type": "choices", "field": field.name}),
-                                  content_type='application/json')
+                content_type='application/json')
 
     @staticmethod
     def _has(field, attr):

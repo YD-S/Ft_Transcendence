@@ -24,6 +24,13 @@ PageManager.getInstance().setOnPageLoad("auth/register", () => {
                 PageManager.getInstance().load('auth/login');
             } else {
                 Notification.error("USER.REGISTER.FAILED");
+                return response.json();
+            }
+        }).then(data => {
+            if (data) {
+                for (const message of data.errors) {
+                    Notification.error(message);
+                }
             }
         });
     });
