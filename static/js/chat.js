@@ -117,7 +117,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
         .addEventListener("click", function (event) {
             const roomCode = document.getElementById("join-room-code").value;
             if (!roomCode.trim()) {
-                Notification.warning("Room code cannot be empty");
+                Notification.warning("CHAT.ERROR.EMPTY_ROOM_CODE");
                 return;
             }
             fetch(`/api/chat/room/join/${roomCode.trim()}`, {

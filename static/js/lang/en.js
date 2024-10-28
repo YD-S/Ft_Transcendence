@@ -64,6 +64,7 @@ export const locale = {
         ERROR: {
             CREATE_ROOM_FAILED: 'Failed to create room!',
             JOIN_ROOM_FAILED: 'Failed to join room!',
+            EMPTY_ROOM_CODE: 'Room code cannot be empty',
             DIRECT_ROOM_FAILED: 'Failed to join direct message room!',
             LEAVE_ROOM_FAILED: 'Failed to leave room!',
             EMPTY_USERNAME: 'Username cannot be empty!',
