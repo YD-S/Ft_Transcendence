@@ -14,7 +14,7 @@
     <div id="profile-page" class="box">
       <span></span>
       <div class="content">
-        <div class="col-6">
+        <div class="col-4" id="user">
           <div class="col-12">
             {% if online %}
               <div>
@@ -27,7 +27,17 @@
           </div>
           <h3 class="col-12 fixed-bottom w-50 text-center">{{ user.username }}</h3>
         </div>
-        <div class="col-6">
+        <div class="col-4" id="stats">
+          <h3 class="col-12">{% translate "Stats" %}</h3>
+          <div class="col-12">
+            <p>{% translate "Friend count" %}: {{ user.stats.friends }}</p>
+            <p>{% translate "Matches" %}: {{ user.stats.matches }}</p>
+            <p>{% translate "Win rate" %}: {{ user.stats.winrate }}%</p>
+            <p>{% translate "Wins" %}: {{ user.stats.wins }}</p>
+            <p>{% translate "Losses" %}: {{ user.stats.losses }}</p>
+          </div>
+        </div>
+        <div class="col-4" id="actions">
           {% if is_not_friend %}
               {% if is_not_blocked %}
                 <button class="button col-12 mb-2" id="friend-user">{% translate "Add friend" %}</button>

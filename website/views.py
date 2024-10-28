@@ -11,7 +11,7 @@ from chat.models import Room
 from chat.serializers import RoomSerializer
 from common.request import HttpRequest
 from users.forms import AvatarForm
-from users.models import User, BlockedUser, Friendship
+from users.models import User, BlockedUser, Friendship, Match
 from utils.exception import NotFoundError, HttpError
 
 UNPROTECTED_PAGES = [
@@ -66,52 +66,28 @@ def protected_page_view(request: HttpRequest, file: str):
     match file:
         case "friendlist.html":
             friends = [
-                {
-                    'id': friendship.id,
-                    'user': friendship.friend
-                }
-                for friendship in Friendship.objects.filter(
+                          {
+                              'id': friendship.id,
+                              'user': friendship.friend
+                          }
+                          for friendship in Friendship.objects.filter(
                     Q(user_id=request.GET.get('user', request.user.id))
                 )
-            ] + [
-                {
-                    'id': friendship.id,
-                    'user': friendship.user
-                }
-                for friendship in Friendship.objects.filter(
+                      ] + [
+                          {
+                              'id': friendship.id,
+                              'user': friendship.user
+                          }
+                          for friendship in Friendship.objects.filter(
                     Q(friend_id=request.GET.get('user', request.user.id))
                 )
-            ]
+                      ]
             return render(request, file, {"friends": friends})
         case "me.html":
             return render(request, file, {"user": request.user})
         case "user.html":
             try:
-                user = User.objects.get(id=int(request.GET.get('id', 0)))
-                is_self_blocked = user in [blocked_user.user for blocked_user in BlockedUser.objects.filter(blocked_user=request.user)]
-                if is_self_blocked:
-                    return render(request, "404.html")
-                user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
-                user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)]
-                if user_is_blocked:
-                    block = BlockedUser.objects.filter(user=request.user).get(blocked_user=user)
-                else:
-                    block = None
-                if user_is_friend:
-                    friend = Friendship.objects.filter(user=request.user).get(friend=user)
-                else:
-                    friend = None
-                if user == request.user:
-                    return render(request, "me.html", {"user": request.user})
-                sentinel = object()
-                return render(request, "user.html", {
-                    "user": user,
-                    "online": cache.get(f"user:{user.id}:token", sentinel) is not sentinel,
-                    "is_not_blocked": not user_is_blocked,
-                    "block": block,
-                    "is_not_friend": not user_is_friend,
-                    "friend": friend
-                })
+                return user_page(request)
             except User.DoesNotExist:
                 return render(request, "404.html")
         case "chat.html":
@@ -125,6 +101,50 @@ def protected_page_view(request: HttpRequest, file: str):
                 return render(request, file)
             except TemplateDoesNotExist:
                 return render(request, "404.html")
+
+
+def calculate_stats(user: User):
+    matches = Match.objects.filter(Q(winner=user) | Q(loser=user)).count()
+    wins = Match.objects.filter(winner=user).count()
+    winrate = (wins / matches) if matches != 0 else 0
+    losses = Match.objects.filter(loser=user).count()
+    return {
+        "friends": Friendship.objects.filter(user=user).count() + Friendship.objects.filter(friend=user).count(),
+        "matches": matches,
+        "winrate": winrate,
+        "wins": wins,
+        "losses": losses
+    }
+
+
+def user_page(request):
+    user = User.objects.get(id=int(request.GET.get('id', 0)))
+    is_self_blocked = user in [blocked_user.user for blocked_user in BlockedUser.objects.filter(blocked_user=request.user)]
+    if is_self_blocked:
+        return render(request, "404.html")
+    user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
+    user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)]
+    if user_is_blocked:
+        block = BlockedUser.objects.filter(user=request.user).get(blocked_user=user)
+    else:
+        block = None
+    if user_is_friend:
+        friend = Friendship.objects.filter(user=request.user).get(friend=user)
+    else:
+        friend = None
+    if user == request.user:
+        return render(request, "me.html", {"user": request.user})
+    sentinel = object()
+    stats = calculate_stats(user)
+    return render(request, "user.html", {
+        "user": user,
+        "online": cache.get(f"user:{user.id}:token", sentinel) is not sentinel,
+        "is_not_blocked": not user_is_blocked,
+        "block": block,
+        "is_not_friend": not user_is_friend,
+        "friend": friend,
+        "stats": stats
+    })
 
 
 def page_view(request: HttpRequest, file: str):

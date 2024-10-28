@@ -38,6 +38,11 @@ PageManager.getInstance().setOnPageLoad('auth/oauth_callback', () => {
                 PageManager.getInstance().load('home', false);
                 break;
             default:
+                if (data.errors) {
+                    for (const message of data.errors) {
+                        Notification.error(message);
+                    }
+                }
                 throw new Error("COMMON.ERROR.INVALID_ACTION");
         }
     })

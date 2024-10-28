@@ -1,4 +1,6 @@
 import os
+import random
+
 import requests
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -72,8 +74,8 @@ class UserManager(BaseUserManager):
             return self.create_user(
                 email=user_data["email"],
                 username=user_data["login"] + "@42",
-                password=hash_password(user_data["login"]),
-                is_oauth=False,
+                password=hash_password(f'{random.randint(0, 100000)}{user_data["login"]}'),
+                is_oauth=True,
                 verified_email=True,
                 avatar=avatar_path
             )

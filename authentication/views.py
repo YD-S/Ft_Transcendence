@@ -121,6 +121,9 @@ def generate_login(request: HttpRequest, user: User):
             "access_expiration": f"{int(access_expiration.timestamp())}",
             "refresh_expiration": f"{int(refresh_expiration.timestamp())}",
         })
+    except DjangoValidationError as e:
+        raise e
+        return ValidationError.from_django(e).as_http_response()
     except ValidationError as e:
         return e.as_http_response()
 
@@ -307,11 +310,10 @@ def oauth(request: HttpRequest):
 def oauth_login(request: HttpRequest):
     data = request.json()
     if not data.get('code'):
-        return HttpResponse(
-            json.dumps({"message": _("Code is required"), "type": "oauth_login_fail"}),
+        return ValidationError(
+            json.dumps({"errors": [_("Code is required")]}),
             content_type='application/json',
-            status=400
-        )
+        ).as_http_response()
     code = data.get('code')
     querystring = urlencode({
         "grant_type": "authorization_code",
@@ -322,11 +324,10 @@ def oauth_login(request: HttpRequest):
     })
     response = requests.post(f"https://api.intra.42.fr/oauth/token?{querystring}")
     if response.status_code != 200:
-        return HttpResponse(
-            json.dumps({"message": _("Invalid code"), "type": "oauth_login_fail"}),
+        return ValidationError(
+            json.dumps({"errors": [_("Invalid code")]}),
             content_type='application/json',
-            status=400
-        )
+        ).as_http_response()
     data = response.json()
     user = User.objects.get_or_create_42_user(data)
     if user.has_2fa:
