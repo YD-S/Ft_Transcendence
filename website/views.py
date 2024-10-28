@@ -129,7 +129,13 @@ def user_page(request):
     else:
         block = None
     if user_is_friend:
-        friend = Friendship.objects.filter(user=request.user).get(friend=user)
+        try:
+            friend = Friendship.objects.filter(user=request.user).get(friend=user)
+        except Friendship.DoesNotExist:
+            try:
+                friend = Friendship.objects.filter(friend=request.user).get(user=user)
+            except Friendship.DoesNotExist:
+                friend = None
     else:
         friend = None
     if user == request.user:
