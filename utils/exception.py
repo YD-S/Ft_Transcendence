@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
@@ -29,6 +31,10 @@ class ValidationError(HttpError):
     def __init__(self, content: str, content_type: str = 'text/plain'):
         super().__init__(400, content)
         self.content_type = content_type
+
+    @classmethod
+    def from_django(cls, e):
+        return cls(json.dumps({"errors": [f'{key}: {"\n".join(val)}' for key, val in e.message_dict.items()]}), content_type='application/json')
 
 
 class InternalServerError(HttpError):
