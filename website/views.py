@@ -2,6 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 
@@ -9,7 +10,7 @@ from authentication.token import require_token
 from chat.models import Room
 from chat.serializers import RoomSerializer
 from common.request import HttpRequest
-from users.forms import UserForm
+from users.forms import AvatarForm
 from users.models import User, BlockedUser, Friendship
 from utils.exception import NotFoundError, HttpError
 
@@ -23,19 +24,22 @@ UNPROTECTED_PAGES = [
 ]
 
 
+def upload_avatar(file, user: User):
+    with open(f'/media/avatars/{user.username}.{file.name.split(".")[-1]}', "wb+") as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+
 def handle_post(request: HttpRequest, page: str):
     match page:
         case 'edit-profile':
             if request.user.is_anonymous:
                 return redirect("/auth/login")
-            form = UserForm(data=request.POST, files=request.FILES, instance=request.user)
-            print(form)
-            print(form.errors)
+            form = AvatarForm(files=request.FILES)
+
             if form.is_valid():
-                form.save()
-                return redirect("/me")
-            else:
-                return redirect("/edit-profile")
+                upload_avatar(request.FILES['avatar'], request.user)
+                return HttpResponse(status=200)
 
     raise NotFoundError()
 
@@ -115,7 +119,7 @@ def protected_page_view(request: HttpRequest, file: str):
         case "room.html":
             return room_view(request)
         case "edit-profile.html":
-            return render(request, file, {"form": UserForm(instance=request.user)})
+            return render(request, file, {"form": AvatarForm(instance=request.user)})
         case _:
             try:
                 return render(request, file)
