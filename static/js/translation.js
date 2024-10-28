@@ -11,6 +11,9 @@ const locales = {
 
 export function t(key) {
     const lang = getCookie('django_language');
+    if (!lang) {
+        return lookup(key, locales['en-US']);
+    }
 
     let locale = locales[lang];
 
