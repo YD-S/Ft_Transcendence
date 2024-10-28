@@ -20,6 +20,8 @@ from users.serializers import UserSerializer
 from utils.exception import ValidationError
 from django.core.cache import cache
 
+from django.core.exceptions import ValidationError as DjangoValidationError
+
 from django.utils.translation import gettext as _
 
 
@@ -168,7 +170,7 @@ def refresh(request: HttpRequest):
     data = request.json()
     if not data.get('refresh_token'):
         return HttpResponse(
-            json.dumps({"message": _("Refresh token is required"), "type": "refresh_fail"}),
+            json.dumps({"errors": [_("Refresh token is required")]}),
             content_type='application/json',
             status=400
         )
@@ -195,26 +197,23 @@ def register(request: HttpRequest):
     # Read the username and password from the request
     data = request.json()
     if not data.get('username') or not data.get('password') or not data.get('email'):
-        return HttpResponse(
-            json.dumps({"message": _("Username and password and email are required"), "type": "register_fail"}),
+        return ValidationError(
+            json.dumps({"errors": [_("Username and password and email are required")]}),
             content_type='application/json',
-            status=400
-        )
+        ).as_http_response()
     username = data.get('username')
     if '@' in username:
-        return HttpResponse(
-            json.dumps({"message": _("Username cannot contain '@'"), "type": "register_fail"}),
+        return ValidationError(
+            json.dumps({"errors": [_("Username cannot contain '@'")]}),
             content_type='application/json',
-            status=400
-        )
+        ).as_http_response()
     email = data.get('email')
     # Check if the username already exists
     if User.objects.filter(username=username).exists():
-        return HttpResponse(
-            json.dumps({"message": _("Username already exists"), "type": "register_fail"}),
+        return ValidationError(
+            json.dumps({"errors": [_("Username already exists")]}),
             content_type='application/json',
-            status=400
-        )
+        ).as_http_response()
     try:
         # Create the user
         User.objects.create_user(
@@ -224,6 +223,8 @@ def register(request: HttpRequest):
         )
     except ValidationError as e:
         return e.as_http_response()
+    except DjangoValidationError as e:
+        return ValidationError(json.dumps({"errors": e.messages}), content_type='application/json').as_http_response()
     return HttpResponse(
         json.dumps({"message": _("User registered successfully")}),
         content_type='application/json',

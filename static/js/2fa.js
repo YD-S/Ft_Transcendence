@@ -40,7 +40,6 @@ PageManager.getInstance().setOnPageLoad("auth/2fa", (email2fa, user_id) => {
 
     document.getElementById('resend')
         .addEventListener('click', (event) => {
-            console.log('resend', user_id)
             let data = {
                 user_id: user_id
             };

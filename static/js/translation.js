@@ -11,19 +11,22 @@ const locales = {
 
 export function t(key) {
     const lang = getCookie('django_language');
+    let val = key;
     if (!lang) {
-        return lookup(key, locales['en-US']);
+        val = lookup(key, locales['en-US']);
+    } else {
+        val = lookup(key, locales[lang]);
     }
-    return lookup(key, locales[lang]);
+    return val;
 }
 
 function lookup(path, locale) {
     let aPath = path.split('.');
     try {
-        return aPath.reduce((a, v) => a[v], locale);
+        return aPath.reduce((a, v) => a[v], locale) || path;
     } catch {
         try {
-            return aPath.reduce((a, v) => a[v], locales['en-US']);
+            return aPath.reduce((a, v) => a[v], locales['en-US']) || path;
         } catch {
             return path;
         }

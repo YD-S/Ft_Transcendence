@@ -100,6 +100,10 @@ class User(AbstractUser, BaseModel):
     def __eq__(self, other):
         return self.id == other.id
 
+    def save(self, *args, **kwargs):
+        self.clean_fields()
+        super().save(*args, **kwargs)
+
 
 class Match(BaseModel):
     winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="won_matches")
