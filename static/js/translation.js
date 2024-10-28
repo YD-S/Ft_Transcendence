@@ -14,10 +14,7 @@ export function t(key) {
     if (!lang) {
         return lookup(key, locales['en-US']);
     }
-
-    let locale = locales[lang];
-
-    return lookup(key, locale);
+    return lookup(key, locales[lang]);
 }
 
 function lookup(path, locale) {
