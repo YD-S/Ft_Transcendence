@@ -111,7 +111,7 @@ def calculate_stats(user: User):
     return {
         "friends": Friendship.objects.filter(user=user).count() + Friendship.objects.filter(friend=user).count(),
         "matches": matches,
-        "winrate": f'{winrate:.2f}%' if winrate != 0 else "0.00%",
+        "winrate": f'{winrate*100:.2f}%' if winrate != 0 else "0.00%",
         "wins": wins,
         "losses": losses
     }
