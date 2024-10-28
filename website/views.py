@@ -35,10 +35,10 @@ def handle_post(request: HttpRequest, page: str):
         case 'edit-profile':
             if request.user.is_anonymous:
                 return redirect("/auth/login")
-            form = AvatarForm(files=request.FILES)
+            form = AvatarForm(data=request.POST, files=request.FILES, instance=request.user)
 
             if form.is_valid():
-                upload_avatar(request.FILES['avatar'], request.user)
+                form.save()
                 return HttpResponse(status=200)
 
     raise NotFoundError()
@@ -119,7 +119,7 @@ def protected_page_view(request: HttpRequest, file: str):
         case "room.html":
             return room_view(request)
         case "edit-profile.html":
-            return render(request, file, {"form": AvatarForm(instance=request.user)})
+            return render(request, file, {"form": AvatarForm()})
         case _:
             try:
                 return render(request, file)

@@ -1,14 +1,15 @@
 {% load i18n %}
 {% load static %}
 
+<link rel="stylesheet" href="{% static 'css/input.css' %}">
 
-<form method="post" action="edit-profile" enctype="multipart/form-data">
-  {% csrf_token %}
-  <label for="avatar">{% translate "Avatar" %}</label>
-  <input type="file" name="avatar" id="avatar">
-  <label for="email">{% translate "Email" %}</label>
-  <input type="text" name="email" id="email">
-  <label for="password">{% translate "Password" %}</label>
-  <input type="password" name="password" id="password">
-  <button type="submit">{% translate "Save" %}</button>
-</form>
+<div class="row justify-content-center">
+  <div class="col-3"></div>
+  <div class="col-md-6">
+    <h1>{% translate "Edit Profile" %}</h1>
+    <label for="avatar">{% translate "Avatar" %}</label>
+    <input class="col-12" type="file" name="avatar" id="avatar">
+    <button id="submit-button" class="col-12">{% translate "Save" %}</button>
+  </div>
+  <div class="col-3"></div>
+</div>
