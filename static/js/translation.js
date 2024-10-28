@@ -11,10 +11,10 @@ const locales = {
 
 export function t(key) {
     const lang = getCookie('django_language');
-
-    let locale = locales[lang];
-
-    return lookup(key, locale);
+    if (!lang) {
+        return lookup(key, locales['en-US']);
+    }
+    return lookup(key, locales[lang]);
 }
 
 function lookup(path, locale) {
