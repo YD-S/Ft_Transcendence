@@ -7,7 +7,7 @@ function createMessageHTML(message) {
             <span class="system-message">${message.content}</span>`
     }
     return `<span class="timestamp">${message.created_at}</span>
-            <span class="username">${message.sender}:</span>
+            <a class="username" href="/user?id=${ message.sender_id }">${ message.sender }:</a>
             <span class="content">${message.content}</span>`
 }
 
