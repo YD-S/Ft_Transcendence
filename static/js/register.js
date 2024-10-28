@@ -22,12 +22,16 @@ PageManager.getInstance().setOnPageLoad("auth/register", () => {
             if (response.ok) {
                 Notification.success("USER.REGISTER.SUCCESS");
                 PageManager.getInstance().load('auth/login');
+                return response.json();
             } else {
                 Notification.error("USER.REGISTER.FAILED");
                 return response.json();
             }
         }).then(data => {
-            if (data) {
+            if (data.message) {
+                Notification.success(data.message);
+            }
+            else if (data.errors) {
                 for (const message of data.errors) {
                     Notification.error(message);
                 }
