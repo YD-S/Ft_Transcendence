@@ -112,7 +112,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.create_group(self.game_id)
             GameConsumer.games[self.game_id] = GameState()
             GameConsumer.games[self.game_id].player_names.append(self.scope['user'].username)
-            cache.set(f'{self.game_id}:player1' if GameConsumer.players[self.game_id] == 0 else f'{self.game_id}:player2', self.scope['user'].id)
             if self.game_id not in GameConsumer.sockets:
                 GameConsumer.sockets[self.game_id] = [self]
             else:
@@ -268,19 +267,21 @@ class GameConsumer(AsyncWebsocketConsumer):
             **data
         }))
 
-    async def send_winner_message(self, winner: int, looser: int, winner_score: int, looser_score: int):
+    async def send_winner_message(self, winner: int, loser: int, winner_score: int, looser_score: int):
 
         if not GameConsumer.games[self.game_id].game_finished:
             from users.models import User, Match
             winner_obj = await User.objects.aget(id=winner)
-            looser_obj = await User.objects.aget(id=looser)
+            loser_obj = await User.objects.aget(id=loser)
+            with open('game.log', 'a') as f:
+                f.write(f'{winner_obj.username} won against {loser_obj.username} with score {winner_score} - {looser_score}\n')
             cache.delete(f'{self.game_id}:player1')
             cache.delete(f'{self.game_id}:player2')
             GameConsumer.games[self.game_id].game_finished = True
             GameConsumer.games[self.game_id].player1_score = 0
             GameConsumer.games[self.game_id].player2_score = 0
             GameConsumer.games[self.game_id].player_names = []
-            await Match.objects.acreate(winner=winner_obj, loser=looser_obj, winner_score=winner_score,
+            await Match.objects.acreate(winner=winner_obj, loser=loser_obj, winner_score=winner_score,
                                         loser_score=looser_score)
             await self.channel_layer.group_send(
                 self.game_id,

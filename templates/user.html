@@ -15,7 +15,6 @@
       <span></span>
       <div class="content">
         <div class="col-4" id="user">
-          <div class="col-12">
             {% if online %}
               <div>
                   <div class="green-dot"></div>
@@ -24,8 +23,7 @@
             {% else %}
               <img class="profile-picture" src="{{ user.avatar.url }}" alt="user avatar">
             {% endif %}
-          </div>
-          <h3 class="col-12 fixed-bottom w-50 text-center">{{ user.username }}</h3>
+            <h3 class="fixed-bottom text-left pl-1">{{ user.username }}</h3>
         </div>
         <div class="col-4" id="stats">
           <h3 class="col-12">{% translate "Stats" %}</h3>
