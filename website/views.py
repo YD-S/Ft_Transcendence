@@ -123,7 +123,7 @@ def user_page(request):
     if is_self_blocked:
         return render(request, "404.html")
     user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
-    user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)]
+    user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)] + [friendship.user for friendship in Friendship.objects.filter(friend=request.user)]
     if user_is_blocked:
         block = BlockedUser.objects.filter(user=request.user).get(blocked_user=user)
     else:
