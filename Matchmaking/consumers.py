@@ -25,6 +25,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             str(self.scope['user'].id),
             self.channel_name
         )
+        # TODO: use two different cache keys for queue and game values
         if self.scope['user'] in sum(MatchmakingConsumer.private_queue.values(), []):
             for key, value in MatchmakingConsumer.private_queue.items():
                 if self.scope['user'] in value:
