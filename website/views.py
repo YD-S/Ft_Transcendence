@@ -104,14 +104,14 @@ def protected_page_view(request: HttpRequest, file: str):
 
 
 def calculate_stats(user: User):
+    matches = Match.objects.filter(Q(winner=user) | Q(loser=user)).count()
     wins = Match.objects.filter(winner=user).count()
-    losses = Match.objects.filter(loser=user).count()
-    matches = wins + losses
     winrate = (wins / matches) if matches != 0 else 0
+    losses = Match.objects.filter(loser=user).count()
     return {
         "friends": Friendship.objects.filter(user=user).count() + Friendship.objects.filter(friend=user).count(),
         "matches": matches,
-        "winrate": f'{winrate * 100:.2f}%' if winrate != 0 else "0.00%",
+        "winrate": f'{winrate*100:.2f}%' if winrate != 0 else "0.00%",
         "wins": wins,
         "losses": losses
     }
