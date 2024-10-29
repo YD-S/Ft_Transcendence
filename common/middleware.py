@@ -7,12 +7,12 @@ class HttpRequestMiddleware:
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        def json_f(self):
-            if self.__request.headers.get('content-type') != 'application/json':
+        def json_f(s):
+            if s.headers.get('content-type') != 'application/json':
                 raise ValueError('Request content type is not application/json')
-            if not self.body:
+            if not s.body:
                 return {}
-            return json.loads(self.body.decode())
+            return json.loads(s.body.decode())
 
-        request.json = json_f
+        request.json = json_f.__get__(request)
         return self.get_response(request)
