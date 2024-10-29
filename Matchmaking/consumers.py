@@ -41,8 +41,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         from users.models import User
         if (len(MatchmakingConsumer.queue) < 2 and not private) or (private and len(MatchmakingConsumer.private_queue[private_room_id]) < 2):
             return
-        player1 = User.objects.get(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
-        player2 = User.objects.get(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
+        player1 = User.objects.aget(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
+        player2 = User.objects.aget(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
         cache.delete(f'invite:{player1.id}')
         cache.delete(f'invite:{player2.id}')
         if private:
