@@ -7,8 +7,25 @@ PageManager.getInstance().setOnPageLoad("edit-profile", () => {
     button.addEventListener("click", async () => {
         // Get the form data
         const avatarInput = document.getElementById("avatar");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirm-password");
+
         const formData = new FormData();
-        formData.append("avatar", avatarInput.files[0]);
+        if (avatarInput.files.length !== 0) {
+            formData.append("avatar", avatarInput.files[0]);
+        }
+        if (emailInput.value !== "") {
+            formData.append("email", emailInput.value);
+        }
+        if (passwordInput.value !== "") {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                Notification.error("Passwords do not match");
+                return;
+            }
+            formData.append("password", passwordInput.value);
+        }
+
         fetch("/edit-profile", {
             method: "POST",
             body: formData,
