@@ -19,6 +19,10 @@ export default class Matchmaking {
             }
         };
 
+        this.Matchmakingsocket.onopen = () => {
+            console.log("Matchmaking socket connection established");
+        }
+
         this.Matchmakingsocket.onclose = (event) => {
             console.log(event.code);
             if (event.code === 4242) {
