@@ -196,8 +196,10 @@ let matchmaking = null;
 PageManager.getInstance().setOnPageLoad("pong/3dGame", () => {
     matchmaking = new Matchmaking();
     matchmaking.onGameSocketReady = () => {
+        matchmaking.Matchmakingsocket.close(4242);
         game = new NeonPong(matchmaking);
         game.render();
+        matchmaking = null;
     };
 });
 
