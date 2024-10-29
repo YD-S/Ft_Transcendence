@@ -10,7 +10,10 @@ PageManager.getInstance().setOnPageLoad("edit-profile", () => {
         const formData = new FormData(form);
         fetch("/edit-profile", {
             method: "POST",
-            body: formData
+            body: formData,
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
         }).then((response) => {
             if (response.ok) {
                 return response.json();
