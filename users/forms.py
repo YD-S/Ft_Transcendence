@@ -1,7 +1,11 @@
+import logging
+
 from django import forms
 from django.contrib.auth import login
 
 from users.models import User
+
+log = logging.getLogger(__name__)
 
 
 class UserForm(forms.ModelForm):
@@ -18,6 +22,7 @@ class UserForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         original = self.instance
         user = super().save(commit=False)
+        log.debug(self.cleaned_data)
         if "email" in self.changed_data and self.cleaned_data["email"]:
             user.email = original.email
             user.verified_email = False
