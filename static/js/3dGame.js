@@ -210,7 +210,7 @@ PageManager.getInstance().setOnPageUnload("pong/3dGame", () => {
             playerId: game.playerId,
         }));
     }
-    else if(matchmaking) {
+    if(matchmaking) {
         matchmaking.Matchmakingsocket.close(4343);
     }
 });
