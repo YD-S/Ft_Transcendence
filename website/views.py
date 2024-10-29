@@ -11,7 +11,7 @@ from authentication.token import require_token
 from chat.models import Room
 from chat.serializers import RoomSerializer
 from common.request import HttpRequest
-from users.forms import AvatarForm
+from users.forms import UserForm
 from users.models import User, BlockedUser, Friendship, Match
 from utils.exception import NotFoundError, HttpError
 
@@ -38,7 +38,7 @@ def handle_post(request: HttpRequest, page: str):
         case 'edit-profile':
             if request.user.is_anonymous:
                 return redirect("/auth/login")
-            form = AvatarForm(data=request.POST, files=request.FILES, instance=request.user)
+            form = UserForm(data=request.POST, files=request.FILES, instance=request.user)
 
             if form.is_valid():
                 form.save()
@@ -98,7 +98,7 @@ def protected_page_view(request: HttpRequest, file: str):
         case "room.html":
             return room_view(request)
         case "edit-profile.html":
-            return render(request, file, {"form": AvatarForm()})
+            return render(request, file, {"form": UserForm()})
         case _:
             try:
                 return render(request, file)
