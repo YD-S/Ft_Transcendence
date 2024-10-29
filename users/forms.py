@@ -13,13 +13,13 @@ class UserForm(forms.ModelForm):
         model = User
         fields = [
             'avatar',
-            'email',
-            'password',
         ]
 
     def save(self, *args, **kwargs):
+        original = self.instance
         user = super().save(commit=False)
         if "email" in self.changed_data and self.cleaned_data["email"]:
+            user.email = original.email
             user.verified_email = False
             user.has_2fa = False
         if "password" in self.changed_data and self.cleaned_data["password"]:
