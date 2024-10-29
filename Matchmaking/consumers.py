@@ -7,8 +7,6 @@ from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.http import HttpResponse
 
-from users.models import User
-
 
 class MatchmakingConsumer(AsyncWebsocketConsumer):
     queue = []
@@ -40,6 +38,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         print('User removed from queue:', user_id)
 
     async def add_to_game(self, private=False, private_room_id=None):
+        from users.models import User
         if (len(MatchmakingConsumer.queue) < 2 and not private) or (private and len(MatchmakingConsumer.private_queue[private_room_id]) < 2):
             return
         player1 = User.objects.get(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
