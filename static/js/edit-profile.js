@@ -6,7 +6,7 @@ PageManager.getInstance().setOnPageLoad("edit-profile", () => {
 
     button.addEventListener("click", async () => {
         // Get the form data
-        const form = document.getElementById("edit-profile-form");
+        const form = document.getElementById("edit-avatar");
         const formData = new FormData(form);
         fetch("/edit-profile", {
             method: "POST",
