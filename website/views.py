@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint
 
+from django.contrib.auth import login
 from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
@@ -41,7 +42,8 @@ def handle_post(request: HttpRequest, page: str):
             form = UserForm(data=request.POST, files=request.FILES, instance=request.user)
 
             if form.is_valid():
-                form.save()
+                user = form.save()
+                login(request, user, backend='authentication.backends.TokenBackend')
                 return JsonResponse({"message": "Avatar updated", "success": True})
 
     raise NotFoundError().as_http_response()
