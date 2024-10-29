@@ -274,8 +274,6 @@ class GameConsumer(AsyncWebsocketConsumer):
             from users.models import User, Match
             winner_obj = await User.objects.aget(id=winner)
             loser_obj = await User.objects.aget(id=loser)
-            with open('game.log', 'a') as f:
-                f.write(f'{winner_obj.username} won against {loser_obj.username} with score {winner_score} - {looser_score}\n')
             cache.delete(f'{self.game_id}:player1')
             cache.delete(f'{self.game_id}:player2')
             GameConsumer.games[self.game_id].game_finished = True

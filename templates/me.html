@@ -11,7 +11,7 @@
     <div id="profile-page" class="box">
       <span></span>
       <div class="content">
-        <div class="col-4">
+        <div class="col-4 ml-2">
           <img class="profile-picture col-12" src="{{ user.avatar.url }}" alt="user avatar">
           <h3 class="col-12">{{ user.username }}</h3>
           <p class="col-12">{{ user.email }}</p>
@@ -27,7 +27,7 @@
             <p>{% translate "Losses" %}: {{ stats.losses }}</p>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-5" style="transform: translateX(-25px);">
           {% if not user.verified_email %}
           <li>{% translate "Email not verified" %}</li>
           <button class="button mb-2" id="resend-verification">{% translate "Resend verification email" %}</button>
@@ -51,14 +51,21 @@
       </div>
     </div>
   </div>
-  <div class="col-3">
-    {% for match in stats.matches %}
-      <div class="match">
-        <h3>{{ match.opponent }}</h3>
-        <p>{{ match.date }}</p>
-        <p>{{ match.result }}</p>
-        <p>{{ match.score }}</p>
-      </div>
-    {% endfor %}
+  <div class="col-3 mh-100">
+    <h3 class="mb-3 text-center gold-text">{% translate "Matches" %}</h3>
+    <div class="mh-100" style="overflow-y: scroll;">
+        {% for match in stats.matches %}
+          <div class="match justify-content-between">
+            <div class="d-flex flex-column">
+                <h5>{{ match.opponent }}</h5>
+                <p>{{ match.date }}</p>
+            </div>
+              <div class="d-flex flex-column align-items-end mr-2">
+                  {{ match.score }}
+                <p>{{ match.result }}</p>
+              </div>
+          </div>
+        {% endfor %}
+    </div>
   </div>
 </div>
