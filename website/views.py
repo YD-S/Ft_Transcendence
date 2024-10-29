@@ -2,7 +2,7 @@ from pprint import pprint
 
 from django.core.cache import cache
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template.exceptions import TemplateDoesNotExist
 
@@ -39,9 +39,9 @@ def handle_post(request: HttpRequest, page: str):
 
             if form.is_valid():
                 form.save()
-                return HttpResponse(status=200)
+                return JsonResponse({"message": "Avatar updated"})
 
-    raise NotFoundError()
+    raise NotFoundError().as_http_response()
 
 
 @require_token()
