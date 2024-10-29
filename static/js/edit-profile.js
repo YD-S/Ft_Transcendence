@@ -6,14 +6,12 @@ PageManager.getInstance().setOnPageLoad("edit-profile", () => {
 
     button.addEventListener("click", async () => {
         // Get the form data
-        const form = document.getElementById("edit-avatar");
-        const formData = new FormData(form);
+        const avatarInput = document.getElementById("avatar");
+        const formData = new FormData();
+        formData.append("avatar", avatarInput.files[0]);
         fetch("/edit-profile", {
             method: "POST",
             body: formData,
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
         }).then((response) => {
             if (response.ok) {
                 return response.json();
