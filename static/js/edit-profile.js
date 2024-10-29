@@ -15,10 +15,10 @@ PageManager.getInstance().setOnPageLoad("edit-profile", () => {
         if (avatarInput.files.length !== 0) {
             formData.append("avatar", avatarInput.files[0]);
         }
-        if (emailInput.value !== "") {
+        if (emailInput.value) {
             formData.append("email", emailInput.value);
         }
-        if (passwordInput.value !== "") {
+        if (passwordInput.value) {
             if (passwordInput.value !== confirmPasswordInput.value) {
                 Notification.error("Passwords do not match");
                 return;

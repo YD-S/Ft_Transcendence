@@ -1,4 +1,4 @@
-from common.request import HttpRequest
+import json
 
 
 class HttpRequestMiddleware:
@@ -7,4 +7,12 @@ class HttpRequestMiddleware:
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        return self.get_response(HttpRequest(request))
+        def json_f(self):
+            if self.__request.headers.get('content-type') != 'application/json':
+                raise ValueError('Request content type is not application/json')
+            if not self.body:
+                return {}
+            return json.loads(self.body.decode())
+
+        request.json = json_f
+        return self.get_response(request)
