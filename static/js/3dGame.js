@@ -199,7 +199,6 @@ PageManager.getInstance().setOnPageLoad("pong/3dGame", () => {
         matchmaking.Matchmakingsocket.close(4242);
         game = new NeonPong(matchmaking);
         game.render();
-        matchmaking = null;
     };
 });
 
@@ -209,8 +208,10 @@ PageManager.getInstance().setOnPageUnload("pong/3dGame", () => {
             type: "leave",
             playerId: game.playerId,
         }));
+        game = null;
     }
     if(matchmaking) {
         matchmaking.Matchmakingsocket.close(4343);
+        matchmaking = null;
     }
 });
