@@ -46,7 +46,7 @@ def handle_post(request: HttpRequest, page: str):
                 login(request, user, backend='authentication.backends.TokenBackend')
                 return JsonResponse({"message": "Avatar updated", "success": True})
 
-    raise NotFoundError().as_http_response()
+    raise NotFoundError()
 
 
 @require_token()
