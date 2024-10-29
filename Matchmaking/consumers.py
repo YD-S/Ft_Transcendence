@@ -7,6 +7,17 @@ from django.core.cache import cache
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.http import HttpResponse
 
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename='logs.log',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    filemode='a',
+)
+
+log = logging.getLogger(__name__)
+
 
 class OrderedSet(list):
 
@@ -33,6 +44,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             str(user_id),
             self.channel_name
         )
+        log.debug('User disconnected:', user_id)
         if user_id in sum(MatchmakingConsumer.private_queue.values(), []):
             for key in MatchmakingConsumer.private_queue.keys():
                 if user_id in MatchmakingConsumer.private_queue[key]:
@@ -42,7 +54,8 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
                     break
         elif user_id in MatchmakingConsumer.queue:
             MatchmakingConsumer.queue.remove(user_id)
-        print('User removed from queue:', user_id)
+        log.debug('User removed from queue:', user_id)
+        log.debug(f'Queue: {MatchmakingConsumer.queue}, Private Queue: {MatchmakingConsumer.private_queue}')
 
     async def add_to_game(self, private=False, private_room_id=None):
         from users.models import User
@@ -57,7 +70,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         if private:
             del MatchmakingConsumer.private_queue[private_room_id]
         room_id = private_room_id or random.randint(1000, 10000)
-        print('Creating game with room_id:', room_id)
+        log.debug('Creating game with room_id:', room_id)
         await self.channel_layer.group_send(
             str(player1.id),
             {
@@ -105,6 +118,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
 
     async def get_user_data(self):
         user_id = self.scope['user'].id
+        log.debug('Adding user to queue:', user_id)
         if (private_room_id := cache.get(f'invite:{user_id}', self.sentinel)) is not self.sentinel:
             MatchmakingConsumer.private_queue[private_room_id] = MatchmakingConsumer.private_queue.get(private_room_id, OrderedSet())
             MatchmakingConsumer.private_queue[private_room_id].add(user_id)
@@ -113,6 +127,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             MatchmakingConsumer.queue.add(user_id)
             if len(MatchmakingConsumer.queue) >= 2:
                 await self.add_to_game()
+        log.debug(f'Queue: {MatchmakingConsumer.queue}, Private Queue: {MatchmakingConsumer.private_queue}')
 
     async def game_start(self, event):
         data = event['data']
