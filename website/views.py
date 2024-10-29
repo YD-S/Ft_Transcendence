@@ -84,7 +84,7 @@ def protected_page_view(request: HttpRequest, file: str):
                       ]
             return render(request, file, {"friends": friends})
         case "me.html":
-            return render(request, file, {"user": request.user})
+            return render(request, file, {"user": request.user, "stats": calculate_stats(request.user)})
         case "user.html":
             try:
                 return user_page(request)
@@ -104,16 +104,25 @@ def protected_page_view(request: HttpRequest, file: str):
 
 
 def calculate_stats(user: User):
-    matches = Match.objects.filter(Q(winner=user) | Q(loser=user)).count()
     wins = Match.objects.filter(winner=user).count()
-    winrate = (wins / matches) if matches != 0 else 0
     losses = Match.objects.filter(loser=user).count()
+    match_count = wins + losses
+    winrate = (wins / match_count) if match_count != 0 else 0
     return {
         "friends": Friendship.objects.filter(user=user).count() + Friendship.objects.filter(friend=user).count(),
-        "matches": matches,
+        "match_count": match_count,
         "winrate": f'{winrate*100:.2f}%' if winrate != 0 else "0.00%",
         "wins": wins,
-        "losses": losses
+        "losses": losses,
+        "matches": [
+            {
+                "opponent": match.loser if match.winner == user else match.winner,
+                "result": "win" if match.winner == user else "loss",
+                "score": f"{match.winner_score} - {match.loser_score}" if match.winner == user else f"{match.loser_score} - {match.winner_score}",
+                "date": match.date
+            }
+            for match in Match.objects.filter(Q(winner=user) | Q(loser=user))
+        ]
     }
 
 
