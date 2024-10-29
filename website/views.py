@@ -38,7 +38,10 @@ def handle_post(request: HttpRequest, page: str):
     match page:
         case 'edit-profile':
             log.debug(request.POST)
-            log.debug(request.FILES)
+            try:
+                log.debug(request.FILES['avatar'])
+            except Exception as e:
+                pass
             if request.user.is_anonymous:
                 return redirect("/auth/login")
             form = AvatarForm(data=request.POST, files=request.FILES, instance=request.user)
