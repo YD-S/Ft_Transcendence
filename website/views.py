@@ -116,7 +116,7 @@ def calculate_stats(user: User):
         "losses": losses,
         "matches": [
             {
-                "opponent": match.loser if match.winner == user else match.winner,
+                "opponent": (match.loser if match.winner == user else match.winner).username,
                 "result": "win" if match.winner == user else "loss",
                 "score": f"{match.winner_score} - {match.loser_score}" if match.winner == user else f"{match.loser_score} - {match.winner_score}",
                 "date": match.date
