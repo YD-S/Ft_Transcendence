@@ -39,7 +39,7 @@ def handle_post(request: HttpRequest, page: str):
 
             if form.is_valid():
                 form.save()
-                return JsonResponse({"message": "Avatar updated"})
+                return JsonResponse({"message": "Avatar updated", "success": True})
 
     raise NotFoundError().as_http_response()
 
