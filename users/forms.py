@@ -3,7 +3,7 @@ from django import forms
 from users.models import User
 
 
-class AvatarForm(forms.Form):
+class AvatarForm(forms.ModelForm):
     avatar = forms.ImageField()
 
     class Meta:
