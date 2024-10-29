@@ -7,4 +7,6 @@ class AvatarForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['avatar']
+        fields = [
+            'avatar'
+        ]
