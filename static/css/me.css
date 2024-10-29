@@ -218,8 +218,9 @@ h1 {
 }
 
 .profile-picture {
-    max-width: 250px;
-    max-height: 250px;
+	max-width: 100%;
+	max-height: 250px;
+	margin-bottom: 25px;
 }
 
 .match{

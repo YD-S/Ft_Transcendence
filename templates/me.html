@@ -11,7 +11,7 @@
     <div id="profile-page" class="box">
       <span></span>
       <div class="content">
-        <div class="col-4 ml-2">
+        <div class="col-4 ml-3">
           <img class="profile-picture col-12" src="{{ user.avatar.url }}" alt="user avatar">
           <h3 class="col-12">{{ user.username }}</h3>
           <p class="col-12">{{ user.email }}</p>
@@ -27,7 +27,7 @@
             <p>{% translate "Losses" %}: {{ stats.losses }}</p>
           </div>
         </div>
-        <div class="col-5" style="transform: translateX(-25px);">
+        <div class="col-4 mr-3">
           {% if not user.verified_email %}
           <li>{% translate "Email not verified" %}</li>
           <button class="button mb-2" id="resend-verification">{% translate "Resend verification email" %}</button>
