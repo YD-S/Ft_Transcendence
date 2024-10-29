@@ -8,8 +8,15 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.http import HttpResponse
 
 
+class OrderedSet(list):
+
+    def add(self, element):
+        if element not in self:
+            self.append(element)
+
+
 class MatchmakingConsumer(AsyncWebsocketConsumer):
-    queue = []
+    queue = OrderedSet()
     private_queue = {}
     sentinel = object()
 
@@ -41,8 +48,10 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         from users.models import User
         if (len(MatchmakingConsumer.queue) < 2 and not private) or (private and len(MatchmakingConsumer.private_queue[private_room_id]) < 2):
             return
-        player1 = await User.objects.aget(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
-        player2 = await User.objects.aget(id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
+        player1 = await User.objects.aget(
+            id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
+        player2 = await User.objects.aget(
+            id=MatchmakingConsumer.queue.pop(0) if not private else MatchmakingConsumer.private_queue[private_room_id].pop(0))
         cache.delete(f'invite:{player1.id}')
         cache.delete(f'invite:{player2.id}')
         if private:
@@ -97,11 +106,11 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
     async def get_user_data(self):
         user_id = self.scope['user'].id
         if (private_room_id := cache.get(f'invite:{user_id}', self.sentinel)) is not self.sentinel:
-            MatchmakingConsumer.private_queue[private_room_id] = MatchmakingConsumer.private_queue.get(private_room_id, [])
-            MatchmakingConsumer.private_queue[private_room_id].append(user_id)
+            MatchmakingConsumer.private_queue[private_room_id] = MatchmakingConsumer.private_queue.get(private_room_id, OrderedSet())
+            MatchmakingConsumer.private_queue[private_room_id].add(user_id)
             await self.add_to_game(True, private_room_id)
         else:
-            MatchmakingConsumer.queue.append(user_id)
+            MatchmakingConsumer.queue.add(user_id)
             if len(MatchmakingConsumer.queue) >= 2:
                 await self.add_to_game()
 
