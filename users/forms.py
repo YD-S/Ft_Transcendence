@@ -19,9 +19,9 @@ class UserForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         user = super().save(commit=False)
-        if "email" in self.changed_data:
+        if "email" in self.changed_data and self.cleaned_data["email"]:
             user.verified_email = False
             user.has_2fa = False
-        if "password" in self.changed_data:
+        if "password" in self.changed_data and self.cleaned_data["password"]:
             user.set_password(self.cleaned_data["password"])
         super().save(*args, **kwargs)
