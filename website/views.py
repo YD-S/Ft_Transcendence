@@ -1,3 +1,4 @@
+import logging
 from pprint import pprint
 
 from django.core.cache import cache
@@ -23,6 +24,8 @@ UNPROTECTED_PAGES = [
     "auth/verify_email",
 ]
 
+log = logging.getLogger(__name__)
+
 
 def upload_avatar(file, user: User):
     with open(f'/media/avatars/{user.username}.{file.name.split(".")[-1]}', "wb+") as destination:
@@ -31,8 +34,11 @@ def upload_avatar(file, user: User):
 
 
 def handle_post(request: HttpRequest, page: str):
+    log.debug(page)
     match page:
         case 'edit-profile':
+            log.debug(request.POST)
+            log.debug(request.FILES)
             if request.user.is_anonymous:
                 return redirect("/auth/login")
             form = AvatarForm(data=request.POST, files=request.FILES, instance=request.user)
@@ -111,7 +117,7 @@ def calculate_stats(user: User):
     return {
         "friends": Friendship.objects.filter(user=user).count() + Friendship.objects.filter(friend=user).count(),
         "match_count": match_count,
-        "winrate": f'{winrate*100:.2f}%' if winrate != 0 else "0.00%",
+        "winrate": f'{winrate * 100:.2f}%' if winrate != 0 else "0.00%",
         "wins": wins,
         "losses": losses,
         "matches": [
@@ -133,7 +139,9 @@ def user_page(request):
     if is_self_blocked:
         return render(request, "404.html")
     user_is_blocked = user in [blocked_user.blocked_user for blocked_user in BlockedUser.objects.filter(user=request.user)]
-    user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)] + [friendship.user for friendship in Friendship.objects.filter(friend=request.user)]
+    user_is_friend = user in [friendship.friend for friendship in Friendship.objects.filter(user=request.user)] + [friendship.user for friendship in
+                                                                                                                   Friendship.objects.filter(
+                                                                                                                       friend=request.user)]
     if user_is_blocked:
         block = BlockedUser.objects.filter(user=request.user).get(blocked_user=user)
     else:
