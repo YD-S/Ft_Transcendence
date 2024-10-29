@@ -79,6 +79,7 @@ def angle_difference(angle1: float, angle2: float):
         abs(angle1 - angle2 - 2 * math.pi),
     ])
 
+
 @dataclass
 class GameState:
     player1_angle: float = 0
@@ -89,12 +90,13 @@ class GameState:
     ball_velocity: Vector = Vector(0, 0)
     last_collision: str = None
     game_finished: bool = False
-    player_names : List[str] = field(default_factory=list)
+    player_names: List[str] = field(default_factory=list)
+
 
 class GameConsumer(AsyncWebsocketConsumer):
     sockets = {}
     games: Dict[int, GameState] = {}
-    players : Dict[int, int] = {}
+    players: Dict[int, int] = {}
     ball_speed = 0.18
 
     def __init__(self, *args, **kwargs):
@@ -242,7 +244,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         GameConsumer.games[self.game_id].ball_velocity = Vector.from_angle(math.pi / 4 * 3)
         GameConsumer.games[self.game_id].player1_angle = 0
         GameConsumer.games[self.game_id].player2_angle = math.pi
-
 
     def add_score(self):
         if GameConsumer.games[self.game_id].last_collision == 'player1':
