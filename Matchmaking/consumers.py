@@ -9,13 +9,6 @@ from django.http import HttpResponse
 
 import logging
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename='logs.log',
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    filemode='a',
-)
-
 log = logging.getLogger(__name__)
 
 
