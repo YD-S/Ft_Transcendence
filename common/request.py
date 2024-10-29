@@ -46,8 +46,6 @@ class HttpRequest(ASGIRequest):
 
     def __init__(self, request: ASGIRequest, *args, **kwargs):
         self.__request = request
-        log.debug(f'Request  files: {request.FILES}')
-        self.content_type = request.headers.get('content-type')
 
     def __getattr__(self, item):
         try:
@@ -56,7 +54,7 @@ class HttpRequest(ASGIRequest):
             return super().__getattribute__(item)
 
     def json(self):
-        if self.content_type != 'application/json':
+        if self.__request.headers.get('content-type') != 'application/json':
             raise ValueError('Request content type is not application/json')
         if not self.body:
             return {}
