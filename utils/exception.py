@@ -34,7 +34,8 @@ class ValidationError(HttpError):
 
     @classmethod
     def from_django(cls, e):
-        return cls(json.dumps({"errors": [f'{key}: {"\n".join(val)}' for key, val in e.message_dict.items()]}), content_type='application/json')
+        nl = "\n"
+        return cls(json.dumps({"errors": [f'{key}: {nl.join(val)}' for key, val in e.message_dict.items()]}), content_type='application/json')
 
 
 class InternalServerError(HttpError):
