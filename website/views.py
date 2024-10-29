@@ -34,12 +34,8 @@ def upload_avatar(file, user: User):
 
 
 def handle_post(request: HttpRequest, page: str):
-    log.debug(page)
     match page:
         case 'edit-profile':
-            log.debug(request.POST)
-            for key, value in request.FILES.items():
-                log.debug(f"{key}: {value}")
             if request.user.is_anonymous:
                 return redirect("/auth/login")
             form = AvatarForm(data=request.POST, files=request.FILES, instance=request.user)
