@@ -1,9 +1,12 @@
 import json
+import logging
 
 from django.core.handlers.asgi import ASGIRequest
 from django.http import HttpResponseNotAllowed
 
 from utils.exception import HttpError
+
+log = logging.getLogger(__name__)
 
 
 class ViewMixin:
@@ -43,6 +46,7 @@ class HttpRequest(ASGIRequest):
 
     def __init__(self, request: ASGIRequest, *args, **kwargs):
         self.__request = request
+        log.debug(f'Request  files: {request.FILES}')
         self.content_type = request.headers.get('content-type')
 
     def __getattr__(self, item):
