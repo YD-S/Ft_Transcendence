@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 import logging
 import os
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "NeonPong.settings")
 
 from channels.auth import AuthMiddlewareStack
@@ -17,7 +18,6 @@ from channels.sessions import SessionMiddlewareStack
 from django.core.asgi import get_asgi_application
 
 import routing.routing
-
 
 MIDDLEWARE = [
     SessionMiddlewareStack,

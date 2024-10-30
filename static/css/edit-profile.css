@@ -10,7 +10,7 @@
 }
 
 /* From Uiverse.io by csemszepp */
-.custum-file-upload {
+.custom-file-upload {
     height: 100px;
     width: 250px;
     display: flex;
@@ -28,17 +28,17 @@
     margin: 25px auto;
 }
 
-.custum-file-upload .text {
+.custom-file-upload .text {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.custum-file-upload .text span {
+.custom-file-upload .text span {
   font-weight: 400;
   color: #e8e8e8;
 }
 
-.custum-file-upload input {
+.custom-file-upload input {
   display: none;
 }
