@@ -231,7 +231,7 @@ msgstr "Crie uma sala"
 
 #: templates/chat.html:20
 msgid "Room name"
-msgstr "Nombre de la sala"
+msgstr "Nome do quarto"
 
 #: templates/chat.html:24
 msgid "Create"
@@ -431,7 +431,7 @@ msgstr "Convidar jogo"
 #~ msgstr "Os usuários OAuth não precisam de autenticação em duas etapas"
 
 #~ msgid "enabled,disabled"
-#~ msgstr "ativado, desativado"
+#~ msgstr "ativado,desativado"
 
 #~ msgid "Toggle"
 #~ msgstr "Alternar"
