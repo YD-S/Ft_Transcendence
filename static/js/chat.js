@@ -1,5 +1,6 @@
 import {PageManager} from "./page-manager.js";
 import {Notification} from "./notification.js";
+import {inviteUser} from "./users";
 
 function createMessageHTML(message) {
     if (!message.sender) {
@@ -7,7 +8,7 @@ function createMessageHTML(message) {
             <span class="system-message">${message.content}</span>`
     }
     return `<span class="timestamp">${message.created_at}</span>
-            <a class="username" href="/user?id=${ message.sender_id }">${ message.sender }:</a>
+            <a class="username" href="/user?id=${message.sender_id}">${message.sender}:</a>
             <span class="content">${message.content}</span>`
 }
 
@@ -29,7 +30,7 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
         const data = JSON.parse(event.data);
         const message = document.createElement("div");
         const messages = document.getElementsByClassName("message").length
-        message.className = `message ${messages % 2 ? 'one': 'two'}`;
+        message.className = `message ${messages % 2 ? 'one' : 'two'}`;
         message.innerHTML = createMessageHTML(data.message);
         document.getElementById("chat-log").appendChild(message);
         document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
@@ -129,7 +130,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 .then(response => {
                     if (response.ok) {
                         return response.json();
-                    }else {
+                    } else {
                         throw new Error("CHAT.ERROR.JOIN_ROOM_FAILED");
                     }
                 })
@@ -157,8 +158,7 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 .then(response => {
                     if (response.ok) {
                         return response.json();
-                    }
-                    else {
+                    } else {
                         switch (response.status) {
                             case 400:
                                 throw new Error("CHAT.ERROR.DM_WITH_SELF");
@@ -188,13 +188,23 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 ws.close();
             }
             PageManager.getInstance().loadToContainer(
-              "room",
-              document.getElementById('current-room'),
-              false,
-              {query: `?room=${roomButton.getAttribute("data-room-id")}`, storeInHistory: false}
-            ).then(() => {})
-         })
+                "room",
+                document.getElementById('current-room'),
+                false,
+                {query: `?room=${roomButton.getAttribute("data-room-id")}`, storeInHistory: false}
+            ).then(() => {
+            })
+        })
     }
+})
 
-
+PageManager.getInstance().setOnPageLoad("room", () => {
+    if (document.getElementById("game-invite")) {
+        inviteUser();
+        document.getElementById("game-invite").addEventListener("click", function () {
+            ws.send(JSON.stringify({
+                invite: true
+            }))
+        })
+    }
 })
