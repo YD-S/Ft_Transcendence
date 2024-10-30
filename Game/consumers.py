@@ -12,7 +12,7 @@ GAME_SIZE = 1000
 COURT_RADIUS = 15
 PLAYER_WIDTH = GAME_SIZE / 350
 BALL_RADIUS = GAME_SIZE / 1500
-WINNING_SCORE = 2
+WINNING_SCORE = 5
 
 ANGLE_MARGIN = math.asin((PLAYER_WIDTH / 2 + BALL_RADIUS) / COURT_RADIUS)
 BOUNCE_MARGIN = math.pi / 3
@@ -241,7 +241,7 @@ class GameConsumer(AsyncWebsocketConsumer):
     def reset_ball(self):
         GameConsumer.games[self.game_id].last_collision = None
         GameConsumer.games[self.game_id].ball_pos = Vector(0, 0)
-        GameConsumer.games[self.game_id].ball_velocity = Vector.from_angle(math.pi / 4 * 3)
+        GameConsumer.games[self.game_id].ball_velocity = Vector.from_angle(random.random() * 2 * math.pi).normalize()
         GameConsumer.games[self.game_id].player1_angle = 0
         GameConsumer.games[self.game_id].player2_angle = math.pi
 

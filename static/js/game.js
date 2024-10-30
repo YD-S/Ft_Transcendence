@@ -4,7 +4,7 @@ import {PageManager} from "./page-manager.js";
 import {Notification} from "./notification.js";
 import {t} from "./translation.js";
 
-const  WINNING_SCORE = 1;
+const  WINNING_SCORE = 5;
 export class Game {
     constructor() {
         this.tournament = false;
