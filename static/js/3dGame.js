@@ -92,6 +92,14 @@ class NeonPong {
 
         document.getElementById("game-canvas").appendChild(this.renderer.domElement);
 
+        if (this.amIfirst) {
+            document.getElementById("player1").innerText = this.playerId;
+            document.getElementById("player2").innerText = this.opponentId;
+        }else {
+            document.getElementById("player1").innerText = this.opponentId;
+            document.getElementById("player2").innerText = this.playerId;
+        }
+
         this.GameSocket.onmessage = async (event) => {
             await this.handleMessage(event);
         };
