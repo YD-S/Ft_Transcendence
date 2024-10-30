@@ -51,6 +51,13 @@ class ChatRoomConsumer(WebsocketConsumer):
         room = Room.objects.get(id=int(self.scope['url_route']['kwargs']['room_id']))
 
         text_data_json = json.loads(text_data)
+
+        if text_data_json.get('invite', False) and room.is_direct:
+            msg = Message.objects.create(
+                content=f'{self.scope['user'].username} has invited you to play Pong 3D! <a href="/pong/3dGame">Click here to join!</a>',
+                sender=self.scope['user'], room=room)
+            self.send_group(MessageSerializer(instance=msg).data)
+            return
         message = text_data_json['message']
         msg = Message.objects.create(content=message, sender=self.scope['user'], room=room)
         msg.save()
