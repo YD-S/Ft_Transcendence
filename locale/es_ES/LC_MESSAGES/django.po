@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 23:34+0000\n"
-"PO-Revision-Date: 2024-04-14 01:57+0200\n"
-"Last-Translator: Ciro García Belmonte\n"
+"POT-Creation-Date: 2024-10-30 15:04+0100\n"
+"PO-Revision-Date: 2024-10-30 15:38+0200\n"
+"Last-Translator: Fco Jose Ortega Molina\n"
 "Language-Team: \n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
@@ -19,127 +19,143 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: authentication/token.py:70 authentication/token.py:89
-msgid "Invalid token"
-msgstr "Token inválido"
-
-#: authentication/token.py:80
-msgid "Token reuse detected"
-msgstr "Reutilización de tokens detectada"
-
-#: authentication/token.py:86
-msgid "Token expired"
-msgstr "Token caducado"
-
-#: authentication/views.py:32
+#: authentication/views.py:34
 msgid "Username and password are required"
 msgstr "El usuario y la contraseña son obligatorios"
 
-#: authentication/views.py:40
+#: authentication/views.py:42
 msgid "Invalid username or password"
 msgstr "Usuario o contraseña incorrectos"
 
-#: authentication/views.py:61 templates/me.html:19 templates/me.html:21
+#: authentication/views.py:63
 msgid "Two-Factor Authentication"
 msgstr "Autenticación en dos pasos"
 
-#: authentication/views.py:63
+#: authentication/views.py:65
 msgid "Your one-time passcode is"
 msgstr "Tú código de un solo uso es"
 
-#: authentication/views.py:63
+#: authentication/views.py:65
 msgid "It expires in 5 minutes"
 msgstr "Expira en 5 minutos"
 
-#: authentication/views.py:73 authentication/views.py:131
-#: authentication/views.py:234 authentication/views.py:348
+#: authentication/views.py:75 authentication/views.py:136
+#: authentication/views.py:244 authentication/views.py:362
 msgid "User ID is required"
 msgstr "La ID de usuario es obligatoria"
 
-#: authentication/views.py:79
+#: authentication/views.py:81
 msgid "2FA code is required"
 msgstr "El código de un solo uso es obligatorio"
 
-#: authentication/views.py:87 authentication/views.py:139
-#: authentication/views.py:254 authentication/views.py:356 chat/views.py:62
+#: authentication/views.py:89 authentication/views.py:144
+#: authentication/views.py:264 authentication/views.py:370 chat/views.py:62
 msgid "User not found"
 msgstr "Usuario no encontrado"
 
-#: authentication/views.py:95 authentication/views.py:103
+#: authentication/views.py:97 authentication/views.py:105
 msgid "Invalid 2FA code"
 msgstr "Código de un solo uso inválido"
 
-#: authentication/views.py:145
+#: authentication/views.py:150
 msgid "2FA code sent"
 msgstr "Código de un solo uso enviado"
 
-#: authentication/views.py:159
+#: authentication/views.py:164
 msgid "Logout successful"
 msgstr "Sesión cerrada correctamente"
 
-#: authentication/views.py:171
+#: authentication/views.py:176
 msgid "Refresh token is required"
 msgstr "El token de refresco es obligatorio"
 
-#: authentication/views.py:199
+#: authentication/views.py:204
 msgid "Username and password and email are required"
 msgstr "El nombre de usuario, contraseña e email son obligatorios"
 
-#: authentication/views.py:208
+#: authentication/views.py:210
+msgid "Username cannot contain '@'"
+msgstr "El nombre de usuario no puede contener '@'"
+
+#: authentication/views.py:217
 msgid "Username already exists"
 msgstr "El nombre de usuario ya existe"
 
-#: authentication/views.py:222
+#: authentication/views.py:232
 msgid "User registered successfully"
 msgstr "Usuario registrado correctamente"
 
-#: authentication/views.py:240
+#: authentication/views.py:250
 msgid "Current password is required"
 msgstr "La contraseña actual es obligatoria"
 
-#: authentication/views.py:246
+#: authentication/views.py:256
 msgid "New password is required"
 msgstr "La nueva contraseña es obligatoria"
 
-#: authentication/views.py:261
+#: authentication/views.py:271
 msgid "Current password is incorrect"
 msgstr "La contraseña actual es incorrecta"
 
-#: authentication/views.py:268
+#: authentication/views.py:278
 msgid "New password must be different from current password"
 msgstr "La nueva contraseña debe ser distinta de la actual"
 
-#: authentication/views.py:275
+#: authentication/views.py:285
 msgid "Password changed successfully"
 msgstr "Contraseña cambiada correctamente"
 
-#: authentication/views.py:304 authentication/views.py:373
+#: authentication/views.py:314 authentication/views.py:387
 msgid "Code is required"
 msgstr "El código es obligatorio"
 
-#: authentication/views.py:320 authentication/views.py:383
+#: authentication/views.py:328 authentication/views.py:397
 msgid "Invalid code"
 msgstr "Código inválido"
 
-#: authentication/views.py:336
+#: authentication/views.py:350
 msgid "Email verification"
 msgstr "Verificación de email"
 
-#: authentication/views.py:362
+#: authentication/views.py:376
 msgid "Verification email sent"
 msgstr "Reenviar correo de verificación"
 
-#: authentication/views.py:391
+#: authentication/views.py:405
 msgid "Code expired"
 msgstr "Código caducado"
 
-#: authentication/views.py:399
+#: authentication/views.py:413
 msgid "Email verified"
 msgstr "Email verificado"
+
+#: chat/models.py:46
+msgid "* deleted user *"
+msgstr "* usuario eliminado *"
+
+#: chat/models.py:51
+msgid "Direct rooms can only have 2 members"
+msgstr "Las salas directas solo pueden tener 2 miembros"
 
 #: chat/views.py:38 chat/views.py:50
 msgid "Room not found"
 msgstr "Sala no encontrada"
+
+#: chat/views.py:64
+msgid "You cannot create a direct room with yourself"
+msgstr "No puedes crear una habitación directa contigo mismo."
+
+#: chat/views.py:67
+msgid "You are blocked by this user"
+msgstr "Estás bloqueado por este usuario"
+
+#: chat/views.py:70
+msgid "You have blocked this user"
+msgstr "Has bloqueado a este usuario"
+
+#: chat/views.py:73
+msgid "You are not friends with this user"
+msgstr "No eres amigo de este usuario"
 
 #: templates/404.html:4
 msgid "Page not found"
@@ -153,52 +169,51 @@ msgstr "Se ha enviado un mensaje a su cuenta de correo electrónico."
 msgid "Code"
 msgstr "Código"
 
-#: templates/auth/2fa.html:7 templates/chat.html:64
-msgid "Send"
-msgstr "Enviar"
+#: templates/auth/2fa.html:7
+#, fuzzy
+#| msgid "Verifying code"
+msgid "Verify"
+msgstr "Verificando código"
 
 #: templates/auth/2fa.html:9
 msgid "Request a new code"
 msgstr "Solicitar un nuevo código"
 
-#: templates/auth/login.html:5
+#: templates/auth/login.html:11
 msgid "Sign in to Neon Pong"
 msgstr "Iniciar sesión en Neon Pong"
 
-#: templates/auth/login.html:7 templates/auth/register.html:6
-#: templates/chat.html:35 templates/me.html:12
+#: templates/auth/login.html:15 templates/auth/register.html:13
+#: templates/chat.html:42
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: templates/auth/login.html:9 templates/auth/register.html:8
+#: templates/auth/login.html:20 templates/auth/register.html:21
+#: templates/edit-profile.html:25
 msgid "Password"
 msgstr "Contraseña"
 
-#: templates/auth/login.html:11
+#: templates/auth/login.html:23
 msgid "Sign in"
 msgstr "Iniciar sesión"
 
-#: templates/auth/login.html:12
+#: templates/auth/login.html:24
 msgid "Sign in with 42"
 msgstr "Iniciar sesión con 42"
 
-#: templates/auth/login.html:14
+#: templates/auth/login.html:25 templates/auth/register.html:9
 msgid "Create a new account"
 msgstr "Crear una nueva cuenta"
 
-#: templates/auth/oauth_callback.html:2
-msgid "Validating OAuth code"
-msgstr "Validando código de OAuth"
-
-#: templates/auth/register.html:7 templates/me.html:13
+#: templates/auth/register.html:17 templates/edit-profile.html:21
 msgid "Email"
 msgstr "Email"
 
-#: templates/auth/register.html:9
+#: templates/auth/register.html:25 templates/edit-profile.html:29
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
 
-#: templates/auth/register.html:10
+#: templates/auth/register.html:27
 msgid "Register"
 msgstr "Crear cuenta"
 
@@ -210,90 +225,213 @@ msgstr "Verificando código"
 msgid "Chats"
 msgstr "Chats"
 
-#: templates/chat.html:20
+#: templates/chat.html:19
 msgid "Create a room"
 msgstr "Crear una sala"
 
-#: templates/chat.html:21
+#: templates/chat.html:20
 msgid "Room name"
 msgstr "Nombre de la sala"
 
-#: templates/chat.html:23
+#: templates/chat.html:24
 msgid "Create"
 msgstr "Crear"
 
-#: templates/chat.html:27
+#: templates/chat.html:30
 msgid "Join a room"
 msgstr "Unirse a una sala"
 
-#: templates/chat.html:28 templates/chat.html:47
+#: templates/chat.html:31 templates/room.html:11
 msgid "Room code"
 msgstr "Código de sala"
 
-#: templates/chat.html:30 templates/chat.html:37
+#: templates/chat.html:35 templates/chat.html:46
 msgid "Join"
 msgstr "Unirse"
 
-#: templates/chat.html:34
+#: templates/chat.html:41
 msgid "Direct message"
 msgstr "Mensaje directo"
 
-#: templates/chat.html:51
-msgid "Leave room"
-msgstr "Abandonar sala"
+#: templates/edit-profile.html:10 templates/me.html:45
+#, fuzzy
+#| msgid "Profile"
+msgid "Edit Profile"
+msgstr "Perfil"
 
-#: templates/chat.html:63
-msgid "Type your message here"
-msgstr "Escribe aquí tu mensaje"
+#: templates/edit-profile.html:31
+msgid "Save"
+msgstr "Guardar"
 
-#: templates/chat.html:67
-msgid "Select a chat to start a conversation"
-msgstr "Selecciona un chat para iniciar una conversación"
+#: templates/friendlist.html:8 templates/index.html:48
+msgid "Friends"
+msgstr "Amigos"
 
-#: templates/home.html:7
+#: templates/friendlist.html:15 templates/user.html:46
+msgid "Remove friend"
+msgstr "Eliminar amigo"
+
+#: templates/home.html:8
 msgid "Local Game"
 msgstr "Partida local"
 
-#: templates/index.html:16
-msgid "Settings"
-msgstr "Ajustes"
+#: templates/home.html:11
+msgid "Remote 3D Game"
+msgstr "Juego 3D Remoto"
 
-#: templates/index.html:24
-msgid "Chat"
-msgstr "Chat"
+#: templates/home.html:14
+msgid "Tournament"
+msgstr "Torneo"
 
-#: templates/index.html:27
-msgid "Log out"
-msgstr "Cerrar sesión"
+#: templates/index.html:32
+msgid "Home"
+msgstr "Inicio"
 
-#: templates/index.html:31 templates/settings.html:7
+#: templates/index.html:40 templates/settings.html:7 templates/user.html:13
 msgid "Profile"
 msgstr "Perfil"
 
-#: templates/index.html:35
-msgid "Select language"
+#: templates/index.html:56
+msgid "Chat"
+msgstr "Chat"
+
+#: templates/index.html:63
+#, fuzzy
+#| msgid "Select language"
+msgid "Language"
 msgstr "Seleccionar idioma"
 
-#: templates/me.html:9
+#: templates/index.html:99
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+#: templates/me.html:10
 msgid "My Profile"
 msgstr "Mi perfil"
 
-#: templates/me.html:15
+#: templates/me.html:21 templates/user.html:29
+msgid "Stats"
+msgstr "Estadísticas"
+
+#: templates/me.html:23 templates/user.html:31
+msgid "Friend count"
+msgstr "Recuento de amigos"
+
+#: templates/me.html:24 templates/user.html:32
+msgid "Match count"
+msgstr "Recuento de partidos"
+
+#: templates/me.html:25 templates/user.html:33
+msgid "Win rate"
+msgstr "Tasa de ganadas"
+
+#: templates/me.html:26 templates/user.html:34
+msgid "Wins"
+msgstr "Ganadas"
+
+#: templates/me.html:27 templates/user.html:35
+msgid "Losses"
+msgstr "Perdidas"
+
+#: templates/me.html:32
 msgid "Email not verified"
 msgstr "Email sin verificar"
 
-#: templates/me.html:16
+#: templates/me.html:33
 msgid "Resend verification email"
 msgstr "Reenviar correo de verificación"
 
-#: templates/me.html:19
-msgid "OAuth users don't need two-factor auth."
-msgstr "Los usuarios de OAuth no necesitan autenticación en dos pasos."
+#: templates/me.html:37
+#, fuzzy
+#| msgid "Two-Factor Authentication"
+msgid "Disable Two-Factor Authentication"
+msgstr "Autenticación en dos pasos"
 
-#: templates/me.html:21
-msgid "enabled,disabled"
-msgstr "activado,desactivado"
+#: templates/me.html:41
+#, fuzzy
+#| msgid "Two-Factor Authentication"
+msgid "Enable Two-Factor Authentication"
+msgstr "Autenticación en dos pasos"
 
-#: templates/me.html:22
-msgid "Toggle"
-msgstr "Alternar"
+#: templates/me.html:48
+msgid "Friendlist"
+msgstr "Lista de amigos"
+
+#: templates/me.html:55 templates/ui/matches.html:5
+msgid "Matches"
+msgstr "Partidas"
+
+#: templates/pong/tournament.html:6
+msgid "player1"
+msgstr "jugador1"
+
+#: templates/pong/tournament.html:11
+msgid "player2"
+msgstr "jugador2"
+
+#: templates/pong/tournament.html:16
+msgid "player3"
+msgstr "jugador3"
+
+#: templates/pong/tournament.html:21
+msgid "player4"
+msgstr "jugador4"
+
+#: templates/pong/tournament.html:25
+msgid "Start Tournament"
+msgstr "Comenzar torneo"
+
+#: templates/room.html:15
+msgid "Leave room"
+msgstr "Abandonar sala"
+
+#: templates/room.html:28
+msgid "Type your message here"
+msgstr "Escribe aquí tu mensaje"
+
+#: templates/room.html:35
+msgid "Select a chat to start a conversation"
+msgstr "Selecciona un chat para iniciar una conversación"
+
+#: templates/user.html:41 templates/user.html:43
+msgid "Add friend"
+msgstr "Añadir amigo"
+
+#: templates/user.html:49
+msgid "Block User"
+msgstr "Bloquear usuario"
+
+#: templates/user.html:51
+msgid "Unblock User"
+msgstr "Desbloquear usuario"
+
+#: templates/user.html:53
+msgid "Invite to game"
+msgstr "Invitar a juego"
+
+#~ msgid "Invalid token"
+#~ msgstr "Token inválido"
+
+#~ msgid "Token reuse detected"
+#~ msgstr "Reutilización de tokens detectada"
+
+#~ msgid "Token expired"
+#~ msgstr "Token caducado"
+
+#~ msgid "Send"
+#~ msgstr "Enviar"
+
+#~ msgid "Validating OAuth code"
+#~ msgstr "Validando código de OAuth"
+
+#~ msgid "Settings"
+#~ msgstr "Ajustes"
+
+#~ msgid "OAuth users don't need two-factor auth."
+#~ msgstr "Los usuarios de OAuth no necesitan autenticación en dos pasos."
+
+#~ msgid "enabled,disabled"
+#~ msgstr "activado,desactivado"
+
+#~ msgid "Toggle"
+#~ msgstr "Alternar"
