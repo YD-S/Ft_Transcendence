@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-13 23:34+0000\n"
 "PO-Revision-Date: 2024-04-14 00:38+0200\n"
-"Last-Translator: Ciro García Belmonte\n"
+"Last-Translator: Fco Jose Ortega Molina\n"
 "Language-Team: \n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
@@ -21,279 +21,279 @@ msgstr ""
 
 #: authentication/token.py:70 authentication/token.py:89
 msgid "Invalid token"
-msgstr ""
+msgstr "Token inválido"
 
 #: authentication/token.py:80
 msgid "Token reuse detected"
-msgstr ""
+msgstr "Reutilização de token detectada"
 
 #: authentication/token.py:86
 msgid "Token expired"
-msgstr ""
+msgstr "Token expirado"
 
 #: authentication/views.py:32
 msgid "Username and password are required"
-msgstr ""
+msgstr "Nome de usuário e senha são obrigatórios"
 
 #: authentication/views.py:40
 msgid "Invalid username or password"
-msgstr ""
+msgstr "Nome de usuário ou senha incorretos"
 
 #: authentication/views.py:61 templates/me.html:19 templates/me.html:21
 msgid "Two-Factor Authentication"
-msgstr ""
+msgstr "Autenticação em duas etapas"
 
 #: authentication/views.py:63
 msgid "Your one-time passcode is"
-msgstr ""
+msgstr "Seu código único é"
 
 #: authentication/views.py:63
 msgid "It expires in 5 minutes"
-msgstr ""
+msgstr "Expira em 5 minutos"
 
 #: authentication/views.py:73 authentication/views.py:131
 #: authentication/views.py:234 authentication/views.py:348
 msgid "User ID is required"
-msgstr ""
+msgstr "O ID do usuário é obrigatório"
 
 #: authentication/views.py:79
 msgid "2FA code is required"
-msgstr ""
+msgstr "É necessário um código de uso único"
 
 #: authentication/views.py:87 authentication/views.py:139
 #: authentication/views.py:254 authentication/views.py:356 chat/views.py:62
 msgid "User not found"
-msgstr ""
+msgstr "Usuário não encontrado"
 
 #: authentication/views.py:95 authentication/views.py:103
 msgid "Invalid 2FA code"
-msgstr ""
+msgstr "Código de uso único inválido"
 
 #: authentication/views.py:145
 msgid "2FA code sent"
-msgstr ""
+msgstr "Código de uso único enviado"
 
 #: authentication/views.py:159
 msgid "Logout successful"
-msgstr ""
+msgstr "Desconectado com sucesso"
 
 #: authentication/views.py:171
 msgid "Refresh token is required"
-msgstr ""
+msgstr "O token de atualização é obrigatório"
 
 #: authentication/views.py:199
 msgid "Username and password and email are required"
-msgstr ""
+msgstr "Nome de usuário, senha e e-mail são obrigatórios"
 
 #: authentication/views.py:208
 msgid "Username already exists"
-msgstr ""
+msgstr "O nome de usuário já existe"
 
 #: authentication/views.py:222
 msgid "User registered successfully"
-msgstr ""
+msgstr "Usuário cadastrado com sucesso"
 
 #: authentication/views.py:240
 msgid "Current password is required"
-msgstr ""
+msgstr "A senha atual é obrigatória"
 
 #: authentication/views.py:246
 msgid "New password is required"
-msgstr ""
+msgstr "A nova senha é obrigatória"
 
 #: authentication/views.py:261
 msgid "Current password is incorrect"
-msgstr ""
+msgstr "A senha atual está incorreta"
 
 #: authentication/views.py:268
 msgid "New password must be different from current password"
-msgstr ""
+msgstr "A nova senha deve ser diferente da atual"
 
 #: authentication/views.py:275
 msgid "Password changed successfully"
-msgstr ""
+msgstr "Senha alterada corretamente"
 
 #: authentication/views.py:304 authentication/views.py:373
 msgid "Code is required"
-msgstr ""
+msgstr "O código é obrigatório"
 
 #: authentication/views.py:320 authentication/views.py:383
 msgid "Invalid code"
-msgstr ""
+msgstr "Código inválido"
 
 #: authentication/views.py:336
 msgid "Email verification"
-msgstr ""
+msgstr "Verificação de e-mail"
 
 #: authentication/views.py:362
 msgid "Verification email sent"
-msgstr ""
+msgstr "Reenviar e-mail de verificação"
 
 #: authentication/views.py:391
 msgid "Code expired"
-msgstr ""
+msgstr "Código expirado"
 
 #: authentication/views.py:399
 msgid "Email verified"
-msgstr ""
+msgstr "E-mail verificado"
 
 #: chat/views.py:38 chat/views.py:50
 msgid "Room not found"
-msgstr ""
+msgstr "Quarto não encontrado"
 
 #: templates/404.html:4
 msgid "Page not found"
-msgstr ""
+msgstr "Página não encontrada"
 
 #: templates/auth/2fa.html:2
 msgid "An email has been sent to your email account."
-msgstr ""
+msgstr "Uma mensagem foi enviada para sua conta de e-mail"
 
 #: templates/auth/2fa.html:5
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #: templates/auth/2fa.html:7 templates/chat.html:64
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #: templates/auth/2fa.html:9
 msgid "Request a new code"
-msgstr ""
+msgstr "Solicite um novo código"
 
 #: templates/auth/login.html:5
 msgid "Sign in to Neon Pong"
-msgstr ""
+msgstr "Iniciar sesión en Neon Pong"
 
 #: templates/auth/login.html:7 templates/auth/register.html:6
 #: templates/chat.html:35 templates/me.html:12
 msgid "Username"
-msgstr ""
+msgstr "Nome de usuário"
 
 #: templates/auth/login.html:9 templates/auth/register.html:8
 msgid "Password"
-msgstr ""
+msgstr "Senha"
 
 #: templates/auth/login.html:11
 msgid "Sign in"
-msgstr ""
+msgstr "Conecte-se"
 
 #: templates/auth/login.html:12
 msgid "Sign in with 42"
-msgstr ""
+msgstr "Entrar com 42"
 
 #: templates/auth/login.html:14
 msgid "Create a new account"
-msgstr ""
+msgstr "Crie uma nova conta"
 
 #: templates/auth/oauth_callback.html:2
 msgid "Validating OAuth code"
-msgstr ""
+msgstr "Validando código OAuth"
 
 #: templates/auth/register.html:7 templates/me.html:13
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: templates/auth/register.html:9
 msgid "Confirm password"
-msgstr ""
+msgstr "Confirme sua senha"
 
 #: templates/auth/register.html:10
 msgid "Register"
-msgstr ""
+msgstr "Criar uma conta"
 
 #: templates/auth/verify_email.html:2
 msgid "Verifying code"
-msgstr ""
+msgstr "Verificando código"
 
 #: templates/chat.html:8
 msgid "Chats"
-msgstr ""
+msgstr "Chats"
 
 #: templates/chat.html:20
 msgid "Create a room"
-msgstr ""
+msgstr "Crie uma sala"
 
 #: templates/chat.html:21
 msgid "Room name"
-msgstr ""
+msgstr "Nombre de la sala"
 
 #: templates/chat.html:23
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #: templates/chat.html:27
 msgid "Join a room"
-msgstr ""
+msgstr "Junte-se a uma sala"
 
 #: templates/chat.html:28 templates/chat.html:47
 msgid "Room code"
-msgstr ""
+msgstr "Código do quarto"
 
 #: templates/chat.html:30 templates/chat.html:37
 msgid "Join"
-msgstr ""
+msgstr "Juntar"
 
 #: templates/chat.html:34
 msgid "Direct message"
-msgstr ""
+msgstr "Mensagem direta"
 
 #: templates/chat.html:51
 msgid "Leave room"
-msgstr ""
+msgstr "Sair do quarto"
 
 #: templates/chat.html:63
 msgid "Type your message here"
-msgstr ""
+msgstr "Escreva aqui sua mensagem"
 
 #: templates/chat.html:67
 msgid "Select a chat to start a conversation"
-msgstr ""
+msgstr "Selecione um chat para iniciar uma conversa"
 
 #: templates/home.html:7
 msgid "Local Game"
-msgstr ""
+msgstr "Jogo local"
 
 #: templates/index.html:16
 msgid "Settings"
-msgstr ""
+msgstr "Configurações"
 
 #: templates/index.html:24
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #: templates/index.html:27
 msgid "Log out"
-msgstr ""
+msgstr "Sair"
 
 #: templates/index.html:31 templates/settings.html:7
 msgid "Profile"
-msgstr ""
+msgstr "Perfil"
 
 #: templates/index.html:35
 msgid "Select language"
-msgstr ""
+msgstr "Selecione o idioma"
 
 #: templates/me.html:9
 msgid "My Profile"
-msgstr ""
+msgstr "Meu perfil"
 
 #: templates/me.html:15
 msgid "Email not verified"
-msgstr ""
+msgstr "Email não verificado"
 
 #: templates/me.html:16
 msgid "Resend verification email"
-msgstr ""
+msgstr "Reenviar email de verificação"
 
 #: templates/me.html:19
 msgid "OAuth users don't need two-factor auth."
-msgstr ""
+msgstr "Os usuários OAuth não precisam de autenticação em duas etapas"
 
 #: templates/me.html:21
 msgid "enabled,disabled"
-msgstr ""
+msgstr "ativado, desativado"
 
 #: templates/me.html:22
 msgid "Toggle"
-msgstr ""
+msgstr "Alternar"
