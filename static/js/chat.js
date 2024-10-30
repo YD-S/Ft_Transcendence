@@ -58,27 +58,39 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
         }
     })
 
-    document.getElementById("leave-room").addEventListener("click", function (event) {
-        fetch(`/api/chat/room/leave/${roomId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("CHAT.ERROR.LEAVE_ROOM_FAILED");
+    if (document.getElementById("game-invite")) {
+
+
+        document.getElementById("leave-room").addEventListener("click", function (event) {
+            fetch(`/api/chat/room/leave/${roomId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
                 }
             })
-            .then(data => {
-                PageManager.getInstance().load("chat")
-            })
-            .catch(error => {
-                Notification.error(error.message);
-            })
-    })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("CHAT.ERROR.LEAVE_ROOM_FAILED");
+                    }
+                })
+                .then(data => {
+                    PageManager.getInstance().load("chat")
+                })
+                .catch(error => {
+                    Notification.error(error.message);
+                })
+        })
+
+
+        inviteUser();
+        document.getElementById("game-invite").addEventListener("click", function () {
+            ws.send(JSON.stringify({
+                message: `You have been invited to play Pong 3D. <a href="/pong/3dGame">Click here to join!</a>`
+            }))
+        })
+    }
 })
 
 PageManager.getInstance().setOnPageLoad("chat", function () {
@@ -194,17 +206,6 @@ PageManager.getInstance().setOnPageLoad("chat", function () {
                 {query: `?room=${roomButton.getAttribute("data-room-id")}`, storeInHistory: false}
             ).then(() => {
             })
-        })
-    }
-})
-
-PageManager.getInstance().setOnPageLoad("room", () => {
-    if (document.getElementById("game-invite")) {
-        inviteUser();
-        document.getElementById("game-invite").addEventListener("click", function () {
-            ws.send(JSON.stringify({
-                invite: true
-            }))
         })
     }
 })
