@@ -61,7 +61,8 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
     if (document.getElementById("game-invite")) {
 
 
-        document.getElementById("leave-room").addEventListener("click", function (event) {
+        const leaveRoom = document.getElementById("leave-room")
+            if (leaveRoom) leaveRoom.addEventListener("click", function (event) {
             fetch(`/api/chat/room/leave/${roomId}`, {
                 method: "POST",
                 headers: {
