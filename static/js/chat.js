@@ -1,6 +1,6 @@
 import {PageManager} from "./page-manager.js";
 import {Notification} from "./notification.js";
-import {inviteUser} from "./users";
+import {inviteUser} from "./users.js";
 
 function createMessageHTML(message) {
     if (!message.sender) {
@@ -31,7 +31,9 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
         const message = document.createElement("div");
         const messages = document.getElementsByClassName("message").length
         message.className = `message ${messages % 2 ? 'one' : 'two'}`;
-        message.innerHTML = createMessageHTML(data.message);
+        const messageHtml = createMessageHTML(data.message);
+        console.log(messageHtml)
+        message.innerHTML = messageHtml;
         document.getElementById("chat-log").appendChild(message);
         document.getElementById("chat-log").scrollTop = document.getElementById("chat-log").scrollHeight;
     }
@@ -88,7 +90,7 @@ PageManager.getInstance().setOnPageLoad("room", function (options) {
         inviteUser();
         document.getElementById("game-invite").addEventListener("click", function () {
             ws.send(JSON.stringify({
-                message: `You have been invited to play Pong 3D. <a href="/pong/3dGame">Click here to join!</a>`
+                message: `<a href="/pong/3dGame">Click here to join!</a>`
             }))
         })
     }

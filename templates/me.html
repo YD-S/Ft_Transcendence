@@ -57,7 +57,7 @@
         {% for match in stats.matches %}
           <div class="match justify-content-between">
             <div class="d-flex flex-column">
-                <h5>{{ match.opponent }}</h5>
+                <h5><a href="/user?id={{ match.opponent_id }}">{{ match.opponent }}</a></h5>
                 <p>{{ match.date }}</p>
             </div>
               <div class="d-flex flex-column align-items-end mr-2">

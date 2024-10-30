@@ -45,7 +45,7 @@ class ChatRoomConsumer(WebsocketConsumer):
             'content': f'<a href="/user?id={self.scope["user"].id}">{self.scope["user"].username}</a> has left the chat',
             'created_at': datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S')
         })
-        self.channel_layer.group_discard(self.group, self.channel_name)
+        async_to_sync(self.channel_layer.group_discard(self.group, self.channel_name))
 
     def receive(self, text_data):
         room = Room.objects.get(id=int(self.scope['url_route']['kwargs']['room_id']))

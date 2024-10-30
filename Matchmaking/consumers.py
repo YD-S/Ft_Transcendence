@@ -38,7 +38,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         log.debug(f'User disconnected: {user_id}')
-        if user_id in sum(MatchmakingConsumer.private_queue.values(), []):
+        if user_id in sum(MatchmakingConsumer.private_queue.values(), OrderedSet()):
             for key in MatchmakingConsumer.private_queue.keys():
                 if user_id in MatchmakingConsumer.private_queue[key]:
                     MatchmakingConsumer.private_queue[key].remove(user_id)
@@ -145,7 +145,7 @@ class MatchmakingConsumer(AsyncWebsocketConsumer):
         user = User.objects.get(id=body['user'])
         cache.set(f'invite:{user.id}', private_room_id)
         cache.set(f'invite:{request.user.id}', private_room_id)
-        MatchmakingConsumer.private_queue[private_room_id] = []
+        MatchmakingConsumer.private_queue[private_room_id] = OrderedSet()
         return HttpResponse('')
 
 

@@ -5,7 +5,7 @@
 <div id="room-container" class="room-container">
   {% if current_room %}
       <span style="display: none" id="room-id">{{ current_room.id }}</span>
-      <span style="display: none" id="user_id">{{ current_room.user_id }}</span>
+      <span style="display: none" id="user_id">{{ user_id }}</span>
       <h2>
         {{ current_room.name }}
         {% if not current_room.is_direct %}
@@ -20,7 +20,7 @@
           <div class="message {% if forloop.counter|divisibleby:2 %} one {% else %} two {% endif %}">
             <span class="timestamp">{{ message.created_at }}</span>
             <a class="username" href="/user?id={{ message.sender_id }}">{{ message.sender }}:</a>
-            <span class="content">{{ message.content }}</span>
+            <span class="content">{{ message.content | safe }}</span>
           </div>
         {% endfor %}
       </div>
