@@ -181,7 +181,7 @@ msgstr "Solicite um novo código"
 
 #: templates/auth/login.html:11
 msgid "Sign in to Neon Pong"
-msgstr "Iniciar sesión en Neon Pong"
+msgstr "Faça login no Neon Pong"
 
 #: templates/auth/login.html:15 templates/auth/register.html:13
 #: templates/chat.html:42
